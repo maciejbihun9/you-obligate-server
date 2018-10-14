@@ -8,11 +8,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.transaction.Transactional;
 import java.util.List;
 
-@Controller
+@RestController
 @Transactional(rollbackOn = Exception.class)
 public class UserRegisteredServiceControllerImpl implements UserRegisteredServiceController {
 
@@ -22,6 +23,7 @@ public class UserRegisteredServiceControllerImpl implements UserRegisteredServic
     @Override
     @RequestMapping(value = "/register-service", method = RequestMethod.POST)
     public UserRegisteredService saveUserRegisteredService(@RequestBody UserRegisteredService userRegisteredService) {
+        System.out.println("should print that");
         return userRegisteredServiceRepository.saveUserRegisteredService(userRegisteredService);
     }
 
