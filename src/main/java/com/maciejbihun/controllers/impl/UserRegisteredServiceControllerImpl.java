@@ -32,6 +32,7 @@ public class UserRegisteredServiceControllerImpl implements UserRegisteredServic
     }
 
     @Override
+    @RequestMapping(value = "/user-registered-services", method = RequestMethod.GET)
     public List<UserRegisteredService> getAllUserRegisteredServices() {
         return userRegisteredServiceRepository.getAllUserRegisteredServices();
     }
