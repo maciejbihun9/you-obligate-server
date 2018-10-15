@@ -21,6 +21,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {Application.class, HibernateConf.class})
@@ -68,8 +69,12 @@ public class UserRegisteredServiceControllerTest {
         assertEquals(notFoundStatusResponseEntity.getStatusCode(), HttpStatus.NOT_FOUND);
 
         userRegisteredService = userRegisteredServiceController.saveUserRegisteredService(userRegisteredService);
+        assertNotNull(userRegisteredServiceController.getUserRegisteredService(userRegisteredService.getId()));
+
         ResponseEntity<String> noContentResponseEntity = userRegisteredServiceController.deleteUserRegisteredService(userRegisteredService.getId());
         assertEquals(noContentResponseEntity.getStatusCode(), HttpStatus.NO_CONTENT);
+        assertNull(userRegisteredServiceController.getUserRegisteredService(userRegisteredService.getId()));
+
     }
 
     @Test
