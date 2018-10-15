@@ -21,7 +21,7 @@ public class UserRegisteredServiceControllerImpl implements UserRegisteredServic
     UserRegisteredServiceRepository userRegisteredServiceRepository;
 
     @Override
-    @RequestMapping(value = "/register-service", method = RequestMethod.POST)
+    @RequestMapping(value = "/user-registered-services", method = RequestMethod.POST)
     public UserRegisteredService saveUserRegisteredService(@RequestBody UserRegisteredService userRegisteredService) {
         return userRegisteredServiceRepository.saveUserRegisteredService(userRegisteredService);
     }
