@@ -36,4 +36,6 @@ public class UserRegisteredServiceControllerImpl implements UserRegisteredServic
     public List<UserRegisteredService> getAllUserRegisteredServices() {
         return userRegisteredServiceRepository.getAllUserRegisteredServices();
     }
+
+
 }
