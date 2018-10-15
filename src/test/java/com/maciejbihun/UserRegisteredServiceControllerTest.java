@@ -51,9 +51,15 @@ public class UserRegisteredServiceControllerTest {
 
     @Test
     public void getUserRegisteredServiceTest(){
-        UserRegisteredService userRegisteredService = allUserRegisteredServices.get(1);
-        Long id = userRegisteredService.getId();
-        assertNotNull(userRegisteredServiceController.getUserRegisteredService(id));
+        Long testId = 1500l;
+        ResponseEntity<UserRegisteredService> notExistingUserRegisteredService = userRegisteredServiceController.getUserRegisteredService(testId);
+        assertNull(notExistingUserRegisteredService.getBody());
+        assertEquals(notExistingUserRegisteredService.getStatusCode(), HttpStatus.NOT_FOUND);
+
+        Long existingId = 10l;
+        ResponseEntity<UserRegisteredService> existingUserRegisteredService = userRegisteredServiceController.getUserRegisteredService(existingId);
+        assertEquals(existingUserRegisteredService.getStatusCode(), HttpStatus.OK);
+        assertNotNull(existingUserRegisteredService);
     }
 
     @Test
