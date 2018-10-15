@@ -12,7 +12,7 @@ public interface UserRegisteredServiceController {
 
     UserRegisteredService saveUserRegisteredService(UserRegisteredService userRegisteredService);
 
-    UserRegisteredService getUserRegisteredService(Long id);
+    ResponseEntity<UserRegisteredService> getUserRegisteredService(Long id);
 
     List<UserRegisteredService> getAllUserRegisteredServices();
 

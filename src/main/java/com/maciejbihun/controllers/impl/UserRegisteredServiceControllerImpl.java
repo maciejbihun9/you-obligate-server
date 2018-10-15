@@ -26,8 +26,12 @@ public class UserRegisteredServiceControllerImpl implements UserRegisteredServic
     }
 
     @Override
-    public UserRegisteredService getUserRegisteredService(Long id) {
-        return userRegisteredServiceRepository.getUserRegisteredService(id);
+    public ResponseEntity<UserRegisteredService> getUserRegisteredService(Long id) {
+        UserRegisteredService userRegisteredService = userRegisteredServiceRepository.getUserRegisteredService(id);
+        if (userRegisteredService == null){
+            return new ResponseEntity<>(userRegisteredService, HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(userRegisteredServiceRepository.getUserRegisteredService(id), HttpStatus.OK);
     }
 
     @Override
