@@ -4,11 +4,10 @@ import com.maciejbihun.controllers.UserRegisteredServiceController;
 import com.maciejbihun.models.UserRegisteredService;
 import com.maciejbihun.repository.UserRegisteredServiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -37,5 +36,15 @@ public class UserRegisteredServiceControllerImpl implements UserRegisteredServic
         return userRegisteredServiceRepository.getAllUserRegisteredServices();
     }
 
+    @Override
+    @RequestMapping(value = "/user-registered-services/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity<String> deleteUserRegisteredService(@PathVariable("id") Long id) {
+        UserRegisteredService userRegisteredService = this.userRegisteredServiceRepository.getUserRegisteredService(id);
+        if (userRegisteredService == null){
+            return new ResponseEntity<>("An entity not found.", HttpStatus.NOT_FOUND);
+        }
+        this.userRegisteredServiceRepository.deleteUserRegisteredService(userRegisteredService);
+        return new ResponseEntity<>("An entity has been deleted.", HttpStatus.NO_CONTENT);
+    }
 
 }

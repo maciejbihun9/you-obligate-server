@@ -10,6 +10,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -51,6 +53,23 @@ public class UserRegisteredServiceControllerTest {
         UserRegisteredService userRegisteredService = allUserRegisteredServices.get(1);
         Long id = userRegisteredService.getId();
         assertNotNull(userRegisteredServiceController.getUserRegisteredService(id));
+    }
+
+    @Test
+    public void deleteUserRegisteredServiceTest(){
+        Long notExistingUserServiceId = 1500l;
+        UserRegisteredService userRegisteredService = new UserRegisteredService();
+        userRegisteredService.setExperienceDescription("exp desc");
+        userRegisteredService.setServiceDescription("Service desc");
+        userRegisteredService.setServiceName("service name");
+        userRegisteredService.setUserRegisteredServiceCategory(UserRegisteredServiceCategory.IT);
+
+        ResponseEntity<String> notFoundStatusResponseEntity = userRegisteredServiceController.deleteUserRegisteredService(notExistingUserServiceId);
+        assertEquals(notFoundStatusResponseEntity.getStatusCode(), HttpStatus.NOT_FOUND);
+
+        userRegisteredService = userRegisteredServiceController.saveUserRegisteredService(userRegisteredService);
+        ResponseEntity<String> noContentResponseEntity = userRegisteredServiceController.deleteUserRegisteredService(userRegisteredService.getId());
+        assertEquals(noContentResponseEntity.getStatusCode(), HttpStatus.NO_CONTENT);
     }
 
     @Test

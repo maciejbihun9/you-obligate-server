@@ -14,4 +14,6 @@ public interface UserRegisteredServiceRepository {
 
     List<UserRegisteredService> getAllUserRegisteredServices();
 
+    void deleteUserRegisteredService(UserRegisteredService userRegisteredService);
+
 }

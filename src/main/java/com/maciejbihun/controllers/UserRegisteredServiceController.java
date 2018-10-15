@@ -1,6 +1,8 @@
 package com.maciejbihun.controllers;
 
 import com.maciejbihun.models.UserRegisteredService;
+import org.springframework.http.ResponseEntity;
+
 import java.util.List;
 
 /**
@@ -13,5 +15,7 @@ public interface UserRegisteredServiceController {
     UserRegisteredService getUserRegisteredService(Long id);
 
     List<UserRegisteredService> getAllUserRegisteredServices();
+
+    ResponseEntity<String> deleteUserRegisteredService(Long id);
 
 }

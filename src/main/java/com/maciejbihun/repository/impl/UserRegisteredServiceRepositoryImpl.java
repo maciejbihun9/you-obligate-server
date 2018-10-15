@@ -31,4 +31,9 @@ public class UserRegisteredServiceRepositoryImpl implements UserRegisteredServic
         TypedQuery<UserRegisteredService> allUserRegisteredServices = entityManager.createQuery("SELECT u FROM UserRegisteredService u", UserRegisteredService.class);
         return allUserRegisteredServices.getResultList();
     }
+
+    @Override
+    public void deleteUserRegisteredService(UserRegisteredService userRegisteredService) {
+        entityManager.remove(userRegisteredService);
+    }
 }
