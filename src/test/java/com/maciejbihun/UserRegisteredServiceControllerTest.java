@@ -64,7 +64,7 @@ public class UserRegisteredServiceControllerTest {
 
     @Test
     public void deleteUserRegisteredServiceTest(){
-        Long notExistingUserServiceId = 1500l;
+        Long notExistingUserServiceId = 1500L;
         UserRegisteredService userRegisteredService = new UserRegisteredService();
         userRegisteredService.setExperienceDescription("exp desc");
         userRegisteredService.setServiceDescription("Service desc");
