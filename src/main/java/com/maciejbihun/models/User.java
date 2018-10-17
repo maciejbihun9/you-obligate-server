@@ -25,7 +25,7 @@ public class User {
     private String login;
 
     @Basic(optional = false)
-    @Column(name = "PASSWORD", updatable = true, length = 30)
+    @Column(name = "PASSWORD", updatable = true, length = 60 /* length 60 for BCrypt */)
     private String password;
 
 }
