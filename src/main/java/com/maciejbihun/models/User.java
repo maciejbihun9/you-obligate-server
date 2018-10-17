@@ -1,6 +1,7 @@
 package com.maciejbihun.models;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "User_")
@@ -28,8 +29,16 @@ public class User {
     @Column(name = "PASSWORD", updatable = true, length = 60 /* length 60 for BCrypt */)
     private String password;
 
-    public Long getId() {
-        return id;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "USER_ID")
+    private List<UserRegisteredService> userRegisteredServices;
+
+    public List<UserRegisteredService> getUserRegisteredServices() {
+        return userRegisteredServices;
+    }
+
+    public void setUserRegisteredServices(List<UserRegisteredService> userRegisteredServices) {
+        this.userRegisteredServices = userRegisteredServices;
     }
 
     public String getName() {
