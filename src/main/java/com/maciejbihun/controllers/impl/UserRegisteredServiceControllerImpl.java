@@ -26,7 +26,8 @@ public class UserRegisteredServiceControllerImpl implements UserRegisteredServic
     }
 
     @Override
-    public ResponseEntity<UserRegisteredService> getUserRegisteredService(Long id) {
+    @RequestMapping(value = "/user-registered-services/{id}", method = RequestMethod.GET)
+    public ResponseEntity<UserRegisteredService> getUserRegisteredService(@PathVariable("id") Long id) {
         UserRegisteredService userRegisteredService = userRegisteredServiceRepository.getUserRegisteredService(id);
         if (userRegisteredService == null){
             return new ResponseEntity<>(userRegisteredService, HttpStatus.NOT_FOUND);
