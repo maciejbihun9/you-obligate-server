@@ -1,6 +1,7 @@
 package com.maciejbihun.models;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name="UserRegisteredService")
@@ -29,8 +30,20 @@ public class UserRegisteredService {
     @Column(name = "SERVICE_EXPERIENCE_DESCRIPTION", updatable = true, length = 100)
     private String experienceDescription;
 
+    @Basic(optional = false)
+    @Column(name = "CREATED_DATE_TIME", nullable = false)
+    private LocalDateTime createdDateTime;
+
     public Long getId() {
         return id;
+    }
+
+    public LocalDateTime getCreatedDateTime() {
+        return createdDateTime;
+    }
+
+    public void setCreatedDateTime(LocalDateTime createdDateTime) {
+        this.createdDateTime = createdDateTime;
     }
 
     public String getServiceName() {
