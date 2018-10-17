@@ -1,4 +1,4 @@
-package com.maciejbihun;
+package com.maciejbihun.controllers;
 
 import com.maciejbihun.Application;
 import com.maciejbihun.HibernateConf;

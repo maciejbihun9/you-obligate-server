@@ -3,7 +3,7 @@ package com.maciejbihun.models;
 import javax.persistence.*;
 
 @Entity
-@Table(name="user_registered_service")
+@Table(name="UserRegisteredService")
 public class UserRegisteredService {
 
     @Id
