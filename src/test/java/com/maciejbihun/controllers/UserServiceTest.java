@@ -74,7 +74,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void entityIdsReturnCorrectValues(){
+    public void userRegisteredServicesIdsAreGeneratedCorrectly(){
         Long id = 2L;
         List<Long> userRegisteredServicesIds = Arrays.asList(6L, 7L, 8L, 9L, 10L);
         ResponseEntity<User> userEntity = userService.getUser(id);
