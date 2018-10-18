@@ -80,6 +80,7 @@ public class UserServiceTest {
         assertNotNull("User with specified id is present", userEntity);
         List<Long> userEntityRegisteredServicesIds = userEntity.getBody().getUserRegisteredServices().stream().map(UserRegisteredService::getId).collect(toList());
         assertTrue(userRegisteredServicesIds.containsAll(userEntityRegisteredServicesIds));
+        System.out.println(userEntityRegisteredServicesIds);
     }
 
 }

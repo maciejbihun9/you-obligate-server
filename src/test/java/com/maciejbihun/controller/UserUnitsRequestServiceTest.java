@@ -5,10 +5,13 @@ import com.maciejbihun.HibernateConf;
 import com.maciejbihun.models.UserRegisteredService;
 import com.maciejbihun.models.UserRegisteredServiceCategory;
 import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = {Application.class, HibernateConf.class})
@@ -30,5 +33,11 @@ public class UserUnitsRequestServiceTest {
         allUserRegisteredServices = userRegisteredServiceController.getAllUserRegisteredServices();
         System.out.println(allUserRegisteredServices);
     }*/
+
+    @Test
+    public void testMethod(){
+        boolean test = true;
+        assertTrue(test);
+    }
 
 }

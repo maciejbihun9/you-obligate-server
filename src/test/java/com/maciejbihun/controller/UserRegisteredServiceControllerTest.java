@@ -52,7 +52,7 @@ public class UserRegisteredServiceControllerTest {
 
         Long existingId = 10L;
         ResponseEntity<UserRegisteredService> existingUserRegisteredService = userRegisteredServiceController.getUserRegisteredService(existingId);
-        assertEquals(existingUserRegisteredService.getStatusCode(), HttpStatus.OK);
+        assertEquals(existingUserRegisteredService.getStatusCode(), HttpStatus.FOUND);
         assertNotNull(existingUserRegisteredService);
     }
 
