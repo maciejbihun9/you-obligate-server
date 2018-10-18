@@ -30,8 +30,9 @@ public class UserRegisteredService {
     @Column(name = "SERVICE_EXPERIENCE_DESCRIPTION", updatable = true, length = 100)
     private String experienceDescription;
 
+    @Basic(optional = true)
     @OneToOne(mappedBy = "userRegisteredServiceId", cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY, optional = false)
+            fetch = FetchType.LAZY, optional = true)
     private UserUnitsRequest userUnitsRequest;
 
     @Basic(optional = false)
@@ -44,6 +45,14 @@ public class UserRegisteredService {
 
     public LocalDateTime getCreatedDateTime() {
         return createdDateTime;
+    }
+
+    public UserUnitsRequest getUserUnitsRequest() {
+        return userUnitsRequest;
+    }
+
+    public void setUserUnitsRequest(UserUnitsRequest userUnitsRequest) {
+        this.userUnitsRequest = userUnitsRequest;
     }
 
     public void setCreatedDateTime(LocalDateTime createdDateTime) {
