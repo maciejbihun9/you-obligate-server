@@ -31,8 +31,6 @@ public class UserRegisteredServiceControllerTest {
     @Autowired
     UserRegisteredServiceController userRegisteredServiceController;
 
-    private List<UserRegisteredService> allUserRegisteredServices;
-
     @Before
     public void init(){
         int i = 0;
@@ -45,8 +43,6 @@ public class UserRegisteredServiceControllerTest {
             userRegisteredServiceController.saveUserRegisteredService(userRegisteredService);
             i++;
         }
-        allUserRegisteredServices = userRegisteredServiceController.getAllUserRegisteredServices();
-        System.out.println(allUserRegisteredServices);
     }
 
     @Test
