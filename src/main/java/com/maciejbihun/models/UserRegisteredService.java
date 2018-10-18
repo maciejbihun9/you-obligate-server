@@ -30,6 +30,10 @@ public class UserRegisteredService {
     @Column(name = "SERVICE_EXPERIENCE_DESCRIPTION", updatable = true, length = 100)
     private String experienceDescription;
 
+    @OneToOne(mappedBy = "userRegisteredServiceId", cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY, optional = false)
+    private UserUnitsRequest userUnitsRequest;
+
     @Basic(optional = false)
     @Column(name = "CREATED_DATE_TIME", nullable = false)
     private LocalDateTime createdDateTime;

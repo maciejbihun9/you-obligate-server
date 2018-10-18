@@ -15,12 +15,9 @@ public class UserUnitsRequest {
     private Long id;
 
     @Basic(optional = false)
-    @Column(name = "USER_ID", nullable = false, updatable = false)
-    private Long userId;
-
-    @Basic(optional = false)
-    @Column(name = "SERVICE_ID", nullable = false, updatable = false)
-    private Long serviceId;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ID")
+    private UserRegisteredService userRegisteredServiceId;
 
     @Basic(optional = false)
     @Column(name = "CREATED_DATE_TIME", nullable = false)
