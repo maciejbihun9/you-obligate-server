@@ -57,12 +57,13 @@ public class UserRegisteredServiceControllerTest {
     }
 
     @Test
-    public void deleteUserRegisteredServiceTest(){
+    public void shouldReturnCorrectStatusAfterDeletion(){
         Long notExistingUserServiceId = 1500L;
         UserRegisteredService userRegisteredService = new UserRegisteredService();
         userRegisteredService.setExperienceDescription("exp desc");
         userRegisteredService.setServiceDescription("Service desc");
         userRegisteredService.setServiceName("service name");
+        userRegisteredService.setCreatedDateTime(LocalDateTime.now());
         userRegisteredService.setUserRegisteredServiceCategory(UserRegisteredServiceCategory.IT);
 
         ResponseEntity<String> notFoundStatusResponseEntity = userRegisteredServiceController.deleteUserRegisteredService(notExistingUserServiceId);
@@ -73,21 +74,7 @@ public class UserRegisteredServiceControllerTest {
 
         ResponseEntity<String> noContentResponseEntity = userRegisteredServiceController.deleteUserRegisteredService(userRegisteredService.getId());
         assertEquals(noContentResponseEntity.getStatusCode(), HttpStatus.NO_CONTENT);
-        assertNull(userRegisteredServiceController.getUserRegisteredService(userRegisteredService.getId()));
-
+        assertEquals(userRegisteredServiceController.getUserRegisteredService(userRegisteredService.getId()).getStatusCode(), HttpStatus.NOT_FOUND);
     }
-
-    @Test
-    public void testSavingItem(){
-        UserRegisteredService userRegisteredService = new UserRegisteredService();
-        userRegisteredService.setExperienceDescription("exp desc");
-        userRegisteredService.setServiceDescription("Service desc");
-        userRegisteredService.setServiceName("service name");
-        userRegisteredService.setUserRegisteredServiceCategory(UserRegisteredServiceCategory.IT);
-        UserRegisteredService savedUserRegisteredService = userRegisteredServiceController.saveUserRegisteredService(userRegisteredService);
-        System.out.println("Testing saving user registered service");
-        assertEquals(userRegisteredService, savedUserRegisteredService);
-    }
-
 
 }
