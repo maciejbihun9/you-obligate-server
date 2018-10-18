@@ -1,4 +1,4 @@
-package com.maciejbihun.controllers;
+package com.maciejbihun.controller;
 
 import com.maciejbihun.models.User;
 import org.springframework.http.ResponseEntity;

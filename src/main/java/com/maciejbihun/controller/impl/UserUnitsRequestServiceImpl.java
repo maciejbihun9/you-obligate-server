@@ -1,6 +1,6 @@
-package com.maciejbihun.controllers.impl;
+package com.maciejbihun.controller.impl;
 
-import com.maciejbihun.controllers.UserUnitsRequestService;
+import com.maciejbihun.controller.UserUnitsRequestService;
 import com.maciejbihun.models.UserUnitsRequest;
 import com.maciejbihun.repository.UserUnitsRequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;

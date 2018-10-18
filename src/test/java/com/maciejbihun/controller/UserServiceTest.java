@@ -1,4 +1,4 @@
-package com.maciejbihun.controllers;
+package com.maciejbihun.controller;
 
 import com.maciejbihun.Application;
 import com.maciejbihun.HibernateConf;
@@ -19,7 +19,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.*;

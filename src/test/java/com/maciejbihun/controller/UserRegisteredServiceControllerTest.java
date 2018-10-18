@@ -1,8 +1,7 @@
-package com.maciejbihun.controllers;
+package com.maciejbihun.controller;
 
 import com.maciejbihun.Application;
 import com.maciejbihun.HibernateConf;
-import com.maciejbihun.controllers.UserRegisteredServiceController;
 import com.maciejbihun.models.UserRegisteredService;
 import com.maciejbihun.models.UserRegisteredServiceCategory;
 import org.junit.Before;
@@ -14,10 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 
-import java.util.Collection;
-import java.util.List;
+import java.time.LocalDateTime;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -40,15 +37,16 @@ public class UserRegisteredServiceControllerTest {
             userRegisteredService.setServiceDescription("Service desc");
             userRegisteredService.setServiceName("service name");
             userRegisteredService.setUserRegisteredServiceCategory(UserRegisteredServiceCategory.IT);
+            userRegisteredService.setCreatedDateTime(LocalDateTime.now());
             userRegisteredServiceController.saveUserRegisteredService(userRegisteredService);
             i++;
         }
     }
 
     @Test
-    public void getUserRegisteredServiceTest(){
-        Long testId = 1500L;
-        ResponseEntity<UserRegisteredService> notExistingUserRegisteredService = userRegisteredServiceController.getUserRegisteredService(testId);
+    public void userRegisteredServiceEntityShouldReturnCorrectStatus(){
+        Long notExistingId = 1500L;
+        ResponseEntity<UserRegisteredService> notExistingUserRegisteredService = userRegisteredServiceController.getUserRegisteredService(notExistingId);
         assertNull(notExistingUserRegisteredService.getBody());
         assertEquals(notExistingUserRegisteredService.getStatusCode(), HttpStatus.NOT_FOUND);
 

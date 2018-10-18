@@ -1,8 +1,7 @@
-package com.maciejbihun.controllers.impl;
+package com.maciejbihun.controller.impl;
 
-import com.maciejbihun.controllers.UserService;
+import com.maciejbihun.controller.UserService;
 import com.maciejbihun.models.User;
-import com.maciejbihun.models.UserRegisteredService;
 import com.maciejbihun.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

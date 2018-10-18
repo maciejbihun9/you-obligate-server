@@ -1,9 +1,7 @@
-package com.maciejbihun.controllers;
+package com.maciejbihun.controller;
 
 import com.maciejbihun.models.UserRegisteredService;
 import org.springframework.http.ResponseEntity;
-
-import java.util.List;
 
 /**
  * @author BHN

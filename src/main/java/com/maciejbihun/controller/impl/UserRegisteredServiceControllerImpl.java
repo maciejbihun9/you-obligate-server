@@ -1,16 +1,14 @@
-package com.maciejbihun.controllers.impl;
+package com.maciejbihun.controller.impl;
 
-import com.maciejbihun.controllers.UserRegisteredServiceController;
+import com.maciejbihun.controller.UserRegisteredServiceController;
 import com.maciejbihun.models.UserRegisteredService;
 import com.maciejbihun.repository.UserRegisteredServiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
-import java.util.List;
 
 @RestController
 @Transactional(rollbackOn = Exception.class)
