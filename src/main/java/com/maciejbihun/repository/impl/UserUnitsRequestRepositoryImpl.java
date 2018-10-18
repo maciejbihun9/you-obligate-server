@@ -15,7 +15,7 @@ public class UserUnitsRequestRepositoryImpl extends SimpleJpaRepository<UserUnit
     @Autowired
     EntityManager entityManager;
 
-    public UserUnitsRequestRepositoryImpl(JpaEntityInformation<UserUnitsRequest, ?> entityInformation, EntityManager entityManager) {
-        super(entityInformation, entityManager);
+    public UserUnitsRequestRepositoryImpl(EntityManager entityManager) {
+        super(UserUnitsRequest.class, entityManager);
     }
 }

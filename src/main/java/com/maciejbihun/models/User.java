@@ -1,6 +1,7 @@
 package com.maciejbihun.models;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -29,9 +30,12 @@ public class User {
     @Column(name = "PASSWORD", updatable = true, length = 60 /* length 60 for BCrypt */)
     private String password;
 
+    /**
+     * User won't have many UserRegisteredService, so it is ok to load them eagerly.
+     */
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "USER_ID")
-    private List<UserRegisteredService> userRegisteredServices;
+    private List<UserRegisteredService> userRegisteredServices = new ArrayList<>();
 
     public List<UserRegisteredService> getUserRegisteredServices() {
         return userRegisteredServices;

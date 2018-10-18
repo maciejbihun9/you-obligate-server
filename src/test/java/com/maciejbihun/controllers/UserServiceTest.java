@@ -14,12 +14,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static java.util.stream.Collectors.toList;
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {Application.class, HibernateConf.class})
@@ -29,9 +31,6 @@ public class UserServiceTest {
     @Autowired
     UserService userService;
 
-    @Autowired
-    UserRegisteredServiceController userRegisteredServiceController;
-
     List<User> users = new ArrayList<>();
 
     @Before
@@ -40,18 +39,26 @@ public class UserServiceTest {
         int i = 0;
         while (i < 5){
             // store couple UserRegisteredService entities to verify id generation
-            UserRegisteredService userRegisteredService = new UserRegisteredService();
-            userRegisteredService.setExperienceDescription("exp desc");
-            userRegisteredService.setServiceDescription("Service desc");
-            userRegisteredService.setServiceName("service name");
-            userRegisteredService.setUserRegisteredServiceCategory(UserRegisteredServiceCategory.IT);
-            userRegisteredServiceController.saveUserRegisteredService(userRegisteredService);
 
             User user = new User();
             user.setName("Maciej " + i);
             user.setSurname("Bihun");
             user.setPassword("password");
             user.setLogin("login");
+
+            List<UserRegisteredService> userRegisteredServices = new ArrayList<>();
+            int j = 0;
+            while(j < 5){
+                UserRegisteredService userRegisteredService = new UserRegisteredService();
+                userRegisteredService.setExperienceDescription("exp desc");
+                userRegisteredService.setServiceDescription("Service desc");
+                userRegisteredService.setServiceName("service name");
+                userRegisteredService.setUserRegisteredServiceCategory(UserRegisteredServiceCategory.IT);
+                userRegisteredService.setCreatedDateTime(LocalDateTime.now());
+                userRegisteredServices.add(userRegisteredService);
+                j++;
+            }
+            user.setUserRegisteredServices(userRegisteredServices);
             userService.saveUser(user);
             users.add(user);
             i++;
@@ -59,11 +66,13 @@ public class UserServiceTest {
     }
 
     @Test
-    public void userIdGenerationTest(){
-        Long id = 3L;
+    public void entityIdsReturnCorrectValues(){
+        Long id = 2L;
+        List<Long> userRegisteredServicesIds = Arrays.asList(6L, 7L, 8L, 9L, 10L);
         ResponseEntity<User> userEntity = userService.getUser(id);
-        assertNotNull(userEntity);
+        assertNotNull("User with specified id is present", userEntity);
+        List<Long> userEntityRegisteredServicesIds = userEntity.getBody().getUserRegisteredServices().stream().map(UserRegisteredService::getId).collect(toList());
+        assertTrue(userRegisteredServicesIds.containsAll(userEntityRegisteredServicesIds));
     }
-
 
 }
