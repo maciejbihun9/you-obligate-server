@@ -36,12 +36,6 @@ public class UserRegisteredServiceControllerImpl implements UserRegisteredServic
     }
 
     @Override
-    @RequestMapping(value = "/user-registered-services", method = RequestMethod.GET)
-    public List<UserRegisteredService> getAllUserRegisteredServices() {
-        return userRegisteredServiceRepository.getAllUserRegisteredServices();
-    }
-
-    @Override
     @RequestMapping(value = "/user-registered-services/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<String> deleteUserRegisteredService(@PathVariable("id") Long id) {
         UserRegisteredService userRegisteredService = this.userRegisteredServiceRepository.getUserRegisteredService(id);

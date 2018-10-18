@@ -12,8 +12,6 @@ public interface UserRegisteredServiceRepository {
 
     UserRegisteredService getUserRegisteredService(Long id);
 
-    List<UserRegisteredService> getAllUserRegisteredServices();
-
     void deleteUserRegisteredService(UserRegisteredService userRegisteredService);
 
 }

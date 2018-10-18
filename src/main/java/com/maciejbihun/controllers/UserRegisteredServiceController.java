@@ -14,8 +14,6 @@ public interface UserRegisteredServiceController {
 
     ResponseEntity<UserRegisteredService> getUserRegisteredService(Long id);
 
-    List<UserRegisteredService> getAllUserRegisteredServices();
-
     ResponseEntity<String> deleteUserRegisteredService(Long id);
 
 }
