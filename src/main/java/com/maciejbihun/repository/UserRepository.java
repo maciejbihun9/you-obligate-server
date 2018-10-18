@@ -1,13 +1,10 @@
 package com.maciejbihun.repository;
 
 import com.maciejbihun.models.User;
-import com.maciejbihun.models.UserRegisteredService;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.NoRepositoryBean;
 
-import java.util.List;
+@NoRepositoryBean
+public interface UserRepository extends JpaRepository<User, Long> {
 
-public interface UserRepository {
-    User saveUser(User user);
-    User getUser(Long id);
-    List<UserRegisteredService> getUserRegisteredServices(Long id);
 }

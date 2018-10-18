@@ -2,8 +2,11 @@ package com.maciejbihun.repository.impl;
 
 import com.maciejbihun.models.User;
 import com.maciejbihun.models.UserRegisteredService;
+import com.maciejbihun.models.UserUnitsRequest;
 import com.maciejbihun.repository.UserRepository;
+import com.maciejbihun.repository.UserUnitsRequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
@@ -11,26 +14,13 @@ import javax.persistence.EntityManager;
 import java.util.List;
 
 @Repository
-public class UserRepositoryImpl implements UserRepository {
+public class UserRepositoryImpl extends SimpleJpaRepository<User, Long> implements UserRepository {
 
     @Autowired
     EntityManager entityManager;
 
-    @Override
-    public User saveUser(User user) {
-        entityManager.persist(user);
-        // return the same user with generated ID
-        return user;
+    public UserRepositoryImpl(EntityManager em) {
+        super(User.class, em);
     }
 
-    @Override
-    public User getUser(Long id) {
-        return entityManager.find(User.class, id);
-    }
-
-    @Override
-    public List<UserRegisteredService> getUserRegisteredServices(Long id) {
-        List<UserRegisteredService> userRegisteredServices = entityManager.find(User.class, id).getUserRegisteredServices();
-        return userRegisteredServices;
-    }
 }
