@@ -1,17 +1,13 @@
 package com.maciejbihun.repository;
 
 import com.maciejbihun.models.UserRegisteredService;
-import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.NoRepositoryBean;
 
 /**
  * @author MBihun
  */
-public interface UserRegisteredServiceRepository {
-
-    UserRegisteredService saveUserRegisteredService(UserRegisteredService userRegisteredService);
-
-    UserRegisteredService getUserRegisteredService(Long id);
-
-    void deleteUserRegisteredService(UserRegisteredService userRegisteredService);
+@NoRepositoryBean
+public interface UserRegisteredServiceRepository extends JpaRepository<UserRegisteredService, Long> {
 
 }

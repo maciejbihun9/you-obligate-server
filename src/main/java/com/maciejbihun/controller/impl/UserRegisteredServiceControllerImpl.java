@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
+import java.util.Optional;
 
 @RestController
 @Transactional(rollbackOn = Exception.class)
@@ -20,28 +21,25 @@ public class UserRegisteredServiceControllerImpl implements UserRegisteredServic
     @Override
     @RequestMapping(value = "/user-registered-services", method = RequestMethod.POST)
     public UserRegisteredService saveUserRegisteredService(@RequestBody UserRegisteredService userRegisteredService) {
-        return userRegisteredServiceRepository.saveUserRegisteredService(userRegisteredService);
+        return userRegisteredServiceRepository.save(userRegisteredService);
     }
 
     @Override
     @RequestMapping(value = "/user-registered-services/{id}", method = RequestMethod.GET)
     public ResponseEntity<UserRegisteredService> getUserRegisteredService(@PathVariable("id") Long id) {
-        UserRegisteredService userRegisteredService = userRegisteredServiceRepository.getUserRegisteredService(id);
-        if (userRegisteredService == null){
-            return new ResponseEntity<>(userRegisteredService, HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(userRegisteredServiceRepository.getUserRegisteredService(id), HttpStatus.OK);
+        Optional<UserRegisteredService> userRegisteredServiceOptional = userRegisteredServiceRepository.findById(id);
+        return userRegisteredServiceOptional.map(userRegisteredService -> new ResponseEntity<>(userRegisteredService, HttpStatus.FOUND)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @Override
     @RequestMapping(value = "/user-registered-services/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<String> deleteUserRegisteredService(@PathVariable("id") Long id) {
-        UserRegisteredService userRegisteredService = this.userRegisteredServiceRepository.getUserRegisteredService(id);
-        if (userRegisteredService == null){
-            return new ResponseEntity<>("An entity not found.", HttpStatus.NOT_FOUND);
+        Optional<UserRegisteredService> userRegisteredServiceOptional = userRegisteredServiceRepository.findById(id);
+        if (userRegisteredServiceOptional.isPresent()){
+            this.userRegisteredServiceRepository.deleteById(id);
+            return new ResponseEntity<>("An entity has been deleted.", HttpStatus.NO_CONTENT);
         }
-        this.userRegisteredServiceRepository.deleteUserRegisteredService(userRegisteredService);
-        return new ResponseEntity<>("An entity has been deleted.", HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>("An entity not found.", HttpStatus.NOT_FOUND);
     }
 
 }

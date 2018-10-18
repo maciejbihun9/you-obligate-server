@@ -3,31 +3,18 @@ package com.maciejbihun.repository.impl;
 import com.maciejbihun.models.UserRegisteredService;
 import com.maciejbihun.repository.UserRegisteredServiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.stereotype.Repository;
-
 import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-import java.util.List;
 
 @Repository
-public class UserRegisteredServiceRepositoryImpl implements UserRegisteredServiceRepository {
+public class UserRegisteredServiceRepositoryImpl extends SimpleJpaRepository<UserRegisteredService, Long> implements UserRegisteredServiceRepository {
 
     @Autowired
     EntityManager entityManager;
 
-    @Override
-    public UserRegisteredService saveUserRegisteredService(UserRegisteredService userRegisteredService) {
-        entityManager.persist(userRegisteredService);
-        return userRegisteredService;
+    public UserRegisteredServiceRepositoryImpl(EntityManager em) {
+        super(UserRegisteredService.class, em);
     }
 
-    @Override
-    public UserRegisteredService getUserRegisteredService(Long id) {
-        return entityManager.find(UserRegisteredService.class, id);
-    }
-
-    @Override
-    public void deleteUserRegisteredService(UserRegisteredService userRegisteredService) {
-        entityManager.remove(userRegisteredService);
-    }
 }
