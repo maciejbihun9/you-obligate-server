@@ -2,15 +2,13 @@ package com.maciejbihun.controller.impl;
 
 import com.maciejbihun.controller.UserUnitsRequestService;
 import com.maciejbihun.models.UserUnitsRequest;
+import com.maciejbihun.models.UserUnitsRequestStatus;
 import com.maciejbihun.repository.UserUnitsRequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import java.util.Optional;
@@ -36,4 +34,12 @@ public class UserUnitsRequestServiceImpl implements UserUnitsRequestService {
         userUnitsRequest = userUnitsRequestRepository.save(userUnitsRequest);
         return new ResponseEntity<>(userUnitsRequest, HttpStatus.CREATED);
     }
+
+    @Override
+    @RequestMapping(value = "/user_units_request", method = RequestMethod.GET)
+    public ResponseEntity<UserUnitsRequest> getUserUnitsRequestByStatus(@RequestParam("status") String userUnitsRequestStatusString) {
+        UserUnitsRequestStatus userUnitsRequestStatus = UserUnitsRequestStatus.valueOf(userUnitsRequestStatusString);
+        return new ResponseEntity<>(HttpStatus.FOUND);
+    }
+
 }
