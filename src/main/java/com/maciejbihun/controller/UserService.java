@@ -8,5 +8,6 @@ import java.util.List;
 public interface UserService {
     ResponseEntity<User> getUser(Long id);
     ResponseEntity<List<User>> getAllUsers();
-    ResponseEntity<User> saveUser(User user);
+    ResponseEntity<User> createUserAccount(User user);
+    createUserAccount
 }

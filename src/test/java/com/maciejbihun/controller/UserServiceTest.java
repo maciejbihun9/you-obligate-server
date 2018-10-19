@@ -59,7 +59,7 @@ public class UserServiceTest {
                 j++;
             }
             user.setUserRegisteredServices(userRegisteredServices);
-            userService.saveUser(user);
+            userService.createUserAccount(user);
             users.add(user);
             i++;
         }
