@@ -2,6 +2,7 @@ package com.maciejbihun.controller.impl;
 
 import com.maciejbihun.controller.UserRegisteredServiceController;
 import com.maciejbihun.models.UserRegisteredService;
+import com.maciejbihun.models.UserRegisteredServiceCategory;
 import com.maciejbihun.repository.UserRegisteredServiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -40,6 +42,12 @@ public class UserRegisteredServiceControllerImpl implements UserRegisteredServic
             return new ResponseEntity<>("An entity has been deleted.", HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>("An entity not found.", HttpStatus.NOT_FOUND);
+    }
+
+    @Override
+    public ResponseEntity<List<UserRegisteredService>> findByUserRegisteredServiceCategory(UserRegisteredServiceCategory userRegisteredServiceCategory) {
+        List<UserRegisteredService> byUserRegisteredServiceCategory = userRegisteredServiceRepository.findByUserRegisteredServiceCategory(userRegisteredServiceCategory);
+        return new ResponseEntity<>(byUserRegisteredServiceCategory, HttpStatus.OK);
     }
 
 }
