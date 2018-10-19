@@ -51,4 +51,31 @@ public class UserRegisteredServiceRepositoryTest {
         assertNotNull(userUnitsRequest);
     }
 
+    @Test
+    public void givenListOfUserRegisteredServices_statusNotVerified_returnsNotVerifiedObjects(){
+        int i = 0;
+        while(i < 50){
+            UserRegisteredService userRegisteredService = new UserRegisteredService();
+            userRegisteredService.setExperienceDescription("exp desc");
+            userRegisteredService.setServiceDescription("Service desc");
+            userRegisteredService.setServiceName("service name");
+            if (i % 2 == 0){
+                userRegisteredService.setUserRegisteredServiceCategory(UserRegisteredServiceCategory.IT);
+            } else {
+                userRegisteredService.setUserRegisteredServiceCategory(UserRegisteredServiceCategory.LEARNING);
+            }
+            userRegisteredService.setCreatedDateTime(LocalDateTime.now());
+
+            UserUnitsRequest userUnitsRequest = new UserUnitsRequest();
+            userUnitsRequest.setUserRegisteredServiceId(userRegisteredService);
+            userUnitsRequest.setCreatedDateTime(LocalDateTime.now());
+            userRegisteredService.setUserUnitsRequest(userUnitsRequest);
+
+            userRegisteredServiceRepository.save(userRegisteredService);
+            i++;
+        }
+        userRegisteredServiceRepository.findByStatus()
+
+    }
+
 }
