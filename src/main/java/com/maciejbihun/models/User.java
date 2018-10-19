@@ -23,8 +23,8 @@ public class User {
     private String surname;
 
     @Basic(optional = false)
-    @Column(name = "LOGIN", updatable = true, length = 30)
-    private String login;
+    @Column(name = "USERNAME", unique = true, updatable = true, length = 30)
+    private String username;
 
     @Basic(optional = false)
     @Column(name = "PASSWORD", updatable = true, length = 60 /* length 60 for BCrypt */)
@@ -61,12 +61,12 @@ public class User {
         this.surname = surname;
     }
 
-    public String getLogin() {
-        return login;
+    public String getUsername() {
+        return username;
     }
 
-    public void setLogin(String login) {
-        this.login = login;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {

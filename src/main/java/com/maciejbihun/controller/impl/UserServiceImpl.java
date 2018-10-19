@@ -2,37 +2,30 @@ package com.maciejbihun.controller.impl;
 
 import com.maciejbihun.controller.UserService;
 import com.maciejbihun.models.User;
+import com.maciejbihun.models.UserPrincipal;
 import com.maciejbihun.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @Transactional
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Autowired
     UserRepository userRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
-
-    @Override
-    @RequestMapping(value="/users/{id}", method = RequestMethod.GET)
-    public ResponseEntity<User> getUser(@PathVariable("id") Long id) {
-        Optional<User> optionalUser = userRepository.findById(id);
-        return optionalUser.map(user -> new ResponseEntity<>(user, HttpStatus.FOUND)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    }
 
     @Override
     public ResponseEntity<List<User>> getAllUsers() {
@@ -47,4 +40,13 @@ public class UserServiceImpl implements UserService {
         return new ResponseEntity<>(userRepository.save(user), HttpStatus.CREATED);
     }
 
+    @Override
+    @RequestMapping(value="/users", method = RequestMethod.GET)
+    public UserPrincipal loadUserByUsername(@RequestParam("username") String username) throws UsernameNotFoundException {
+        User user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new UsernameNotFoundException(username);
+        }
+        return new UserPrincipal(user);
+    }
 }
