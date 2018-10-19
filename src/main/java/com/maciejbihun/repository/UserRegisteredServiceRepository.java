@@ -5,15 +5,17 @@ import com.maciejbihun.models.UserRegisteredServiceCategory;
 import com.maciejbihun.models.UserUnitsRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.NoRepositoryBean;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 /**
  * @author MBihun
  */
-@NoRepositoryBean
+//@NoRepositoryBean
+@Repository
 public interface UserRegisteredServiceRepository extends JpaRepository<UserRegisteredService, Long> {
 
-    List<UserRegisteredService> findByStatus(UserRegisteredServiceCategory userRegisteredServiceCategory);
+    List<UserRegisteredService> findByUserRegisteredServiceCategory(UserRegisteredServiceCategory userRegisteredServiceCategory);
 
 }

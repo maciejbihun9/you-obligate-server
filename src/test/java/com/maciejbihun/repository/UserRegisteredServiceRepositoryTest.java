@@ -13,8 +13,10 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
+import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -74,8 +76,9 @@ public class UserRegisteredServiceRepositoryTest {
             userRegisteredServiceRepository.save(userRegisteredService);
             i++;
         }
-        userRegisteredServiceRepository.findByStatus()
-
+        List<UserRegisteredService> itServices = userRegisteredServiceRepository.findByUserRegisteredServiceCategory(UserRegisteredServiceCategory.IT);
+        List<UserRegisteredServiceCategory> categories = itServices.stream().map(UserRegisteredService::getUserRegisteredServiceCategory).collect(toList());
+        assertTrue(categories.stream().allMatch(category -> category.equals(UserRegisteredServiceCategory.IT)));
     }
 
 }
