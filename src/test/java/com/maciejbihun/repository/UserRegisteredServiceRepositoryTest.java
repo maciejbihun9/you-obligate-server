@@ -54,7 +54,7 @@ public class UserRegisteredServiceRepositoryTest {
     }
 
     @Test
-    public void givenListOfUserRegisteredServices_statusNotVerified_returnsNotVerifiedObjects(){
+    public void givenListOfUserRegisteredServices_filterByCategory_returnsItServices(){
         int i = 0;
         while(i < 50){
             UserRegisteredService userRegisteredService = new UserRegisteredService();

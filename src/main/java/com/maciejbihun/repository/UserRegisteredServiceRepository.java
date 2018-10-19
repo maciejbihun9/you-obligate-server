@@ -12,7 +12,6 @@ import java.util.List;
 /**
  * @author MBihun
  */
-//@NoRepositoryBean
 @Repository
 public interface UserRegisteredServiceRepository extends JpaRepository<UserRegisteredService, Long> {
 
