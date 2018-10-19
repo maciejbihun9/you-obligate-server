@@ -36,7 +36,11 @@ public class UserRegisteredServiceControllerTest {
             userRegisteredService.setExperienceDescription("exp desc");
             userRegisteredService.setServiceDescription("Service desc");
             userRegisteredService.setServiceName("service name");
-            userRegisteredService.setUserRegisteredServiceCategory(UserRegisteredServiceCategory.IT);
+            if (i % 2 == 0){
+                userRegisteredService.setUserRegisteredServiceCategory(UserRegisteredServiceCategory.IT);
+            } else {
+                userRegisteredService.setUserRegisteredServiceCategory(UserRegisteredServiceCategory.LEARNING);
+            }
             userRegisteredService.setCreatedDateTime(LocalDateTime.now());
             userRegisteredServiceController.saveUserRegisteredService(userRegisteredService);
             i++;
@@ -75,6 +79,13 @@ public class UserRegisteredServiceControllerTest {
         ResponseEntity<String> noContentResponseEntity = userRegisteredServiceController.deleteUserRegisteredService(userRegisteredService.getId());
         assertEquals(noContentResponseEntity.getStatusCode(), HttpStatus.NO_CONTENT);
         assertEquals(userRegisteredServiceController.getUserRegisteredService(userRegisteredService.getId()).getStatusCode(), HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    public void findByCategory(){
+        String learningCategory = "learning";
+        ResponseEntity<Object> byUserRegisteredServiceCategory = userRegisteredServiceController.findByUserRegisteredServiceCategory(learningCategory);
+        assertEquals(byUserRegisteredServiceCategory.getStatusCode(), HttpStatus.FOUND);
     }
 
 }
