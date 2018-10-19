@@ -83,9 +83,9 @@ public class UserRegisteredServiceControllerTest {
 
     @Test
     public void findByCategory(){
-        String learningCategory = "learning";
+        String learningCategory = "LEARNING";
         ResponseEntity<Object> byUserRegisteredServiceCategory = userRegisteredServiceController.findByUserRegisteredServiceCategory(learningCategory);
-        assertEquals(byUserRegisteredServiceCategory.getStatusCode(), HttpStatus.FOUND);
+        assertEquals(HttpStatus.FOUND, byUserRegisteredServiceCategory.getStatusCode());
     }
 
 }
