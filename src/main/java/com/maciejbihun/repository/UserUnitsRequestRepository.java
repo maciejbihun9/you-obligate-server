@@ -11,6 +11,4 @@ import java.util.List;
 @NoRepositoryBean
 public interface UserUnitsRequestRepository extends JpaRepository<UserUnitsRequest, Long> {
 
-    List<UserUnitsRequest> findByStatus(String status);
-
 }

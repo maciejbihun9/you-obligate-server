@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
+import java.util.List;
 
 @Repository
 public class UserRegisteredServiceRepositoryImpl extends SimpleJpaRepository<UserRegisteredService, Long> implements UserRegisteredServiceRepository {
@@ -17,4 +18,8 @@ public class UserRegisteredServiceRepositoryImpl extends SimpleJpaRepository<Use
         super(UserRegisteredService.class, em);
     }
 
+    @Override
+    public List<UserRegisteredService> findByStatus(String status) {
+        return null;
+    }
 }

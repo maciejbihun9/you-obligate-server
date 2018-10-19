@@ -21,8 +21,4 @@ public class UserUnitsRequestRepositoryImpl extends SimpleJpaRepository<UserUnit
         super(UserUnitsRequest.class, entityManager);
     }
 
-    @Override
-    public List<UserUnitsRequest> findByStatus(String status) {
-        return new ArrayList<>();
-    }
 }
