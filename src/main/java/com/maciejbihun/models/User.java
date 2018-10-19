@@ -1,7 +1,11 @@
 package com.maciejbihun.models;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -36,6 +40,25 @@ public class User {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "USER_ID")
     private List<UserRegisteredService> userRegisteredServices = new ArrayList<>();
+
+    // LazyCollection is an annotation to omit exception with fetching multiple bags at the same time
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @ManyToMany
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = @JoinColumn(
+                    name = "USER_ID", referencedColumnName = "ID"),
+            inverseJoinColumns = @JoinColumn(
+                    name = "ROLE_ID", referencedColumnName = "ID"))
+    private Collection<Role> roles;
+
+    public Collection<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Collection<Role> roles) {
+        this.roles = roles;
+    }
 
     public List<UserRegisteredService> getUserRegisteredServices() {
         return userRegisteredServices;

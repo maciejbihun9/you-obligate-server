@@ -2,29 +2,19 @@ package com.maciejbihun.controller;
 
 import com.maciejbihun.Application;
 import com.maciejbihun.HibernateConf;
-import com.maciejbihun.models.User;
-import com.maciejbihun.models.UserPrincipal;
-import com.maciejbihun.models.UserRegisteredService;
-import com.maciejbihun.models.UserRegisteredServiceCategory;
-import org.junit.Before;
+import com.maciejbihun.models.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.Collection;
 
-import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
@@ -66,6 +56,13 @@ public class UserServiceTest {
             i++;
         }
     }*/
+
+    @Test
+    public void getUserTest(){
+        UserPrincipal maciek1 = userService.loadUserByUsername("maciek1");
+        Collection<Role> roles = maciek1.getUser().getRoles();
+        System.out.println(roles);
+    }
 
     @Test
     public void userPasswordShouldHave60OfLength(){
