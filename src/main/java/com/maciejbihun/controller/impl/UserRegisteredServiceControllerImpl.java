@@ -46,10 +46,15 @@ public class UserRegisteredServiceControllerImpl implements UserRegisteredServic
 
     @Override
     @RequestMapping(value = "/user-registered-services", method = RequestMethod.GET)
-    public ResponseEntity<List<UserRegisteredService>> findByUserRegisteredServiceCategory(@RequestParam("category") String category) {
-        UserRegisteredServiceCategory userRegisteredServiceCategory = UserRegisteredServiceCategory.valueOf(category);
-        List<UserRegisteredService> byUserRegisteredServiceCategory = userRegisteredServiceRepository.findByUserRegisteredServiceCategory(userRegisteredServiceCategory);
-        return new ResponseEntity<>(byUserRegisteredServiceCategory, HttpStatus.FOUND);
+    public ResponseEntity<Object> findByUserRegisteredServiceCategory(@RequestParam("category") String category) {
+        UserRegisteredServiceCategory userRegisteredServiceCategory;
+        try {
+            userRegisteredServiceCategory = UserRegisteredServiceCategory.valueOf(category);
+            List<UserRegisteredService> byUserRegisteredServiceCategory = userRegisteredServiceRepository.findByUserRegisteredServiceCategory(userRegisteredServiceCategory);
+            return new ResponseEntity<>(byUserRegisteredServiceCategory, HttpStatus.FOUND);
+        } catch (IllegalArgumentException il){
+            return new ResponseEntity<>(category, HttpStatus.NOT_FOUND);
+        }
     }
 
 }
