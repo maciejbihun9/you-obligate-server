@@ -32,7 +32,7 @@ public class UserRegisteredService {
 
     @Basic(optional = true)
     @OneToOne(mappedBy = "userRegisteredServiceId", cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY, optional = true)
+            fetch = FetchType.LAZY)
     private UserUnitsRequest userUnitsRequest;
 
     @Basic(optional = false)
