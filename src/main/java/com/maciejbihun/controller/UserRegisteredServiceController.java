@@ -17,6 +17,6 @@ public interface UserRegisteredServiceController {
 
     ResponseEntity<String> deleteUserRegisteredService(Long id);
 
-    ResponseEntity<List<UserRegisteredService>> findByUserRegisteredServiceCategory(UserRegisteredServiceCategory userRegisteredServiceCategory);
+    ResponseEntity<List<UserRegisteredService>> findByUserRegisteredServiceCategory(String category);
 
 }

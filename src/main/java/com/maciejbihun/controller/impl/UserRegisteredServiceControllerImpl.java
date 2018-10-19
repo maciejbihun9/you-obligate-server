@@ -45,9 +45,11 @@ public class UserRegisteredServiceControllerImpl implements UserRegisteredServic
     }
 
     @Override
-    public ResponseEntity<List<UserRegisteredService>> findByUserRegisteredServiceCategory(UserRegisteredServiceCategory userRegisteredServiceCategory) {
+    @RequestMapping(value = "/user-registered-services", method = RequestMethod.GET)
+    public ResponseEntity<List<UserRegisteredService>> findByUserRegisteredServiceCategory(@RequestParam("category") String category) {
+        UserRegisteredServiceCategory userRegisteredServiceCategory = UserRegisteredServiceCategory.valueOf(category);
         List<UserRegisteredService> byUserRegisteredServiceCategory = userRegisteredServiceRepository.findByUserRegisteredServiceCategory(userRegisteredServiceCategory);
-        return new ResponseEntity<>(byUserRegisteredServiceCategory, HttpStatus.OK);
+        return new ResponseEntity<>(byUserRegisteredServiceCategory, HttpStatus.FOUND);
     }
 
 }
