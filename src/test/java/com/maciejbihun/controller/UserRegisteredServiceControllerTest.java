@@ -8,12 +8,16 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
 
 import static org.junit.Assert.assertEquals;
@@ -21,7 +25,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 @RunWith(SpringRunner.class)
+@ContextConfiguration
 @SpringBootTest(classes = {Application.class, HibernateConf.class})
+// @WebMvcTest(UserRegisteredServiceController.class)
 @ActiveProfiles("test")
 public class UserRegisteredServiceControllerTest {
 
@@ -81,8 +87,17 @@ public class UserRegisteredServiceControllerTest {
         assertEquals(userRegisteredServiceController.getUserRegisteredService(userRegisteredService.getId()).getStatusCode(), HttpStatus.NOT_FOUND);
     }
 
+    @Test(expected = AccessDeniedException.class)
+    @WithMockUser(username="maciek1",roles={"USER"})
+    public void shouldThrowAccessDeniedExceptionWhenAccessingWithSimpleUser(){
+        String learningCategory = "LEARNING";
+        ResponseEntity<Object> byUserRegisteredServiceCategory = userRegisteredServiceController.findByUserRegisteredServiceCategory(learningCategory);
+        assertEquals(HttpStatus.FOUND, byUserRegisteredServiceCategory.getStatusCode());
+    }
+
     @Test
-    public void findByCategory(){
+    @WithMockUser(username="maciek1",roles={"ADMIN"})
+    public void shouldFilterByUserRegisteredServiceLearningCategory(){
         String learningCategory = "LEARNING";
         ResponseEntity<Object> byUserRegisteredServiceCategory = userRegisteredServiceController.findByUserRegisteredServiceCategory(learningCategory);
         assertEquals(HttpStatus.FOUND, byUserRegisteredServiceCategory.getStatusCode());
