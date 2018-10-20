@@ -13,6 +13,10 @@ public class UserRegisteredService {
     @SequenceGenerator(name = "USER_REGISTERED_SERVICE_SEQ", sequenceName = "USER_REGISTERED_SERVICE_SEQ", allocationSize = 1)
     private Long id;
 
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @JoinColumn(name = "ID", nullable = false)
+    User user;
+
     @Basic(optional = false)
     @Column(name = "SERVICE_NAME", updatable = true, length = 30)
     private String serviceName;
