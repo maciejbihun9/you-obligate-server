@@ -11,6 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +25,7 @@ public class UserRegisteredServiceControllerImpl implements UserRegisteredServic
     @Override
     @RequestMapping(value = "/user-registered-services", method = RequestMethod.POST)
     public UserRegisteredService saveUserRegisteredService(@RequestBody UserRegisteredService userRegisteredService) {
+        userRegisteredService.setCreatedDateTime(LocalDateTime.now());
         return userRegisteredServiceRepository.save(userRegisteredService);
     }
 
