@@ -13,7 +13,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -69,8 +71,10 @@ public class UserServiceTest {
         User user = new User();
         user.setName("Maciej");
         user.setSurname("Bihun");
-        user.setPassword("maciek1");
-        user.setUsername("maciek1");
+        user.setPassword("maciek");
+        // make sure that this username is different than in the InitialDataLoader (maciek1) class, because
+        // you will end up with ConstraintViolationException
+        user.setUsername("maciek");
         ResponseEntity<User> userAccount = userService.createUserAccount(user);
         assertEquals(60 ,userAccount.getBody().getPassword().length());
     }
@@ -78,12 +82,12 @@ public class UserServiceTest {
     @Test(expected = UsernameNotFoundException.class)
     public void havingUsername_thereIsNoUserWithGivenUsername_throwsException(){
         String testUsername = "some username";
-        UserDetails userDetails = userService.loadUserByUsername(testUsername);
+        userService.loadUserByUsername(testUsername);
     }
 
     /*@Test
     public void userRegisteredServicesIdsAreGeneratedCorrectly(){
-        String username = "login1";
+        String username = "maciek1";
         List<Long> userRegisteredServicesIds = Arrays.asList(6L, 7L, 8L, 9L, 10L);
         UserPrincipal userEntity = userService.loadUserByUsername(username);
         assertNotNull("User with specified id is present", userEntity);
