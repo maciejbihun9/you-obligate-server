@@ -1,5 +1,7 @@
 package com.maciejbihun.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -18,9 +20,6 @@ public class Role {
     @Column(name = "NAME")
     private String name;
 
-    @ManyToMany(mappedBy = "roles")
-    private Collection<User> users;
-
     @LazyCollection(LazyCollectionOption.FALSE)
     @ManyToMany
     @JoinTable(
@@ -29,6 +28,7 @@ public class Role {
                     name = "ROLE_ID", referencedColumnName = "ID"),
             inverseJoinColumns = @JoinColumn(
                     name = "PRIVILEGE_ID", referencedColumnName = "ID"))
+    //@JsonManagedReference
     private Collection<Privilege> privileges;
 
     public Collection<Privilege> getPrivileges() {
@@ -47,11 +47,4 @@ public class Role {
         this.name = name;
     }
 
-    public Collection<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(Collection<User> users) {
-        this.users = users;
-    }
 }

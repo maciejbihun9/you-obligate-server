@@ -1,5 +1,7 @@
 package com.maciejbihun.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 import java.util.Collection;
 
@@ -16,9 +18,6 @@ public class Privilege {
     @Column(name = "NAME")
     private String name;
 
-    @ManyToMany(mappedBy = "privileges")
-    private Collection<Role> roles;
-
     public Long getId() {
         return id;
     }
@@ -31,11 +30,4 @@ public class Privilege {
         this.name = name;
     }
 
-    public Collection<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Collection<Role> roles) {
-        this.roles = roles;
-    }
 }
