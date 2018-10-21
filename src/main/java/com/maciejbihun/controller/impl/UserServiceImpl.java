@@ -43,6 +43,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    public ResponseEntity<User> saveUserData(@RequestBody User user){
+        return new ResponseEntity<>(userRepository.save(user), HttpStatus.OK);
+    }
+
+    @Override
     @RequestMapping(value="/users", method = RequestMethod.GET)
     public UserPrincipal loadUserByUsername(@RequestParam("username") String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username);

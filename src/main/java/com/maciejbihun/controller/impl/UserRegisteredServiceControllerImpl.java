@@ -2,6 +2,7 @@ package com.maciejbihun.controller.impl;
 
 import com.maciejbihun.controller.UserRegisteredServiceController;
 import com.maciejbihun.controller.UserService;
+import com.maciejbihun.models.User;
 import com.maciejbihun.models.UserRegisteredService;
 import com.maciejbihun.models.UserRegisteredServiceCategory;
 import com.maciejbihun.repository.UserRegisteredServiceRepository;
@@ -36,8 +37,10 @@ public class UserRegisteredServiceControllerImpl implements UserRegisteredServic
     public UserRegisteredService saveUserRegisteredService(@RequestBody UserRegisteredService userRegisteredService) {
         UserDetails principal = (UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         userRegisteredService.setCreatedDateTime(LocalDateTime.now());
-        userRegisteredService.setUser(userService.loadUserByUsername(principal.getUsername()).getUser());
-        return userRegisteredServiceRepository.save(userRegisteredService);
+        User loggedUser = userService.loadUserByUsername(principal.getUsername()).getUser();
+        loggedUser.getUserRegisteredServices().add(userRegisteredService);
+        userService.saveUserData(loggedUser);
+        return userRegisteredService;
     }
 
     @Override

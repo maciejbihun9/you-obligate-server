@@ -16,9 +16,9 @@ public class UserRegisteredService {
     @SequenceGenerator(name = "USER_REGISTERED_SERVICE_SEQ", sequenceName = "USER_REGISTERED_SERVICE_SEQ", allocationSize = 1)
     private Long id;
 
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    /*@ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID", nullable = false)
-    User user;
+    User user;*/
 
     @Basic(optional = false)
     @Column(name = "SERVICE_NAME", updatable = true, length = 30)
@@ -50,13 +50,13 @@ public class UserRegisteredService {
         return id;
     }
 
-    public User getUser() {
+    /*public User getUser() {
         return user;
     }
 
     public void setUser(User user) {
         this.user = user;
-    }
+    }*/
 
     public LocalDateTime getCreatedDateTime() {
         return createdDateTime;
