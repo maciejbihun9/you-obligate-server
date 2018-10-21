@@ -14,7 +14,7 @@ public class UserRegisteredService {
     private Long id;
 
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    @JoinColumn(name = "ID", nullable = false)
+    @JoinColumn(name = "USER_ID", nullable = false)
     User user;
 
     @Basic(optional = false)
