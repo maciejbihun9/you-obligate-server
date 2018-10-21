@@ -1,13 +1,14 @@
 package com.maciejbihun.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.Collection;
 
+/**
+ * @author BHN
+ */
 @Entity
 public class Role {
 
@@ -28,7 +29,6 @@ public class Role {
                     name = "ROLE_ID", referencedColumnName = "ID"),
             inverseJoinColumns = @JoinColumn(
                     name = "PRIVILEGE_ID", referencedColumnName = "ID"))
-    //@JsonManagedReference
     private Collection<Privilege> privileges;
 
     public Collection<Privilege> getPrivileges() {

@@ -1,14 +1,13 @@
 package com.maciejbihun.repository;
 
 import com.maciejbihun.models.UserUnitsRequest;
-import jdk.nashorn.internal.ir.annotations.Reference;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.NoRepositoryBean;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
-// use that if you do not want to implement all methods in class that implements this interface.
-@NoRepositoryBean
+/**
+ * @author BHN
+ */
+@Repository
 public interface UserUnitsRequestRepository extends JpaRepository<UserUnitsRequest, Long> {
 
 }

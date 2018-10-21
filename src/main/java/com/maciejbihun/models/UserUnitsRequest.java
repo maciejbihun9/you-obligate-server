@@ -1,9 +1,11 @@
 package com.maciejbihun.models;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+/**
+ * @author BHN
+ */
 @Entity
 @Table(name = "UserUnitsRequest")
 public class UserUnitsRequest {

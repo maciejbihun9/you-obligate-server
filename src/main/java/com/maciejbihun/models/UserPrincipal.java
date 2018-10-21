@@ -5,6 +5,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
+/**
+ * @author BHN
+ */
 public class UserPrincipal implements UserDetails {
 
     private User user;

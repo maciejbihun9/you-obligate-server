@@ -17,6 +17,9 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * @author BHN
+ */
 @Component
 public class InitialDataLoader implements ApplicationListener<ContextRefreshedEvent> {
 

@@ -1,10 +1,7 @@
 package com.maciejbihun.controller;
 
 import com.maciejbihun.models.UserRegisteredService;
-import com.maciejbihun.models.UserRegisteredServiceCategory;
 import org.springframework.http.ResponseEntity;
-
-import java.util.List;
 
 /**
  * @author BHN

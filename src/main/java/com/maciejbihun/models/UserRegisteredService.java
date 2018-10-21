@@ -3,6 +3,9 @@ package com.maciejbihun.models;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+/**
+ * @author BHN
+ */
 @Entity
 @Table(name="UserRegisteredService")
 public class UserRegisteredService {

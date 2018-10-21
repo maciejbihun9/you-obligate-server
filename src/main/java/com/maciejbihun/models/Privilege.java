@@ -1,10 +1,10 @@
 package com.maciejbihun.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import javax.persistence.*;
-import java.util.Collection;
 
+/**
+ * @author BHN
+ */
 @Entity
 @Table(name = "Privilege")
 public class Privilege {

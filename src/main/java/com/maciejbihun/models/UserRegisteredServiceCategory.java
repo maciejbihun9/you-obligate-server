@@ -1,6 +1,7 @@
 package com.maciejbihun.models;
 
 /**
+ * @author BHN
  * Represents a category that a user is able to pick during registering a service.
  */
 public enum UserRegisteredServiceCategory {

@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.transaction.Transactional;
 import java.util.List;
 
+/**
+ * @author BHN
+ */
 @Controller
 @Transactional
 public class UserServiceImpl implements UserService, UserDetailsService {

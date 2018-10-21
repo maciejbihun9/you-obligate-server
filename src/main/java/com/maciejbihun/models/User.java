@@ -1,6 +1,5 @@
 package com.maciejbihun.models;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -9,6 +8,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * @author BHN
+ */
 @Entity
 @Table(name = "User_")
 public class User {

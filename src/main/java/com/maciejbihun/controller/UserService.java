@@ -6,6 +6,9 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
+/**
+ * @author BHN
+ */
 public interface UserService {
     ResponseEntity<List<User>> getAllUsers();
     ResponseEntity<User> createUserAccount(User user);

@@ -1,5 +1,8 @@
 package com.maciejbihun.models;
 
+/**
+ * @author BHN
+ */
 public enum UserUnitsRequestStatus {
 
     VERIFIED("VERIFIED"),
