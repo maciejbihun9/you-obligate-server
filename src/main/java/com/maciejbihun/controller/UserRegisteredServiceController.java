@@ -3,6 +3,8 @@ package com.maciejbihun.controller;
 import com.maciejbihun.models.UserRegisteredService;
 import org.springframework.http.ResponseEntity;
 
+import java.util.List;
+
 /**
  * @author BHN
  */
@@ -14,6 +16,6 @@ public interface UserRegisteredServiceController {
 
     ResponseEntity<String> deleteUserRegisteredService(Long id);
 
-    ResponseEntity<Object> findByUserRegisteredServiceCategory(String category);
+    ResponseEntity<List<UserRegisteredService>> getUserRegisteredServices(String category);
 
 }

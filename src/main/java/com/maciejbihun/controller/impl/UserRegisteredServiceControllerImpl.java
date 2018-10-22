@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,14 +65,17 @@ public class UserRegisteredServiceControllerImpl implements UserRegisteredServic
     @Override
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(value = "/user-registered-services", method = RequestMethod.GET)
-    public ResponseEntity<Object> findByUserRegisteredServiceCategory(@RequestParam("category") String category) {
+    public ResponseEntity<List<UserRegisteredService>> getUserRegisteredServices(@RequestParam("category") String category) {
         UserRegisteredServiceCategory userRegisteredServiceCategory;
+        if (category == null){
+            return new ResponseEntity<>(userRegisteredServiceRepository.findAll(), HttpStatus.FOUND);
+        }
         try {
             userRegisteredServiceCategory = UserRegisteredServiceCategory.valueOf(category);
             List<UserRegisteredService> byUserRegisteredServiceCategory = userRegisteredServiceRepository.findByUserRegisteredServiceCategory(userRegisteredServiceCategory);
             return new ResponseEntity<>(byUserRegisteredServiceCategory, HttpStatus.FOUND);
         } catch (IllegalArgumentException il){
-            return new ResponseEntity<>(category, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.NOT_FOUND);
         }
     }
 

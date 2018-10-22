@@ -2,23 +2,28 @@ package com.maciejbihun.controller;
 
 import com.maciejbihun.Application;
 import com.maciejbihun.HibernateConf;
+import com.maciejbihun.models.UserPrincipal;
 import com.maciejbihun.models.UserRegisteredService;
 import com.maciejbihun.models.UserRegisteredServiceCategory;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import org.springframework.security.access.AccessDeniedException;
+import sun.plugin.liveconnect.SecurityContextHelper;
+
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -33,6 +38,9 @@ public class UserRegisteredServiceControllerTest {
 
     @Autowired
     UserRegisteredServiceController userRegisteredServiceController;
+
+    @Autowired
+    UserService userService;
 
     @Before
     public void init(){
@@ -91,7 +99,7 @@ public class UserRegisteredServiceControllerTest {
     @WithMockUser(username="maciek1",roles={"USER"})
     public void shouldThrowAccessDeniedExceptionWhenAccessingWithSimpleUser(){
         String learningCategory = "LEARNING";
-        ResponseEntity<Object> byUserRegisteredServiceCategory = userRegisteredServiceController.findByUserRegisteredServiceCategory(learningCategory);
+        ResponseEntity<Object> byUserRegisteredServiceCategory = userRegisteredServiceController.getUserRegisteredServices(learningCategory);
         assertEquals(HttpStatus.FOUND, byUserRegisteredServiceCategory.getStatusCode());
     }
 
@@ -99,8 +107,19 @@ public class UserRegisteredServiceControllerTest {
     @WithMockUser(username="maciek1",roles={"ADMIN"})
     public void shouldFilterByUserRegisteredServiceLearningCategory(){
         String learningCategory = "LEARNING";
-        ResponseEntity<Object> byUserRegisteredServiceCategory = userRegisteredServiceController.findByUserRegisteredServiceCategory(learningCategory);
+        ResponseEntity<Object> byUserRegisteredServiceCategory = userRegisteredServiceController.getUserRegisteredServices(learningCategory);
         assertEquals(HttpStatus.FOUND, byUserRegisteredServiceCategory.getStatusCode());
+    }
+
+    @Test
+    @WithMockUser(username="maciek1",roles={"ADMIN"})
+    public void shouldReturnAllUserRegisteredServices(){
+        UserDetails principal = (UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        ResponseEntity<Object> userRegisteredServices = userRegisteredServiceController.getUserRegisteredServices(null);
+        assertEquals(150, ((List<UserRegisteredService>)userRegisteredServices.getBody()).size());
+
+        ResponseEntity<Object> userRegisteredServicesByLearning = userRegisteredServiceController.getUserRegisteredServices(UserRegisteredServiceCategory.LEARNING.getCategory());
+
     }
 
 }
