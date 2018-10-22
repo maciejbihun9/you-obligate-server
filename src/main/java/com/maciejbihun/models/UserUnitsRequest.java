@@ -1,5 +1,7 @@
 package com.maciejbihun.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -16,9 +18,10 @@ public class UserUnitsRequest {
     @SequenceGenerator(name = "USER_UNITS_REQUEST_SEQ", sequenceName = "USER_UNITS_REQUEST_SEQ", allocationSize = 1)
     private Long id;
 
+    @JsonBackReference
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_REGISTERED_SERVICE_ID")
-    private UserRegisteredService userRegisteredServiceId;
+    private UserRegisteredService userRegisteredService;
 
     @Basic(optional = false)
     @Column(name = "CREATED_DATE_TIME", nullable = false)
@@ -28,12 +31,12 @@ public class UserUnitsRequest {
         return id;
     }
 
-    public UserRegisteredService getUserRegisteredServiceId() {
-        return userRegisteredServiceId;
+    public UserRegisteredService getUserRegisteredService() {
+        return userRegisteredService;
     }
 
-    public void setUserRegisteredServiceId(UserRegisteredService userRegisteredServiceId) {
-        this.userRegisteredServiceId = userRegisteredServiceId;
+    public void setUserRegisteredService(UserRegisteredService userRegisteredService) {
+        this.userRegisteredService = userRegisteredService;
     }
 
     public LocalDateTime getCreatedDateTime() {

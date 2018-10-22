@@ -1,5 +1,6 @@
 package com.maciejbihun.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -40,6 +41,7 @@ public class User {
     /**
      * User won't have many UserRegisteredService, so it is ok to load them eagerly.
      */
+    @JsonManagedReference
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "USER_ID")
     private List<UserRegisteredService> userRegisteredServices = new ArrayList<>();

@@ -35,13 +35,12 @@ public class UserRegisteredServiceControllerImpl implements UserRegisteredServic
 
     @Override
     @RequestMapping(value = "/user-registered-services", method = RequestMethod.POST)
-    public UserRegisteredService saveUserRegisteredService(@RequestBody UserRegisteredService userRegisteredService) {
+    public ResponseEntity<UserRegisteredService> saveUserRegisteredService(@RequestBody UserRegisteredService userRegisteredService) {
         UserDetails principal = (UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         userRegisteredService.setCreatedDateTime(LocalDateTime.now());
         User loggedUser = userService.loadUserByUsername(principal.getUsername()).getUser();
-        loggedUser.getUserRegisteredServices().add(userRegisteredService);
-        userService.saveUserData(loggedUser);
-        return userRegisteredService;
+        userRegisteredService.setUser(loggedUser);
+        return new ResponseEntity<>(userRegisteredServiceRepository.save(userRegisteredService), HttpStatus.CREATED);
     }
 
     @Override

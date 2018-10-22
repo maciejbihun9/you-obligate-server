@@ -41,7 +41,7 @@ public class UserRegisteredServiceRepositoryTest {
 
         UserUnitsRequest userUnitsRequest = new UserUnitsRequest();
         userUnitsRequest.setCreatedDateTime(LocalDateTime.now());
-        userUnitsRequest.setUserRegisteredServiceId(userRegisteredService);
+        userUnitsRequest.setUserRegisteredService(userRegisteredService);
 
         userRegisteredService.setUserUnitsRequest(userUnitsRequest);
 
@@ -69,7 +69,7 @@ public class UserRegisteredServiceRepositoryTest {
             userRegisteredService.setCreatedDateTime(LocalDateTime.now());
 
             UserUnitsRequest userUnitsRequest = new UserUnitsRequest();
-            userUnitsRequest.setUserRegisteredServiceId(userRegisteredService);
+            userUnitsRequest.setUserRegisteredService(userRegisteredService);
             userUnitsRequest.setCreatedDateTime(LocalDateTime.now());
             userRegisteredService.setUserUnitsRequest(userUnitsRequest);
 

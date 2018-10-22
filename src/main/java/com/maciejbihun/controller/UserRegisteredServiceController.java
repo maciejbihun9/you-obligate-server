@@ -10,7 +10,7 @@ import java.util.List;
  */
 public interface UserRegisteredServiceController {
 
-    UserRegisteredService saveUserRegisteredService(UserRegisteredService userRegisteredService);
+    ResponseEntity<UserRegisteredService> saveUserRegisteredService(UserRegisteredService userRegisteredService);
 
     ResponseEntity<UserRegisteredService> getUserRegisteredService(Long id);
 
