@@ -93,12 +93,12 @@ public class HibernateConf {
         hibernateProperties.setProperty(
                 "hibernate.dialect", "org.hibernate.dialect.SQLServer2012Dialect");
         // hibernateProperties.setProperty("hibernate.show_sql", Boolean.TRUE.toString());
-        hibernateProperties.setProperty(
+        /*hibernateProperties.setProperty(
                 "hibernate.cache.use_query_cache", Boolean.TRUE.toString());
         hibernateProperties.setProperty(
                 "hibernate.cache.use_second_level_cache", Boolean.TRUE.toString());
         hibernateProperties.setProperty(
-                "hibernate.cache.region.factory_class", "org.hibernate.cache.ehcache.EhCacheRegionFactory");
+                "hibernate.cache.region.factory_class", "org.hibernate.cache.ehcache.EhCacheRegionFactory");*/
         return hibernateProperties;
     }
 
