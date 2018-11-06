@@ -62,6 +62,21 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
         user.setRoles(Arrays.asList(adminRole));
         userRepository.save(user);
 
+        // Add initial users
+        Role userRole = roleRepository.findByName("ROLE_USER");
+        int i = 0;
+        List<String> names = Arrays.asList("Maciej", "Jakub", "Marian",
+                "Jason", "Marlena", "Kevin", "Robert", "Malecki", "Zaneta", "Pawel");
+        List<String> usernames = Arrays.asList("maciej", "jakub", "marian",
+                "jason", "marlena", "kevin", "robert", "malecki", "zaneta", "pawel");
+        while(i < 10){
+            User testUser = new User();
+            testUser.setName(names.get(i));
+            testUser.setUsername(usernames.get(i));
+            testUser.setPassword(passwordEncoder.encode("maciek1"));
+            testUser.setRoles(Arrays.asList(userRole));
+            i++;
+        }
         alreadySetup = true;
     }
 
