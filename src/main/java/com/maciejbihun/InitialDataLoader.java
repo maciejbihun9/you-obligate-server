@@ -83,7 +83,7 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
         alreadySetup = true;
     }
 
-    private List<UserRegisteredService> createUserRegisteredServices(){
+    private List<UserRegisteredService> getUserRegisteredServices(){
         // people know better how to name his service,
         // people now better how to sell themselfs
         List<String> servicesNames = Arrays.asList("hairdresser", "dentist", "thai massage", "gym", "swimming pool",
@@ -100,6 +100,7 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
             userRegisteredService.setUserRegisteredServiceCategory(UserRegisteredServiceCategory.IT);
             i++;
         }
+        return userRegisteredServices;
     }
 
     private void setUsersRegisteredServices(){
