@@ -107,10 +107,6 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
         return userRegisteredServices;
     }
 
-    private void setUsersRegisteredServices(){
-        // it would be nice if everybody have different registered service
-    }
-
     @Transactional
     private Privilege createPrivilegeIfNotFound(String name) {
 
