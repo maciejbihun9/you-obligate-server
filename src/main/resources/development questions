@@ -2,4 +2,34 @@
 
  * create couple users - done,
 
- * create a method
+ * create a method for registering services:
+ - create that method in initial data loader class, because
+ this is like an initial data aspect,
+ - I won't have to load users and set the data to them later, but
+ I will be able to do that in the method class,
+
+ + maybe create a list of registered services and set them to users:
+ - create a separate method to create that list
+
+ * create a method for registering what a user might want - TODO:
+ - this will be in data init class, I will create separate method for that,
+ - those all gonna be initial data type methods,
+
+ * user creates a group in an init class:
+ + is this should be in an init class?
+ - not neccesserly, because I can get a user and then
+ set a group to that user,
+ - not every user has to have his own group, he might join this group in a method
+
+ + is it really matter where i put this code?:
+ - yes, because I want to test only realtions betwenn groups
+
+ + should I create more users? - yes
+
+ * append many users to one group:
+ - simulate relations between them,
+ - simulate creating obligations,
+ - synchronize entire process of adding money,
+ removing money from a group
+ - exchanging money between groups - see if this is really possible,
+ - define interest rate for a group

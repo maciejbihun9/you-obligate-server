@@ -1,8 +1,6 @@
 package com.maciejbihun;
 
-import com.maciejbihun.models.Privilege;
-import com.maciejbihun.models.Role;
-import com.maciejbihun.models.User;
+import com.maciejbihun.models.*;
 import com.maciejbihun.repository.PrivilegeRepository;
 import com.maciejbihun.repository.RoleRepository;
 import com.maciejbihun.repository.UserRepository;
@@ -13,6 +11,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -36,6 +36,8 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    private int amountOfUsers = 10;
 
     @Override
     @Transactional
@@ -69,7 +71,7 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
                 "Jason", "Marlena", "Kevin", "Robert", "Malecki", "Zaneta", "Pawel");
         List<String> usernames = Arrays.asList("maciej", "jakub", "marian",
                 "jason", "marlena", "kevin", "robert", "malecki", "zaneta", "pawel");
-        while(i < 10){
+        while(i < amountOfUsers){
             User testUser = new User();
             testUser.setName(names.get(i));
             testUser.setUsername(usernames.get(i));
@@ -79,6 +81,29 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
             i++;
         }
         alreadySetup = true;
+    }
+
+    private List<UserRegisteredService> createUserRegisteredServices(){
+        // people know better how to name his service,
+        // people now better how to sell themselfs
+        List<String> servicesNames = Arrays.asList("hairdresser", "dentist", "thai massage", "gym", "swimming pool",
+                                                    "transport", "beers in a bar", "nail painting", "mowing the lawn", "personal trainer");
+        List<UserRegisteredService> userRegisteredServices = new ArrayList<>(amountOfUsers);
+        int i = 0;
+        while(i < amountOfUsers){
+            // create registered service
+            UserRegisteredService userRegisteredService = new UserRegisteredService();
+            userRegisteredService.setCreatedDateTime(LocalDateTime.now());
+            userRegisteredService.setServiceName(servicesNames.get(i));
+            userRegisteredService.setServiceDescription("Any, because it is not important now");
+            userRegisteredService.setExperienceDescription("Experience desciption is also not really important");
+            userRegisteredService.setUserRegisteredServiceCategory(UserRegisteredServiceCategory.IT);
+            i++;
+        }
+    }
+
+    private void setUsersRegisteredServices(){
+        // it would be nice if everybody have different registered service
     }
 
     @Transactional
