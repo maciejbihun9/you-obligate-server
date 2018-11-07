@@ -71,12 +71,16 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
                 "Jason", "Marlena", "Kevin", "Robert", "Malecki", "Zaneta", "Pawel");
         List<String> usernames = Arrays.asList("maciej", "jakub", "marian",
                 "jason", "marlena", "kevin", "robert", "malecki", "zaneta", "pawel");
+
+        List<UserRegisteredService> userRegisteredServices = getUserRegisteredServices();
+
         while(i < amountOfUsers){
             User testUser = new User();
             testUser.setName(names.get(i));
             testUser.setUsername(usernames.get(i));
             testUser.setPassword(passwordEncoder.encode("maciek1"));
             testUser.setRoles(Arrays.asList(userRole));
+            testUser.setUserRegisteredServices(Arrays.asList(userRegisteredServices.get(i)));
             userRepository.save(testUser);
             i++;
         }
