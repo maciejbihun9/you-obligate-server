@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author BHN
@@ -40,6 +42,10 @@ public class UserRegisteredService {
     @Basic(optional = false)
     @Column(name = "SERVICE_EXPERIENCE_DESCRIPTION", updatable = true, length = 100)
     private String experienceDescription;
+
+    // this collection is for searching purposes
+    @ElementCollection
+    private List<String> registeredServiceTerms = new ArrayList<>();
 
     @JsonManagedReference
     @Basic(optional = true)
@@ -109,6 +115,10 @@ public class UserRegisteredService {
 
     public void setExperienceDescription(String experienceDescription) {
         this.experienceDescription = experienceDescription;
+    }
+
+    public List<String> getRegisteredServiceTerms() {
+        return registeredServiceTerms;
     }
 
     @Override

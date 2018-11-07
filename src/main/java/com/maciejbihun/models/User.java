@@ -38,6 +38,9 @@ public class User {
     @Column(name = "PASSWORD", updatable = true, length = 60 /* length 60 for BCrypt */)
     private String password;
 
+    @ElementCollection
+    private List<String> expectedServicesTerms = new ArrayList<>();
+
     /**
      * User won't have many UserRegisteredService, so it is ok to load them eagerly.
      */
@@ -103,5 +106,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public List<String> getExpectedServicesTerms() {
+        return expectedServicesTerms;
     }
 }
