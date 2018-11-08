@@ -6,7 +6,9 @@ import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Entity
 @Table(name="ObligationGroup")
@@ -19,7 +21,8 @@ public class ObligationGroup {
     Long id;
 
     @Basic(optional = false)
-    @Column(name = "GROUP_OWNER", nullable = false, updatable = true)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "GROUP_OWNER_ID", nullable = false, updatable = true)
     private User owner;
 
     @Basic(optional = false)
@@ -41,20 +44,75 @@ public class ObligationGroup {
 
     @Basic(optional = false)
     @Column(name = "CREATED_DATE_TIME", nullable = false, updatable = true)
-    private LocalDateTime createdDateTime;
+    private LocalDateTime createdDateTime = LocalDateTime.now();
 
     @Basic(optional = false)
     @Column(name = "AMOUNT_OF_CREATED_MONEY", nullable = false, updatable = true)
-    private Long amountOfCreatedMoney = 0L;
+    private AtomicLong amountOfCreatedMoney = new AtomicLong(0);
 
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @ManyToMany
-    @JoinTable(
-            name = "obligationGroups_registeredServices",
-            joinColumns = @JoinColumn(
-                    name = "OBLIGATION_GROUP_ID", referencedColumnName = "ID"),
-            inverseJoinColumns = @JoinColumn(
-                    name = "USER_REGISTERED_SERVICE_ID", referencedColumnName = "ID"))
-    private List<UserRegisteredService> registeredServices;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "USER_GROUP_OBLIGATION_STRATEGY_FOR_REGISTERED_SERVICE_ID")
+    private List<UserGroupObligationStrategyForRegisteredService> userGroupObligationStrategyForRegisteredServices = new ArrayList<>();
+
+    public User getOwner() {
+        return owner;
+    }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getMoneyName() {
+        return moneyName;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public List<UserGroupObligationStrategyForRegisteredService> getUserGroupObligationStrategyForRegisteredServices() {
+        return userGroupObligationStrategyForRegisteredServices;
+    }
+
+    public void setMoneyName(String moneyName) {
+        this.moneyName = moneyName;
+    }
+
+    public String getMoneyShortcutName() {
+        return moneyShortcutName;
+    }
+
+    public void setMoneyShortcutName(String moneyShortcutName) {
+        this.moneyShortcutName = moneyShortcutName;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public LocalDateTime getCreatedDateTime() {
+        return createdDateTime;
+    }
+
+    public Long getAmountOfCreatedMoney() {
+        return amountOfCreatedMoney.get();
+    }
+
+    public Long createMoney(Long moneyToCreate){
+        return this.amountOfCreatedMoney.addAndGet(moneyToCreate);
+    }
+
 
 }

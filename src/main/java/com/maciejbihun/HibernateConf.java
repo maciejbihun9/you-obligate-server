@@ -89,7 +89,7 @@ public class HibernateConf {
     private Properties hibernateProperties() {
         Properties hibernateProperties = new Properties();
         hibernateProperties.setProperty(
-                "hibernate.hbm2ddl.auto", "update");
+                "hibernate.hbm2ddl.auto", "create");
         hibernateProperties.setProperty(
                 "hibernate.dialect", "org.hibernate.dialect.SQLServer2012Dialect");
         // hibernateProperties.setProperty("hibernate.show_sql", Boolean.TRUE.toString());

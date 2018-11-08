@@ -23,7 +23,7 @@ import java.util.List;
 @Component
 public class InitialDataLoader implements ApplicationListener<ContextRefreshedEvent> {
 
-    boolean alreadySetup = true;
+    boolean alreadySetup = false;
 
     @Autowired
     private UserRepository userRepository;
@@ -77,10 +77,13 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
         while(i < amountOfUsers){
             User testUser = new User();
             testUser.setName(names.get(i));
+            testUser.setSurname("soe surname " + i);
             testUser.setUsername(usernames.get(i));
             testUser.setPassword(passwordEncoder.encode("maciek1"));
             testUser.setRoles(Arrays.asList(userRole));
-            testUser.setUserRegisteredServices(Arrays.asList(userRegisteredServices.get(i)));
+            UserRegisteredService userRegisteredService = userRegisteredServices.get(i);
+            userRegisteredService.setUser(testUser);
+            testUser.setUserRegisteredServices(Arrays.asList(userRegisteredService));
             userRepository.save(testUser);
             i++;
         }
@@ -102,6 +105,7 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
             userRegisteredService.setServiceDescription("Any, because it is not important now");
             userRegisteredService.setExperienceDescription("Experience desciption is also not really important");
             userRegisteredService.setUserRegisteredServiceCategory(UserRegisteredServiceCategory.IT);
+            userRegisteredServices.add(userRegisteredService);
             i++;
         }
         return userRegisteredServices;

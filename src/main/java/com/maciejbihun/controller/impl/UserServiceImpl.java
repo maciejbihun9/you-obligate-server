@@ -2,6 +2,7 @@ package com.maciejbihun.controller.impl;
 
 import com.maciejbihun.controller.UserService;
 import com.maciejbihun.models.User;
+import com.maciejbihun.models.UserGroupObligationStrategyForRegisteredService;
 import com.maciejbihun.models.UserPrincipal;
 import com.maciejbihun.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> allUsers = userRepository.findAll();
+        User user = allUsers.get(1);
+        List<UserGroupObligationStrategyForRegisteredService> userGroupObligationStrategyForRegisteredServices =
+                user.getUserRegisteredServices().get(0).getUserGroupObligationStrategyForRegisteredServices();
         return new ResponseEntity<>(allUsers, HttpStatus.OK);
     }
 
@@ -51,6 +55,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @RequestMapping(value="/users", method = RequestMethod.GET)
     public UserPrincipal loadUserByUsername(@RequestParam("username") String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username);
+        List<UserGroupObligationStrategyForRegisteredService> userGroupObligationStrategyForRegisteredServices =
+                user.getUserRegisteredServices().get(0).getUserGroupObligationStrategyForRegisteredServices();
         if (user == null) {
             throw new UsernameNotFoundException(username);
         }

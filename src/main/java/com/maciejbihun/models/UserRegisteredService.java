@@ -53,9 +53,18 @@ public class UserRegisteredService {
             fetch = FetchType.LAZY)
     private UserUnitsRequest userUnitsRequest;
 
+    @JsonManagedReference
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER) // fetch type is EAGER, because a user won't have many of UserGroupObligationStrategyForRegisteredService for one UserRegisteredService.
+    @JoinColumn(name = "USER_REGISTERED_SERVICE_ID")
+    private List<UserGroupObligationStrategyForRegisteredService> userGroupObligationStrategyForRegisteredServices = new ArrayList<>();
+
     @Basic(optional = false)
     @Column(name = "CREATED_DATE_TIME", nullable = false)
     private LocalDateTime createdDateTime;
+
+    public List<UserGroupObligationStrategyForRegisteredService> getUserGroupObligationStrategyForRegisteredServices() {
+        return userGroupObligationStrategyForRegisteredServices;
+    }
 
     public Long getId() {
         return id;
