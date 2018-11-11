@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
  * Represents an obligation between a user and a group.
  */
 @Entity
-@Table(name = "User_")
+@Table(name = "Bond")
 public class Bond {
 
     @Id
@@ -18,6 +18,10 @@ public class Bond {
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "BOND_SEQ")
     @SequenceGenerator(name = "BOND_SEQ", sequenceName = "BOND_SEQ", allocationSize = 1)
     private Long id;
+
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @JoinColumn(name = "OBLIGATION_GROUP_ACCOUNT_ID", nullable = false)
+    private ObligationGroupAccount obligationGroupAccount;
 
     @Basic(optional = false)
     @Column(name = "AMOUNT_OF_UNITS_TO_PAY", updatable = true)
