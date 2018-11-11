@@ -19,6 +19,14 @@
  - define interest rate for a group,
 
  * add many users to one group:
- - read about data transfer object base transaction object - done,
- - design create obligation group strategy in the right way,
- that will be ok for other users
+ - design create obligation group strategy in the right way, that will be ok for other users,
+ - at the beginning users have an initial value of variables that is default set by an admin,
+ - if I set RegisteredService to an admin then I will be able to set obligation strategy
+ so admin will have a lot of work, because of setting initial values for users,
+ - but he will, because it will be fun to do it, I think this will be fun
+ - having that group of people with obligation strategy they will be able to create obligations easly,
+
+ * co się dzieje po wygaśnięciu obligacji?:
+
+ * obligation group sounds better?:
+ - because users obligates that they will pay those bonds,

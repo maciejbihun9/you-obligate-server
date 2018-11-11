@@ -93,7 +93,7 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
     private List<UserRegisteredService> getUserRegisteredServices(){
         // people know better how to name his service,
         // people now better how to sell themselfs
-        List<String> servicesNames = Arrays.asList("hairdresser", "dentist", "thai massage", "gym", "swimming pool",
+        List<String> servicesNames = Arrays.asList("dentist", "hairdresser", "thai massage", "gym", "swimming pool",
                                                     "transport", "beers in a bar", "nail painting", "mowing the lawn", "personal trainer");
         List<UserRegisteredService> userRegisteredServices = new ArrayList<>(amountOfUsers);
         int i = 0;

@@ -3,6 +3,9 @@ package com.maciejbihun;
 import com.maciejbihun.controller.ObligationGroupService;
 import com.maciejbihun.controller.UserGroupObligationStrategyForRegisteredServiceController;
 import com.maciejbihun.controller.UserService;
+import com.maciejbihun.dto.ObligationGroupDto;
+import com.maciejbihun.dto.UserGroupObligationStrategyForRegisteredServiceDto;
+import com.maciejbihun.dto.UserRegisteredServiceDto;
 import com.maciejbihun.models.*;
 import org.hibernate.Hibernate;
 import org.junit.Test;
@@ -49,20 +52,36 @@ public class ApplicationWorkflowTest {
         // obligation group should be saved first
         obligationGroup = obligationGroupService.saveObligationGroup(obligationGroup);
 
-        String username = allUsers.get(1).getUsername();
+        User user = allUsers.get(1);
+
+        UserGroupObligationStrategyForRegisteredServiceDto obligationStrategyDto =
+                new UserGroupObligationStrategyForRegisteredServiceDto();
+        obligationStrategyDto.setAlreadyCreatedAmountOfMoney(new BigDecimal("0.00"));
+        obligationStrategyDto.setAlreadyObligatedUnitsOfWork(0);
+        obligationStrategyDto.setInterestRate(new BigDecimal("0.00"));
+        obligationStrategyDto.setAmountOfUnitsEverPaid(0);
+        obligationStrategyDto.setMaxAmountOfUnitsForObligation(100);
+
+        ObligationGroupDto obligationGroupDto = new ObligationGroupDto();
+        obligationGroupDto.setId(obligationGroup.getId());
+        obligationStrategyDto.setObligationGroupDto(obligationGroupDto);
+
+        UserRegisteredServiceDto userRegisteredServiceDto = new UserRegisteredServiceDto();
+        userRegisteredServiceDto.setId(user.getUserRegisteredServices().get(0).getId());
+        obligationStrategyDto.setUserRegisteredServiceDto(userRegisteredServiceDto);
+
         UserGroupObligationStrategyForRegisteredService obligationStrategy =
-                userGroupObligationStrategyForRegisteredServiceController.createObligationStrategy(username, obligationGroup);
+                userGroupObligationStrategyForRegisteredServiceController.createObligationStrategy(obligationStrategyDto);
 
-        // update user to save his registered service and strategy in the same time
+        // create bond object between a user and group:
+        Bond dentistBond = new Bond();
 
-        ResponseEntity<List<User>> allUsers1 = userService.getAllUsers();
-        List<User> usersAfterChanges = allUsers1.getBody();
-        User exampleUserWithSavedData = usersAfterChanges.get(1);
-        System.out.println("Results");
-        // add a registered service to a group
-        /*allUsers.forEach(user -> {
-            obligationGroup.getRegisteredServices().add(user.getUserRegisteredServices().get(0));
-        });*/
+
+        // create obligation strategy for each registered service
+        // define an obligation strategy for each registered service itself
+        // create an obligation strategy for each user registered service without an admin
+
+        // allow a user to obligate
 
     }
 

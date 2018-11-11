@@ -1,6 +1,7 @@
 package com.maciejbihun.controller.impl;
 
 import com.maciejbihun.controller.UserService;
+import com.maciejbihun.dto.UserDto;
 import com.maciejbihun.models.User;
 import com.maciejbihun.models.UserGroupObligationStrategyForRegisteredService;
 import com.maciejbihun.models.UserPrincipal;
@@ -41,9 +42,23 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     @RequestMapping(value="/users", method = RequestMethod.POST)
-    public ResponseEntity<User> createUserAccount(@RequestBody User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+    public ResponseEntity<User> createUserAccount(@RequestBody UserDto userDto) {
+        User user = new User();
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        user.setUsername(userDto.getUsername());
+        user.setName(userDto.getName());
+        user.setSurname(userDto.getSurname());
         return new ResponseEntity<>(userRepository.save(user), HttpStatus.CREATED);
+    }
+
+    @Override
+    public ResponseEntity<User> saveUserData(@RequestBody UserDto userDto){
+        User user = new User();
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        user.setUsername(userDto.getUsername());
+        user.setName(userDto.getName());
+        user.setSurname(userDto.getSurname());
+        return new ResponseEntity<>(userRepository.save(user), HttpStatus.OK);
     }
 
     @Override
