@@ -70,8 +70,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @RequestMapping(value="/users", method = RequestMethod.GET)
     public UserPrincipal loadUserByUsername(@RequestParam("username") String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username);
-        List<UserGroupObligationStrategyForRegisteredService> userGroupObligationStrategyForRegisteredServices =
-                user.getUserRegisteredServices().get(0).getUserGroupObligationStrategyForRegisteredServices();
         if (user == null) {
             throw new UsernameNotFoundException(username);
         }

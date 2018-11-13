@@ -92,7 +92,7 @@ public class HibernateConf {
                 "hibernate.hbm2ddl.auto", "create");
         hibernateProperties.setProperty(
                 "hibernate.dialect", "org.hibernate.dialect.SQLServer2012Dialect");
-        // hibernateProperties.setProperty("hibernate.show_sql", Boolean.TRUE.toString());
+        hibernateProperties.setProperty("hibernate.show_sql", Boolean.TRUE.toString());
         /*hibernateProperties.setProperty(
                 "hibernate.cache.use_query_cache", Boolean.TRUE.toString());
         hibernateProperties.setProperty(
@@ -104,6 +104,7 @@ public class HibernateConf {
 
     private Properties testHibernateProperties() {
         Properties hibernateProperties = new Properties();
+        hibernateProperties.setProperty("hibernate.show_sql", Boolean.TRUE.toString());
         hibernateProperties.setProperty(
                 "hibernate.hbm2ddl.auto", "create-drop");
         hibernateProperties.setProperty(

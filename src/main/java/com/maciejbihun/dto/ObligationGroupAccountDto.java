@@ -13,71 +13,20 @@ public class ObligationGroupAccountDto {
 
     private Long id;
 
-    private User user;
+    private String username;
 
-    private BigDecimal accountBalance = new BigDecimal("0.00");
+    private Long obligationGroupId;
 
-    private ObligationGroup obligationGroup;
-
-    private LocalDateTime createdDateTime = LocalDateTime.now();
-
-    private List<Bond> bonds;
-
-    private List<UserGroupObligationStrategyForRegisteredService> userObligationStrategies;
-
-    public Long getId() {
-        return id;
+    public ObligationGroupAccountDto(String username, Long obligationGroupId) {
+        this.username = username;
+        this.obligationGroupId = obligationGroupId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public String getUsername() {
+        return username;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public BigDecimal getAccountBalance() {
-        return accountBalance;
-    }
-
-    public void setAccountBalance(BigDecimal accountBalance) {
-        this.accountBalance = accountBalance;
-    }
-
-    public ObligationGroup getObligationGroup() {
-        return obligationGroup;
-    }
-
-    public void setObligationGroup(ObligationGroup obligationGroup) {
-        this.obligationGroup = obligationGroup;
-    }
-
-    public LocalDateTime getCreatedDateTime() {
-        return createdDateTime;
-    }
-
-    public void setCreatedDateTime(LocalDateTime createdDateTime) {
-        this.createdDateTime = createdDateTime;
-    }
-
-    public List<Bond> getBonds() {
-        return bonds;
-    }
-
-    public void setBonds(List<Bond> bonds) {
-        this.bonds = bonds;
-    }
-
-    public List<UserGroupObligationStrategyForRegisteredService> getUserObligationStrategies() {
-        return userObligationStrategies;
-    }
-
-    public void setUserObligationStrategies(List<UserGroupObligationStrategyForRegisteredService> userObligationStrategies) {
-        this.userObligationStrategies = userObligationStrategies;
+    public Long getObligationGroupId() {
+        return obligationGroupId;
     }
 }

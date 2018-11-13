@@ -1,7 +1,10 @@
 package com.maciejbihun.models;
 
+import com.maciejbihun.datatype.UnitOfWork;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.logging.Logger;
 
 /**
  * @author Maciej Bihun
@@ -9,6 +12,12 @@ import java.math.BigDecimal;
 @Entity
 @Table(name="UserGroupObligationStrategyForRegisteredService")
 public class UserGroupObligationStrategyForRegisteredService {
+
+    private static final Logger LOGGER = Logger.getLogger(UserGroupObligationStrategyForRegisteredService.class.getName());
+
+    private static final String NOT_ACCEPTED_AMOUNT_OF_UNITS_PER_BOND = "Minimal amount of units per bond should be grater than 1";
+
+    private static final String NOT_ACCEPTED_INTEREST_RATE_VALUE = "Interest rate should be grater than 0.00";
 
     @Id
     @Column(name = "ID")
@@ -53,6 +62,11 @@ public class UserGroupObligationStrategyForRegisteredService {
      */
     private BigDecimal tooBigDebtFine = new BigDecimal("0");
 
+    /**
+     * Each bond has to have minimal amount of units. The default value is 1.
+     */
+    private int minAmountOfUnitsPerBond = 1;
+
     private int debtUnitsLimit;
 
     /**
@@ -69,6 +83,11 @@ public class UserGroupObligationStrategyForRegisteredService {
     }
 
     public void setInterestRate(BigDecimal interestRate) {
+        int compareResult = new BigDecimal("0.00").compareTo(interestRate);
+        if (compareResult >= 1){
+            // picked interestRate was lower than 0.00 which is not acceptable
+            throw new IllegalArgumentException(NOT_ACCEPTED_INTEREST_RATE_VALUE);
+        }
         this.interestRate = interestRate;
     }
 
@@ -151,4 +170,17 @@ public class UserGroupObligationStrategyForRegisteredService {
     public void setUserRegisteredService(UserRegisteredService userRegisteredService) {
         this.userRegisteredService = userRegisteredService;
     }
+
+    public void setMinAmountOfUnitsPerBond(int minAmountOfUnitsPerBond) throws IllegalArgumentException{
+        if (minAmountOfUnitsPerBond < 1){
+            throw new IllegalArgumentException(NOT_ACCEPTED_AMOUNT_OF_UNITS_PER_BOND);
+        } else {
+            this.minAmountOfUnitsPerBond = minAmountOfUnitsPerBond;
+        }
+    }
+
+    public int getMinAmountOfUnitsPerBond(){
+        return this.minAmountOfUnitsPerBond;
+    }
+
 }

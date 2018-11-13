@@ -38,6 +38,9 @@ public class User {
     @Column(name = "PASSWORD", updatable = true, length = 60 /* length 60 for BCrypt */)
     private String password;
 
+    /**
+     * A list of words that describe services the user would like to see in the group in which he obliges
+     */
     @ElementCollection
     private List<String> expectedServicesTerms = new ArrayList<>();
 
@@ -45,9 +48,13 @@ public class User {
      * User won't have many UserRegisteredService, so it is ok to load them eagerly.
      */
     @JsonManagedReference
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID")
     private List<UserRegisteredService> userRegisteredServices = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "OBLIGATION_GROUP_ACCOUNT_ID")
+    private List<ObligationGroupAccount> obligationGroupAccounts = new ArrayList<>();
 
     // LazyCollection is an annotation to omit exception with fetching multiple bags at the same time
     @LazyCollection(LazyCollectionOption.FALSE)
@@ -74,6 +81,10 @@ public class User {
 
     public void setUserRegisteredServices(List<UserRegisteredService> userRegisteredServices) {
         this.userRegisteredServices = userRegisteredServices;
+    }
+
+    public List<ObligationGroupAccount> getObligationGroupAccounts() {
+        return obligationGroupAccounts;
     }
 
     public String getName() {

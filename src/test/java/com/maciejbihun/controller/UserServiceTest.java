@@ -2,20 +2,18 @@ package com.maciejbihun.controller;
 
 import com.maciejbihun.Application;
 import com.maciejbihun.HibernateConf;
+import com.maciejbihun.dto.UserDto;
 import com.maciejbihun.models.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -68,14 +66,14 @@ public class UserServiceTest {
 
     @Test
     public void userPasswordShouldHave60OfLength(){
-        User user = new User();
-        user.setName("Maciej");
-        user.setSurname("Bihun");
-        user.setPassword("maciek");
+        UserDto userDto = new UserDto();
+        userDto.setName("Maciej");
+        userDto.setSurname("Bihun");
+        userDto.setPassword("maciek");
         // make sure that this username is different than in the InitialDataLoader (maciek1) class, because
         // you will end up with ConstraintViolationException
-        user.setUsername("maciek");
-        ResponseEntity<User> userAccount = userService.createUserAccount(user);
+        userDto.setUsername("maciek");
+        ResponseEntity<User> userAccount = userService.createUserAccount(userDto);
         assertEquals(60 ,userAccount.getBody().getPassword().length());
     }
 

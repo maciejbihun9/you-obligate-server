@@ -1,4 +1,4 @@
-package com.maciejbihun.models;
+package com.maciejbihun.datatype;
 
 public enum UnitOfWork {
 

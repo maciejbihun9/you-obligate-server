@@ -1,6 +1,6 @@
 package com.maciejbihun.dto;
 
-import com.maciejbihun.models.UnitOfWork;
+import com.maciejbihun.datatype.UnitOfWork;
 
 import java.math.BigDecimal;
 

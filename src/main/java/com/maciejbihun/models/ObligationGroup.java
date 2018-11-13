@@ -54,6 +54,10 @@ public class ObligationGroup {
     @JoinColumn(name = "USER_GROUP_OBLIGATION_STRATEGY_FOR_REGISTERED_SERVICE_ID")
     private List<UserGroupObligationStrategyForRegisteredService> userGroupObligationStrategyForRegisteredServices = new ArrayList<>();
 
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "OBLIGATION_GROUP_ACCOUNT_ID")
+    private List<ObligationGroupAccount> obligationGroupAccounts = new ArrayList<>();
+
     public User getOwner() {
         return owner;
     }
@@ -80,6 +84,10 @@ public class ObligationGroup {
 
     public List<UserGroupObligationStrategyForRegisteredService> getUserGroupObligationStrategyForRegisteredServices() {
         return userGroupObligationStrategyForRegisteredServices;
+    }
+
+    public List<ObligationGroupAccount> getObligationGroupAccounts() {
+        return obligationGroupAccounts;
     }
 
     public void setMoneyName(String moneyName) {

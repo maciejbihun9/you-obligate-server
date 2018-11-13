@@ -1,11 +1,7 @@
 package com.maciejbihun;
 
-import com.maciejbihun.controller.ObligationGroupService;
-import com.maciejbihun.controller.UserGroupObligationStrategyForRegisteredServiceController;
-import com.maciejbihun.controller.UserService;
-import com.maciejbihun.dto.ObligationGroupDto;
-import com.maciejbihun.dto.UserGroupObligationStrategyForRegisteredServiceDto;
-import com.maciejbihun.dto.UserRegisteredServiceDto;
+import com.maciejbihun.controller.*;
+import com.maciejbihun.dto.*;
 import com.maciejbihun.models.*;
 import org.hibernate.Hibernate;
 import org.junit.Test;
@@ -34,7 +30,14 @@ public class ApplicationWorkflowTest {
     ObligationGroupService obligationGroupService;
 
     @Autowired
+    BondService bondService;
+
+    @Autowired
     UserGroupObligationStrategyForRegisteredServiceController userGroupObligationStrategyForRegisteredServiceController;
+
+    @Autowired
+    ObligationGroupAccountService obligationGroupAccountService;
+
 
     @Test
     public void testApplicationWorkflow(){
@@ -54,6 +57,9 @@ public class ApplicationWorkflowTest {
 
         User user = allUsers.get(1);
 
+        ObligationGroupAccountDto obligationGroupAccountDto = new ObligationGroupAccountDto(user.getUsername(), obligationGroup.getId());
+        ResponseEntity<ObligationGroupAccount> userObligationGroupAccount = obligationGroupAccountService.createGroupAccount(obligationGroupAccountDto);
+
         UserGroupObligationStrategyForRegisteredServiceDto obligationStrategyDto =
                 new UserGroupObligationStrategyForRegisteredServiceDto();
         obligationStrategyDto.setAlreadyCreatedAmountOfMoney(new BigDecimal("0.00"));
@@ -61,6 +67,7 @@ public class ApplicationWorkflowTest {
         obligationStrategyDto.setInterestRate(new BigDecimal("0.00"));
         obligationStrategyDto.setAmountOfUnitsEverPaid(0);
         obligationStrategyDto.setMaxAmountOfUnitsForObligation(100);
+        obligationStrategyDto.setUnitOfWorkCost(new BigDecimal("100.00"));
 
         ObligationGroupDto obligationGroupDto = new ObligationGroupDto();
         obligationGroupDto.setId(obligationGroup.getId());
@@ -74,8 +81,9 @@ public class ApplicationWorkflowTest {
                 userGroupObligationStrategyForRegisteredServiceController.createObligationStrategy(obligationStrategyDto);
 
         // create bond object between a user and group:
-        Bond dentistBond = new Bond();
-
+        BondDto dentistBondDto = new BondDto(100, obligationStrategy.getId(), userObligationGroupAccount.getBody().getId());
+        dentistBondDto.setAmountOfUnitsToPay(100);
+        bondService.save(dentistBondDto);
 
         // create obligation strategy for each registered service
         // define an obligation strategy for each registered service itself
