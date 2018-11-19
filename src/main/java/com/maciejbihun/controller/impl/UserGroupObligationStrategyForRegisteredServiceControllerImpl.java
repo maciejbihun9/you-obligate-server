@@ -53,7 +53,7 @@ public class UserGroupObligationStrategyForRegisteredServiceControllerImpl imple
 
         Session session = entityManager.unwrap(Session.class);
 
-        // A user will pass an id of a obligation group and registered service to this method so, there is no need create security for those next two lines.
+        // A user will pass an id of an obligation group and registered service to this method so, there is no need to create security for those next two lines.
         ObligationGroup obligationGroup = session.load(ObligationGroup.class, userGroupObligationStrategyForRegisteredServiceDto.getObligationGroupDto().getId());
 
         UserRegisteredService userRegisteredService = session.load(UserRegisteredService.class, userGroupObligationStrategyForRegisteredServiceDto.getUserRegisteredServiceDto().getId());
@@ -66,7 +66,8 @@ public class UserGroupObligationStrategyForRegisteredServiceControllerImpl imple
                         obligationGroup,
                         userGroupObligationStrategyForRegisteredServiceDto.getUnitOfWork(),
                         userGroupObligationStrategyForRegisteredServiceDto.getUnitOfWorkCost(),
-                        userGroupObligationStrategyForRegisteredServiceDto.getInterestRate()
+                        userGroupObligationStrategyForRegisteredServiceDto.getInterestRate(),
+                        userGroupObligationStrategyForRegisteredServiceDto.getDebtUnitsLimit()
                 );
                 return new ResponseEntity<>(obligationStrategyRepository.save(obligationStrategy), HttpStatus.CREATED);
             } catch (Exception e){

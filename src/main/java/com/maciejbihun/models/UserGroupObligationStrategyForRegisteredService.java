@@ -20,12 +20,13 @@ public class UserGroupObligationStrategyForRegisteredService {
     public UserGroupObligationStrategyForRegisteredService(){}
 
     public UserGroupObligationStrategyForRegisteredService(UserRegisteredService userRegisteredService, ObligationGroup obligationGroup,
-                                                           UnitOfWork unitOfWork, BigDecimal unitOfWorkCost, BigDecimal interestRate) {
+                                                           UnitOfWork unitOfWork, BigDecimal unitOfWorkCost, BigDecimal interestRate, Integer debtUnitsLimit) {
         this.userRegisteredService = userRegisteredService;
         this.obligationGroup = obligationGroup;
         this.unitOfWork = unitOfWork;
         this.unitOfWorkCost = unitOfWorkCost;
         this.interestRate = interestRate;
+        this.debtUnitsLimit = debtUnitsLimit;
     }
 
     @Id
