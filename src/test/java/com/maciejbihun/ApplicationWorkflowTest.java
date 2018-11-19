@@ -74,7 +74,7 @@ public class ApplicationWorkflowTest {
         // create bond object between a user and group:
         BondDto dentistBondDto = new BondDto(100, obligationStrategy.getId(), userObligationGroupAccount.getBody().getId());
         dentistBondDto.setAmountOfUnitsToPay(100);
-        bondService.createBondInObligationGroup(dentistBondDto);
+        ResponseEntity<Bond> bondInObligationGroup = bondService.createBondInObligationGroup(dentistBondDto);
         System.out.println();
 
         // create obligation strategy for each registered service

@@ -3,7 +3,6 @@ package com.maciejbihun.controller.impl;
 import com.maciejbihun.controller.UserAccountInObligationGroupService;
 import com.maciejbihun.controller.UserService;
 import com.maciejbihun.dto.ObligationGroupAccountDto;
-import com.maciejbihun.models.Bond;
 import com.maciejbihun.models.ObligationGroup;
 import com.maciejbihun.models.UserAccountInObligationGroup;
 import com.maciejbihun.models.UserPrincipal;
@@ -20,7 +19,6 @@ import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * @author Maciej Bihun
@@ -57,12 +55,22 @@ public class UserAccountInObligationGroupServiceImpl implements UserAccountInObl
         return new ResponseEntity<>(userAccountInObligationGroup, HttpStatus.CREATED);
     }
 
+    /**
+     * Returns UserAccountInObligationGroup with eagerly initialized bonds list.
+     * @param userAccountInObligationGroupId
+     * @return UserAccountInObligationGroup entity with initialized bonds
+     */
     @Override
     public ResponseEntity<UserAccountInObligationGroup> getUserAccountInObligationGroupWithBonds(Long userAccountInObligationGroupId) {
         EntityGraph<?> graph = entityManager.getEntityGraph("graph.accountBonds");
         HashMap<String, Object> properties = new HashMap<>();
         properties.put("javax.persistence.fetchgraph", graph);
         UserAccountInObligationGroup userAccountInObligationGroup = entityManager.find(UserAccountInObligationGroup.class, userAccountInObligationGroupId, properties);
+        if (userAccountInObligationGroup == null){
+            MultiValueMap <String, String> multiValueMap = new LinkedMultiValueMap();
+            multiValueMap.set("info", String.format("UserAccountInObligationGroup with id: %s does not exist", userAccountInObligationGroupId));
+            return new ResponseEntity<>(multiValueMap, HttpStatus.NOT_FOUND);
+        }
         return new ResponseEntity<>(userAccountInObligationGroup, HttpStatus.OK);
     }
 }
