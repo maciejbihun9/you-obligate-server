@@ -76,35 +76,35 @@ public class UserGroupObligationStrategyForRegisteredService {
      */
     @Basic(optional = false)
     @Column(name = "ALREADY_OBLIGATED_UNITS_OF_WORK", nullable = false, updatable = true)
-    private int alreadyObligatedUnitsOfWork = 0;
+    private Integer alreadyObligatedUnitsOfWork = 0;
 
     /**
      * Represents amount of units that user already has paid in given group.
      */
     @Basic(optional = false)
     @Column(name = "AMOUNT_OF_UNITS_EVER_PAID", nullable = false, updatable = true)
-    private int amountOfUnitsEverPaid = 0;
+    private Integer amountOfUnitsEverPaid = 0;
 
     /**
      * Each bond has to have minimal amount of units. The default value is 1.
      */
     @Basic(optional = false)
     @Column(name = "MIN_AMOUNT_OF_UNITS_PER_BOND", nullable = false, updatable = true)
-    private int minAmountOfUnitsPerBond = 1;
+    private Integer minAmountOfUnitsPerBond = 1;
 
     /**
      * The amount of units that the user is able to create for given service.
      */
     @Basic(optional = false)
     @Column(name = "DEBT_UNITS_LIMIT", nullable = false, updatable = true)
-    private int debtUnitsLimit;
+    private Integer debtUnitsLimit;
 
     /**
      * How many units a user might obligate at once.
      */
     @Basic(optional = false)
     @Column(name = "MAX_AMOUNT_OF_UNITS_FOR_OBLIGATION", nullable = false, updatable = true)
-    private int maxAmountOfUnitsForObligation;
+    private Integer maxAmountOfUnitsForObligation;
 
     public Long getId() {
         return id;
@@ -121,6 +121,22 @@ public class UserGroupObligationStrategyForRegisteredService {
             throw new IllegalArgumentException(NOT_ACCEPTED_INTEREST_RATE_VALUE);
         }
         this.interestRate = interestRate;
+    }
+
+    public UserRegisteredService getUserRegisteredService() {
+        return userRegisteredService;
+    }
+
+    public void setUserRegisteredService(UserRegisteredService userRegisteredService) {
+        this.userRegisteredService = userRegisteredService;
+    }
+
+    public ObligationGroup getObligationGroup() {
+        return obligationGroup;
+    }
+
+    public void setObligationGroup(ObligationGroup obligationGroup) {
+        this.obligationGroup = obligationGroup;
     }
 
     public UnitOfWork getUnitOfWork() {
@@ -143,56 +159,44 @@ public class UserGroupObligationStrategyForRegisteredService {
         return alreadyCreatedAmountOfMoney;
     }
 
-    public void appendCreatedMoney(BigDecimal moneyToCreate) {
-        this.alreadyCreatedAmountOfMoney = moneyToCreate;
+    public void setAlreadyCreatedAmountOfMoney(BigDecimal alreadyCreatedAmountOfMoney) {
+        this.alreadyCreatedAmountOfMoney = alreadyCreatedAmountOfMoney;
     }
 
-    public int getAlreadyObligatedUnitsOfWork() {
+    public Integer getAlreadyObligatedUnitsOfWork() {
         return alreadyObligatedUnitsOfWork;
     }
 
-    public void obligateUnitsOfWork(int unitsOfWorkToObligate) {
-        this.alreadyObligatedUnitsOfWork = unitsOfWorkToObligate;
+    public void setAlreadyObligatedUnitsOfWork(Integer alreadyObligatedUnitsOfWork) {
+        this.alreadyObligatedUnitsOfWork = alreadyObligatedUnitsOfWork;
     }
 
-    public int getAmountOfUnitsEverPaid() {
+    public Integer getAmountOfUnitsEverPaid() {
         return amountOfUnitsEverPaid;
     }
 
-    public void appendPaidUnits(int paidUnits) {
-        this.amountOfUnitsEverPaid = paidUnits;
+    public void setAmountOfUnitsEverPaid(Integer amountOfUnitsEverPaid) {
+        this.amountOfUnitsEverPaid = amountOfUnitsEverPaid;
     }
 
-    public int getDebtUnitsLimit() {
+    public void setMinAmountOfUnitsPerBond(Integer minAmountOfUnitsPerBond) {
+        this.minAmountOfUnitsPerBond = minAmountOfUnitsPerBond;
+    }
+
+    public Integer getDebtUnitsLimit() {
         return debtUnitsLimit;
     }
 
-    public void setDebtUnitsLimit(int debtUnitsLimit) {
+    public void setDebtUnitsLimit(Integer debtUnitsLimit) {
         this.debtUnitsLimit = debtUnitsLimit;
     }
 
-    public int getMaxAmountOfUnitsForObligation() {
+    public Integer getMaxAmountOfUnitsForObligation() {
         return maxAmountOfUnitsForObligation;
     }
 
-    public void setMaxAmountOfUnitsForObligation(int maxAmountOfUnitsForObligation) {
+    public void setMaxAmountOfUnitsForObligation(Integer maxAmountOfUnitsForObligation) {
         this.maxAmountOfUnitsForObligation = maxAmountOfUnitsForObligation;
-    }
-
-    public ObligationGroup getObligationGroup() {
-        return obligationGroup;
-    }
-
-    public void setObligationGroup(ObligationGroup obligationGroup) {
-        this.obligationGroup = obligationGroup;
-    }
-
-    public UserRegisteredService getUserRegisteredService() {
-        return userRegisteredService;
-    }
-
-    public void setUserRegisteredService(UserRegisteredService userRegisteredService) {
-        this.userRegisteredService = userRegisteredService;
     }
 
     public void setMinAmountOfUnitsPerBond(int minAmountOfUnitsPerBond) throws IllegalArgumentException{
