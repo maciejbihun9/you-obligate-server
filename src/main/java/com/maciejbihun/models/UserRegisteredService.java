@@ -9,7 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author BHN
+ * @author Maciej Bihun
+ * A service that a user will do for an obligation group.
  */
 @Entity
 @Table(name="UserRegisteredService")
@@ -47,13 +48,6 @@ public class UserRegisteredService {
     @ElementCollection
     private List<String> registeredServiceTerms = new ArrayList<>();
 
-    @JsonManagedReference
-    @Basic(optional = true)
-    @OneToOne(mappedBy = "userRegisteredService", cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY)
-    private UserUnitsRequest userUnitsRequest;
-
-    @JsonManagedReference
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER) // fetch type is EAGER, because a user won't have many of UserGroupObligationStrategyForRegisteredService for one UserRegisteredService.
     @JoinColumn(name = "USER_REGISTERED_SERVICE_ID")
     private List<UserGroupObligationStrategyForRegisteredService> userGroupObligationStrategyForRegisteredServices = new ArrayList<>();
@@ -80,14 +74,6 @@ public class UserRegisteredService {
 
     public LocalDateTime getCreatedDateTime() {
         return createdDateTime;
-    }
-
-    public UserUnitsRequest getUserUnitsRequest() {
-        return userUnitsRequest;
-    }
-
-    public void setUserUnitsRequest(UserUnitsRequest userUnitsRequest) {
-        this.userUnitsRequest = userUnitsRequest;
     }
 
     public void setCreatedDateTime(LocalDateTime createdDateTime) {

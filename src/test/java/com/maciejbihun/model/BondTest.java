@@ -3,7 +3,6 @@ package com.maciejbihun.model;
 import com.maciejbihun.controller.UserGroupObligationStrategyForRegisteredServiceController;
 import com.maciejbihun.datatype.UnitOfWork;
 import com.maciejbihun.models.*;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -26,7 +25,7 @@ public class BondTest {
     ObligationGroup obligationGroup;
 
     @Mock
-    ObligationGroupAccount obligationGroupAccount;
+    UserAccountInObligationGroup userAccountInObligationGroup;
 
     @Test
     public void ShouldShowClosedObligationMessageWhenTryingToPayForTheBondUnitOnClosedBond(){
@@ -39,7 +38,7 @@ public class BondTest {
         obligationStrategy.setMinAmountOfUnitsPerBond(10);
 
         Integer amountOfUnitsToPay = 1;
-        Bond testBond = new Bond(obligationGroupAccount, obligationStrategy, amountOfUnitsToPay);
+        Bond testBond = new Bond(userAccountInObligationGroup, obligationStrategy, amountOfUnitsToPay);
 
         assertEquals(new BigDecimal("90").multiply(new BigDecimal("12")), testBond.getAmountOfCreatedMoney());
 
@@ -52,7 +51,7 @@ public class BondTest {
         obligationStrategy.setMinAmountOfUnitsPerBond(10);
 
         Integer amountOfUnitsToPay = 1;
-        new Bond(obligationGroupAccount, obligationStrategy, amountOfUnitsToPay);
+        new Bond(userAccountInObligationGroup, obligationStrategy, amountOfUnitsToPay);
     }
 
     @Test
@@ -65,15 +64,15 @@ public class BondTest {
         obligationStrategy.setObligationGroup(obligationGroup);
 
         Integer amountOfUnitsToPay = 12;
-        Bond testBond = new Bond(obligationGroupAccount, obligationStrategy, amountOfUnitsToPay);
+        Bond testBond = new Bond(userAccountInObligationGroup, obligationStrategy, amountOfUnitsToPay);
         assertEquals(new BigDecimal("90.00").multiply(new BigDecimal(amountOfUnitsToPay)).setScale(2, RoundingMode.HALF_EVEN), testBond.getAmountOfCreatedMoney());
 
         obligationStrategy.setInterestRate(new BigDecimal("0.00"));
-        testBond = new Bond(obligationGroupAccount, obligationStrategy, amountOfUnitsToPay);
+        testBond = new Bond(userAccountInObligationGroup, obligationStrategy, amountOfUnitsToPay);
         assertEquals(new BigDecimal(amountOfUnitsToPay).multiply(obligationStrategy.getUnitOfWorkCost()), testBond.getAmountOfCreatedMoney());
 
         obligationStrategy.setInterestRate(new BigDecimal("-1.00"));
-        testBond = new Bond(obligationGroupAccount, obligationStrategy, amountOfUnitsToPay);
+        testBond = new Bond(userAccountInObligationGroup, obligationStrategy, amountOfUnitsToPay);
         assertEquals(new BigDecimal(amountOfUnitsToPay).multiply(obligationStrategy.getUnitOfWorkCost()), testBond.getAmountOfCreatedMoney());
     }
 

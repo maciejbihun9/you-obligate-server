@@ -55,7 +55,7 @@ public class UserGroupObligationStrategyForRegisteredServiceControllerImpl imple
         obligationStrategy.setMaxAmountOfUnitsForObligation(userGroupObligationStrategyForRegisteredServiceDto.getMaxAmountOfUnitsForObligation());
 
         // obligationStrategy is a child of a userRegisteredService with one-to-many association,
-        // so saving user I will save all the data
+        // so saving user I will createBondInObligationGroup all the data
         /* userRegisteredService.getUserGroupObligationStrategyForRegisteredServices().add(obligationStrategy);
         userService.saveUserData(userRegisteredService.getUser()); */
         return obligationStrategyRepository.save(obligationStrategy);

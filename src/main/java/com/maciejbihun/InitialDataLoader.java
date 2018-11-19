@@ -1,9 +1,8 @@
 package com.maciejbihun;
 
+import com.maciejbihun.datatype.UnitOfWork;
 import com.maciejbihun.models.*;
-import com.maciejbihun.repository.PrivilegeRepository;
-import com.maciejbihun.repository.RoleRepository;
-import com.maciejbihun.repository.UserRepository;
+import com.maciejbihun.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -11,11 +10,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author BHN
@@ -33,6 +30,15 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
 
     @Autowired
     private PrivilegeRepository privilegeRepository;
+
+    @Autowired
+    private ObligationGroupRepository obligationGroupRepository;
+
+    @Autowired
+    private UserAccountInObligationGroupRepository userAccountInObligationGroupRepository;
+
+    @Autowired
+    private UserGroupObligationStrategyForRegisteredServiceRepository obligationStrategyRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -62,7 +68,7 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
         user.setUsername("maciek1");
         user.setPassword(passwordEncoder.encode("maciek1"));
         user.setRoles(Arrays.asList(adminRole));
-        userRepository.save(user);
+        User adminUser = userRepository.save(user);
 
         // Add initial users
         Role userRole = roleRepository.findByName("ROLE_USER");
@@ -87,28 +93,24 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
             userRepository.save(testUser);
             i++;
         }
-        alreadySetup = true;
-    }
 
-    private List<UserRegisteredService> getUserRegisteredServices(){
-        // people know better how to name his service,
-        // people now better how to sell themselfs
-        List<String> servicesNames = Arrays.asList("dentist", "hairdresser", "thai massage", "gym", "swimming pool",
-                                                    "transport", "beers in a bar", "nail painting", "mowing the lawn", "personal trainer");
-        List<UserRegisteredService> userRegisteredServices = new ArrayList<>(amountOfUsers);
-        int i = 0;
-        while(i < amountOfUsers){
-            // create registered service
-            UserRegisteredService userRegisteredService = new UserRegisteredService();
-            userRegisteredService.setCreatedDateTime(LocalDateTime.now());
-            userRegisteredService.setServiceName(servicesNames.get(i));
-            userRegisteredService.setServiceDescription("Any, because it is not important now");
-            userRegisteredService.setExperienceDescription("Experience desciption is also not really important");
-            userRegisteredService.setUserRegisteredServiceCategory(UserRegisteredServiceCategory.IT);
-            userRegisteredServices.add(userRegisteredService);
-            i++;
-        }
-        return userRegisteredServices;
+        // create obligation group
+        ObligationGroup obligationGroup = new ObligationGroup(adminUser, "SPARTANS", "Bihun",
+                "BHN", "This is just simple little money name");
+        obligationGroupRepository.save(obligationGroup);
+
+        // create obligation group account
+        User userById = userRepository.findById(2L).get();
+        UserAccountInObligationGroup userAccountInObligationGroup = new UserAccountInObligationGroup(userById, obligationGroup);
+        userAccountInObligationGroupRepository.save(userAccountInObligationGroup);
+
+        // create obligation strategy
+        UserGroupObligationStrategyForRegisteredService obligationStrategy = new UserGroupObligationStrategyForRegisteredService(
+                userById.getUserRegisteredServices().get(0), obligationGroup, UnitOfWork.SERVICE, new BigDecimal("100.00"), new BigDecimal("0.05")
+        );
+        obligationStrategyRepository.save(obligationStrategy);
+
+        alreadySetup = true;
     }
 
     @Transactional
@@ -136,4 +138,28 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
         }
         return role;
     }
+
+    private List<UserRegisteredService> getUserRegisteredServices(){
+        // people know better how to name his service,
+        // people now better how to sell them self
+        List<String> servicesNames = Arrays.asList("dentist", "hairdresser", "thai massage", "gym", "swimming pool",
+                                                    "transport", "beers in a bar", "nail painting", "mowing the lawn", "personal trainer");
+        List<UserRegisteredService> userRegisteredServices = new ArrayList<>(amountOfUsers);
+        int i = 0;
+        while(i < amountOfUsers){
+            // create registered service
+            UserRegisteredService userRegisteredService = new UserRegisteredService();
+            userRegisteredService.setCreatedDateTime(LocalDateTime.now());
+            userRegisteredService.setServiceName(servicesNames.get(i));
+            userRegisteredService.setServiceDescription("Any, because it is not important now");
+            userRegisteredService.setExperienceDescription("Experience desciption is also not really important");
+            userRegisteredService.setUserRegisteredServiceCategory(UserRegisteredServiceCategory.IT);
+            userRegisteredServices.add(userRegisteredService);
+            i++;
+        }
+        return userRegisteredServices;
+    }
+
+
+
 }

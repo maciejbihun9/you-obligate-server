@@ -24,7 +24,7 @@ public class Role {
     @LazyCollection(LazyCollectionOption.FALSE)
     @ManyToMany
     @JoinTable(
-            name = "roles_privileges",
+            name = "Roles_Privileges",
             joinColumns = @JoinColumn(
                     name = "ROLE_ID", referencedColumnName = "ID"),
             inverseJoinColumns = @JoinColumn(

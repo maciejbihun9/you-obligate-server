@@ -1,38 +1,36 @@
 package com.maciejbihun.controller.impl;
 
-import com.maciejbihun.controller.ObligationGroupAccountService;
+import com.maciejbihun.controller.UserAccountInObligationGroupService;
 import com.maciejbihun.controller.UserService;
 import com.maciejbihun.dto.ObligationGroupAccountDto;
+import com.maciejbihun.models.Bond;
 import com.maciejbihun.models.ObligationGroup;
-import com.maciejbihun.models.ObligationGroupAccount;
-import com.maciejbihun.models.User;
+import com.maciejbihun.models.UserAccountInObligationGroup;
 import com.maciejbihun.models.UserPrincipal;
-import com.maciejbihun.repository.ObligationGroupAccountRepository;
-import com.maciejbihun.repository.ObligationGroupRepository;
+import com.maciejbihun.repository.UserAccountInObligationGroupRepository;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 import javax.transaction.Transactional;
-import java.util.Optional;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * @author Maciej Bihun
  */
 @Service
 @Transactional
-public class ObligationGroupAccountServiceImpl implements ObligationGroupAccountService {
+public class UserAccountInObligationGroupServiceImpl implements UserAccountInObligationGroupService {
 
     @Autowired
-    ObligationGroupAccountRepository obligationGroupAccountRepository;
+    UserAccountInObligationGroupRepository userAccountInObligationGroupRepository;
 
     @Autowired
     UserService userService;
@@ -44,7 +42,7 @@ public class ObligationGroupAccountServiceImpl implements ObligationGroupAccount
      * A group admin is able create an account for a user.
      */
     @Override
-    public ResponseEntity<ObligationGroupAccount> createGroupAccount(ObligationGroupAccountDto obligationGroupAccountDto) {
+    public ResponseEntity<UserAccountInObligationGroup> createGroupAccount(ObligationGroupAccountDto obligationGroupAccountDto) {
         // ObligationGroup obligationGroup = entityManager.find(ObligationGroup.class, obligationGroupAccountDto.getObligationGroupId());
         Session session = entityManager.unwrap(Session.class);
         ObligationGroup obligationGroup = session.load(ObligationGroup.class, obligationGroupAccountDto.getObligationGroupId());
@@ -54,8 +52,17 @@ public class ObligationGroupAccountServiceImpl implements ObligationGroupAccount
             return new ResponseEntity<>(multiValueMap, HttpStatus.NOT_FOUND);
         }
         UserPrincipal userPrincipal = userService.loadUserByUsername(obligationGroupAccountDto.getUsername());
-        ObligationGroupAccount obligationGroupAccount = new ObligationGroupAccount(userPrincipal.getUser(), obligationGroup);
-        obligationGroupAccount = obligationGroupAccountRepository.save(obligationGroupAccount);
-        return new ResponseEntity<>(obligationGroupAccount, HttpStatus.CREATED);
+        UserAccountInObligationGroup userAccountInObligationGroup = new UserAccountInObligationGroup(userPrincipal.getUser(), obligationGroup);
+        userAccountInObligationGroup = userAccountInObligationGroupRepository.save(userAccountInObligationGroup);
+        return new ResponseEntity<>(userAccountInObligationGroup, HttpStatus.CREATED);
+    }
+
+    @Override
+    public ResponseEntity<UserAccountInObligationGroup> getUserAccountInObligationGroupWithBonds(Long userAccountInObligationGroupId) {
+        EntityGraph<?> graph = entityManager.getEntityGraph("graph.accountBonds");
+        HashMap<String, Object> properties = new HashMap<>();
+        properties.put("javax.persistence.fetchgraph", graph);
+        UserAccountInObligationGroup userAccountInObligationGroup = entityManager.find(UserAccountInObligationGroup.class, userAccountInObligationGroupId, properties);
+        return new ResponseEntity<>(userAccountInObligationGroup, HttpStatus.OK);
     }
 }

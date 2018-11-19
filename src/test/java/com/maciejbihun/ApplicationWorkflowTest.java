@@ -3,19 +3,15 @@ package com.maciejbihun;
 import com.maciejbihun.controller.*;
 import com.maciejbihun.dto.*;
 import com.maciejbihun.models.*;
-import org.hibernate.Hibernate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
@@ -36,7 +32,7 @@ public class ApplicationWorkflowTest {
     UserGroupObligationStrategyForRegisteredServiceController userGroupObligationStrategyForRegisteredServiceController;
 
     @Autowired
-    ObligationGroupAccountService obligationGroupAccountService;
+    UserAccountInObligationGroupService obligationGroupAccountService;
 
 
     @Test
@@ -45,12 +41,7 @@ public class ApplicationWorkflowTest {
         List<User> allUsers = userService.getAllUsers().getBody();
         User groupCreator = allUsers.get(0);
 
-        ObligationGroup obligationGroup = new ObligationGroup();
-        obligationGroup.setOwner(groupCreator);
-        obligationGroup.setName("SPARTANS");
-        obligationGroup.setDescription("We are not going to pay taxes anymore, bro !!!");
-        obligationGroup.setMoneyName("BIHUN");
-        obligationGroup.setMoneyShortcutName("BHN");
+        ObligationGroup obligationGroup = new ObligationGroup(groupCreator,"SPARTANS", "BIHUN", "BHN", "desc");
 
         // obligation group should be saved first
         obligationGroup = obligationGroupService.saveObligationGroup(obligationGroup);
@@ -58,7 +49,7 @@ public class ApplicationWorkflowTest {
         User user = allUsers.get(1);
 
         ObligationGroupAccountDto obligationGroupAccountDto = new ObligationGroupAccountDto(user.getUsername(), obligationGroup.getId());
-        ResponseEntity<ObligationGroupAccount> userObligationGroupAccount = obligationGroupAccountService.createGroupAccount(obligationGroupAccountDto);
+        ResponseEntity<UserAccountInObligationGroup> userObligationGroupAccount = obligationGroupAccountService.createGroupAccount(obligationGroupAccountDto);
 
         UserGroupObligationStrategyForRegisteredServiceDto obligationStrategyDto =
                 new UserGroupObligationStrategyForRegisteredServiceDto();
@@ -83,7 +74,8 @@ public class ApplicationWorkflowTest {
         // create bond object between a user and group:
         BondDto dentistBondDto = new BondDto(100, obligationStrategy.getId(), userObligationGroupAccount.getBody().getId());
         dentistBondDto.setAmountOfUnitsToPay(100);
-        bondService.save(dentistBondDto);
+        bondService.createBondInObligationGroup(dentistBondDto);
+        System.out.println();
 
         // create obligation strategy for each registered service
         // define an obligation strategy for each registered service itself

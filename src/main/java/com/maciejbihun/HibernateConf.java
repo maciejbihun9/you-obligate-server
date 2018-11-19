@@ -2,11 +2,17 @@ package com.maciejbihun;
 
 import org.apache.commons.dbcp.BasicDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
+import org.springframework.jdbc.datasource.init.DatabasePopulator;
+import org.springframework.jdbc.datasource.init.DatabasePopulatorUtils;
+import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -68,6 +74,7 @@ public class HibernateConf {
         dataSource.setUrl("jdbc:h2:mem:db;DB_CLOSE_DELAY=-1");
         dataSource.setUsername("sa");
         dataSource.setPassword("sa");
+
         return dataSource;
     }
 
@@ -104,11 +111,13 @@ public class HibernateConf {
 
     private Properties testHibernateProperties() {
         Properties hibernateProperties = new Properties();
-        hibernateProperties.setProperty("hibernate.show_sql", Boolean.TRUE.toString());
+        // hibernateProperties.setProperty("hibernate.show_sql", Boolean.TRUE.toString());
         hibernateProperties.setProperty(
-                "hibernate.hbm2ddl.auto", "create-drop");
+                "hibernate.hbm2ddl.auto", "create");
         hibernateProperties.setProperty(
                 "hibernate.dialect", "org.hibernate.dialect.H2Dialect");
+        hibernateProperties.setProperty(
+                "spring.jpa.hibernate.ddl-auto", "false");
         return hibernateProperties;
     }
 }

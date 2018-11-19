@@ -20,13 +20,13 @@ public class Bond {
 
     private static final Logger BOND_LOGGER = Logger.getLogger(Bond.class.getName());
 
-    private static final String OBLIGATION_CLOSED_MESSAGE = "Obligation is closed, because has been paid";
+    private static final String OBLIGATION_CLOSED_MESSAGE = "Obligation is closed, because has been paid. You can not subtract units from obligation that has been paid";
 
     private static final String NOT_ACCEPTABLE_AMOUNT_OF_UNITS_PER_BOND = "Not acceptable amount of units per bond.";
 
     private Bond(){}
 
-    public Bond(ObligationGroupAccount obligationGroupAccount,
+    public Bond(UserAccountInObligationGroup userAccountInObligationGroup,
                 UserGroupObligationStrategyForRegisteredService obligationStrategy, Integer amountOfUnitsToPay) throws IllegalArgumentException {
 
         if (amountOfUnitsToPay < obligationStrategy.getMinAmountOfUnitsPerBond()){
@@ -34,7 +34,7 @@ public class Bond {
                     amountOfUnitsToPay, obligationStrategy.getMinAmountOfUnitsPerBond()));
         }
         this.amountOfUnitsToPay = amountOfUnitsToPay;
-        this.obligationGroupAccount = obligationGroupAccount;
+        this.userAccountInObligationGroup = userAccountInObligationGroup;
         this.interestRate = obligationStrategy.getInterestRate();
         this.obligationGroup = obligationStrategy.getObligationGroup();
         this.unitOfWorkCost = obligationStrategy.getUnitOfWorkCost().subtract(this.interestRate.multiply(obligationStrategy.getUnitOfWorkCost()));
@@ -53,7 +53,7 @@ public class Bond {
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "OBLIGATION_GROUP_ACCOUNT_ID", nullable = false)
-    private ObligationGroupAccount obligationGroupAccount;
+    private UserAccountInObligationGroup userAccountInObligationGroup;
 
     @Basic(optional = false)
     @Column(name = "AMOUNT_OF_UNITS_TO_PAY", updatable = true)
@@ -83,27 +83,31 @@ public class Bond {
     @Column(name = "OBLIGATION_CLOSED_DATE_TIME", nullable = true, updatable = true)
     private LocalDateTime obligationClosedDateTime;
 
-    public void substractBondUnit(){
+    public String subtractBondUnit() throws Exception {
         if (bondStatus.equals(BondStatus.CLOSED)){
             BOND_LOGGER.log(Level.INFO, OBLIGATION_CLOSED_MESSAGE);
+            throw new Exception(OBLIGATION_CLOSED_MESSAGE);
         }
         if (this.amountOfUnitsToPay > 1){
             this.amountOfUnitsToPay = this.amountOfUnitsToPay - 1;
             this.amountOfCreatedMoney = this.amountOfCreatedMoney.subtract(this.unitOfWorkCost);
+            return "Operation went well. One unit subtracted from bond.";
         } else if(this.amountOfUnitsToPay == 1) {
             this.amountOfUnitsToPay = this.amountOfUnitsToPay - 1;
             this.amountOfCreatedMoney = this.amountOfCreatedMoney.subtract(this.unitOfWorkCost);
             this.obligationClosedDateTime = LocalDateTime.now();
             this.bondStatus = BondStatus.CLOSED;
             BOND_LOGGER.log(Level.INFO, String.format("Obligation: %s has been closed", id));
+            return "Operation went well and bond has been paid. Congratulations!!!";
         }
+        return "";
     }
 
     public Long getId() {
         return id;
     }
 
-    public ObligationGroupAccount getObligationGroupAccount() {return obligationGroupAccount;}
+    public UserAccountInObligationGroup getUserAccountInObligationGroup() {return userAccountInObligationGroup;}
 
     public Integer getAmountOfUnitsToPay() {
         return amountOfUnitsToPay;

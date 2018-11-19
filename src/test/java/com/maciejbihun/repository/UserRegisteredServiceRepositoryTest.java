@@ -43,13 +43,10 @@ public class UserRegisteredServiceRepositoryTest {
         userUnitsRequest.setCreatedDateTime(LocalDateTime.now());
         userUnitsRequest.setUserRegisteredService(userRegisteredService);
 
-        userRegisteredService.setUserUnitsRequest(userUnitsRequest);
-
         userRegisteredService = userRegisteredServiceRepository.save(userRegisteredService);
 
         Optional<UserRegisteredService> userRegisteredServiceOptional = userRegisteredServiceRepository.findById(userRegisteredService.getId());
         assertTrue(userRegisteredServiceOptional.isPresent());
-        userUnitsRequest = userRegisteredServiceOptional.get().getUserUnitsRequest();
         assertNotNull(userUnitsRequest);
     }
 
@@ -71,8 +68,6 @@ public class UserRegisteredServiceRepositoryTest {
             UserUnitsRequest userUnitsRequest = new UserUnitsRequest();
             userUnitsRequest.setUserRegisteredService(userRegisteredService);
             userUnitsRequest.setCreatedDateTime(LocalDateTime.now());
-            userRegisteredService.setUserUnitsRequest(userUnitsRequest);
-
             userRegisteredServiceRepository.save(userRegisteredService);
             i++;
         }

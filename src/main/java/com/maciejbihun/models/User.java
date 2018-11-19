@@ -54,13 +54,13 @@ public class User {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "OBLIGATION_GROUP_ACCOUNT_ID")
-    private List<ObligationGroupAccount> obligationGroupAccounts = new ArrayList<>();
+    private List<UserAccountInObligationGroup> userAccountInObligationGroups = new ArrayList<>();
 
     // LazyCollection is an annotation to omit exception with fetching multiple bags at the same time
     @LazyCollection(LazyCollectionOption.FALSE)
     @ManyToMany
     @JoinTable(
-            name = "users_roles",
+            name = "Users_Roles",
             joinColumns = @JoinColumn(
                     name = "USER_ID", referencedColumnName = "ID"),
             inverseJoinColumns = @JoinColumn(
@@ -83,8 +83,8 @@ public class User {
         this.userRegisteredServices = userRegisteredServices;
     }
 
-    public List<ObligationGroupAccount> getObligationGroupAccounts() {
-        return obligationGroupAccounts;
+    public List<UserAccountInObligationGroup> getUserAccountInObligationGroups() {
+        return userAccountInObligationGroups;
     }
 
     public String getName() {

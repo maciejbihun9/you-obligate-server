@@ -1,18 +1,25 @@
 package com.maciejbihun.models;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
-
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Entity
 @Table(name="ObligationGroup")
 public class ObligationGroup {
+
+    public ObligationGroup(){}
+
+    public ObligationGroup(User owner, String name, String moneyName, String moneyShortcutName, String description) {
+        this.owner = owner;
+        this.name = name;
+        this.moneyName = moneyName;
+        this.moneyShortcutName = moneyShortcutName;
+        this.description = description;
+    }
 
     @Id
     @Column(name = "ID")
@@ -42,56 +49,57 @@ public class ObligationGroup {
     @Column(name = "GROUP_DESCRIPTION", nullable = false, updatable = true)
     private String description;
 
-    @Basic(optional = false)
-    @Column(name = "CREATED_DATE_TIME", nullable = false, updatable = true)
+    @Basic(optional = true)
+    @Column(name = "CREATED_DATE_TIME", nullable = true, updatable = true)
     private LocalDateTime createdDateTime = LocalDateTime.now();
 
-    @Basic(optional = false)
-    @Column(name = "AMOUNT_OF_CREATED_MONEY", nullable = false, updatable = true)
-    private AtomicLong amountOfCreatedMoney = new AtomicLong(0);
+    @Column(name = "ACCOUNT_BALANCE", nullable = false, updatable = true, length = 400)
+    private final AtomicReference<BigDecimal> accountBalance = new AtomicReference<>(BigDecimal.ZERO);
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_GROUP_OBLIGATION_STRATEGY_FOR_REGISTERED_SERVICE_ID")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "obligationGroup")
     private List<UserGroupObligationStrategyForRegisteredService> userGroupObligationStrategyForRegisteredServices = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "OBLIGATION_GROUP_ACCOUNT_ID")
-    private List<ObligationGroupAccount> obligationGroupAccounts = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "obligationGroup")
+    private List<UserAccountInObligationGroup> userAccountInObligationGroups = new ArrayList<>();
 
-    public User getOwner() {
-        return owner;
+    public Long getId() {
+        return id;
     }
 
     public void setOwner(User owner) {
         this.owner = owner;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setMoneyName(String moneyName) {
+        this.moneyName = moneyName;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public User getOwner() {
+        return owner;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public String getMoneyName() {
         return moneyName;
     }
 
-    public Long getId() {
-        return id;
-    }
-
     public List<UserGroupObligationStrategyForRegisteredService> getUserGroupObligationStrategyForRegisteredServices() {
         return userGroupObligationStrategyForRegisteredServices;
     }
 
-    public List<ObligationGroupAccount> getObligationGroupAccounts() {
-        return obligationGroupAccounts;
-    }
-
-    public void setMoneyName(String moneyName) {
-        this.moneyName = moneyName;
+    public List<UserAccountInObligationGroup> getUserAccountInObligationGroups() {
+        return userAccountInObligationGroups;
     }
 
     public String getMoneyShortcutName() {
@@ -106,20 +114,16 @@ public class ObligationGroup {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public LocalDateTime getCreatedDateTime() {
         return createdDateTime;
     }
 
-    public Long getAmountOfCreatedMoney() {
-        return amountOfCreatedMoney.get();
+    public BigDecimal getAccountBalance() {
+        return accountBalance.get();
     }
 
-    public Long createMoney(Long moneyToCreate){
-        return this.amountOfCreatedMoney.addAndGet(moneyToCreate);
+    public BigDecimal addMoneyToAccount(final BigDecimal moneyToCreate){
+        return this.accountBalance.updateAndGet(amountOfCreatedMoney -> amountOfCreatedMoney.add(moneyToCreate));
     }
 
 

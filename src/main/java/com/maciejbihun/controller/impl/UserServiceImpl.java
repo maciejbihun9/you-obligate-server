@@ -34,9 +34,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> allUsers = userRepository.findAll();
-        User user = allUsers.get(1);
-        List<UserGroupObligationStrategyForRegisteredService> userGroupObligationStrategyForRegisteredServices =
-                user.getUserRegisteredServices().get(0).getUserGroupObligationStrategyForRegisteredServices();
         return new ResponseEntity<>(allUsers, HttpStatus.OK);
     }
 
