@@ -42,6 +42,8 @@ public class BondServiceTest {
     @Before
     public void setUp(){
         this.bondService = new BondServiceImpl(bondRepository, obligationStrategyRepository, userAccountInObligationGroupRepository);
+
+
     }
     // test a method without database
 
@@ -66,14 +68,13 @@ public class BondServiceTest {
         Long id = 1L;
 
         User userMock = mock(User.class);
+        BondDto bondDto = new BondDto(100, id, id);
         ObligationGroup obligationGroup = new ObligationGroup(userMock, "", "", "", "");
         UserAccountInObligationGroup userAccountInObligationGroup = new UserAccountInObligationGroup(userMock, obligationGroup);
 
         UserGroupObligationStrategyForRegisteredService obligationStrategy = new UserGroupObligationStrategyForRegisteredService(
                 mock(UserRegisteredService.class), obligationGroup,
-                UnitOfWork.SERVICE, new BigDecimal("100.00"), new BigDecimal("0.05"));
-
-        BondDto bondDto = new BondDto(100, id, id);
+                UnitOfWork.SERVICE, new BigDecimal("100.00"), new BigDecimal("0.05"), 1000);
 
         // when
         Mockito.when(obligationStrategyRepository.findById(id)).thenReturn(Optional.of(obligationStrategy));
@@ -90,6 +91,28 @@ public class BondServiceTest {
     @Test
     public void shouldReturnCreatedBond(){
 
+    }
+
+    // block creating new bonds when limit has been reached
+    // what should happen when
+    @Test(expected = Exception.class)
+    public void shouldThrowExceptionIfDeptIsOverTheLimit(){
+        // given
+        Long id = 1L;
+
+        User userMock = mock(User.class);
+        BondDto bondDto = new BondDto(1001, id, id);
+        ObligationGroup obligationGroup = new ObligationGroup(userMock, "", "", "", "");
+        UserAccountInObligationGroup userAccountInObligationGroup = new UserAccountInObligationGroup(userMock, obligationGroup);
+
+        UserGroupObligationStrategyForRegisteredService obligationStrategy = new UserGroupObligationStrategyForRegisteredService(
+                mock(UserRegisteredService.class), obligationGroup,
+                UnitOfWork.SERVICE, new BigDecimal("100.00"), new BigDecimal("0.05"), 1000);
+
+        // when
+        Mockito.when(obligationStrategyRepository.findById(id)).thenReturn(Optional.of(obligationStrategy));
+        Mockito.when(userAccountInObligationGroupRepository.findById(id)).thenReturn(Optional.of(userAccountInObligationGroup));
+        bondService.createBondInObligationGroup(bondDto);
     }
 
 }

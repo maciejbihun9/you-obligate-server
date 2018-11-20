@@ -12,17 +12,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-import javax.transaction.Transactional;
 import java.util.Optional;
 
 /**
  * @author Maciej Bihun
  */
 @Service
-@Transactional
+@Transactional(readOnly = false, rollbackFor = Exception.class)
 public class BondServiceImpl implements BondService {
 
     private BondRepository bondRepository;
@@ -46,11 +46,22 @@ public class BondServiceImpl implements BondService {
      */
     @Override
     public ResponseEntity<Bond> createBondInObligationGroup(BondDto bondDto) {
+
         Optional<UserAccountInObligationGroup> groupAccountById = userAccountInObligationGroupRepository.findById(bondDto.getGroupAccountId());
         Optional<UserGroupObligationStrategyForRegisteredService> obligationStrategyById = obligationStrategyRepository.findById(bondDto.getObligationStrategyId());
 
         if (obligationStrategyById.isPresent() && groupAccountById.isPresent()){
-            Bond bond = new Bond(groupAccountById.get(), obligationStrategyById.get(), bondDto.getAmountOfUnitsToPay());
+
+            UserGroupObligationStrategyForRegisteredService userGroupObligationStrategyForRegisteredService = obligationStrategyById.get();
+            UserAccountInObligationGroup userAccountInObligationGroup = groupAccountById.get();
+
+            int predictedAmountOfUnitsToPay = userGroupObligationStrategyForRegisteredService.getAlreadyObligatedUnitsOfWork() + bondDto.getAmountOfUnitsToPay();
+
+            if (bondDto.getAmountOfUnitsToPay() > userGroupObligationStrategyForRegisteredService.getAlreadyObligatedUnitsOfWork()){
+
+            }
+
+            Bond bond = new Bond(userAccountInObligationGroup, userGroupObligationStrategyForRegisteredService, bondDto.getAmountOfUnitsToPay());
             // save bond to generate id
             bond = bondRepository.save(bond);
 
@@ -58,7 +69,6 @@ public class BondServiceImpl implements BondService {
             obligationStrategyById.get().getObligationGroup().addMoneyToAccount(bond.getAmountOfCreatedMoney());
 
             // create money in the group account
-            UserAccountInObligationGroup userAccountInObligationGroup = groupAccountById.get();
             userAccountInObligationGroup.addMoneyToAccount(bond.getAmountOfCreatedMoney());
             userAccountInObligationGroup.getBonds().add(bond);
 

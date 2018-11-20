@@ -106,7 +106,7 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
 
         // create obligation strategy
         UserGroupObligationStrategyForRegisteredService obligationStrategy = new UserGroupObligationStrategyForRegisteredService(
-                userById.getUserRegisteredServices().get(0), obligationGroup, UnitOfWork.SERVICE, new BigDecimal("100.00"), new BigDecimal("0.05")
+                userById.getUserRegisteredServices().get(0), obligationGroup, UnitOfWork.SERVICE, new BigDecimal("100.00"), new BigDecimal("0.05"), 1000
         );
         obligationStrategyRepository.save(obligationStrategy);
 
