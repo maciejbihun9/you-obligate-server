@@ -21,21 +21,27 @@ public class BondServiceImpl implements BondService {
 
     private static final String NOT_ACCEPTABLE_AMOUNT_OF_UNITS_PER_BOND = "Not acceptable amount of units per bond.";
 
-    @Autowired
+    private static final String GROUP_ACCOUNT_OR_OBLIGATION_STRATEGY_DOES_NOT_EXISTS = "User group account or obligation strategy with given id does not exists.";
+
     private BondRepository bondRepository;
 
-    @Autowired
     private UserGroupObligationStrategyForRegisteredServiceRepository obligationStrategyRepository;
 
-    @Autowired
     private UserAccountInObligationGroupRepository userAccountInObligationGroupRepository;
 
-    @Autowired
-    CreatingMoneyStrategies creatingMoneyStrategies;
+    private CreatingMoneyStrategies creatingMoneyStrategies;
+
+    public BondServiceImpl(BondRepository bondRepository, UserGroupObligationStrategyForRegisteredServiceRepository obligationStrategyRepository,
+                           UserAccountInObligationGroupRepository userAccountInObligationGroupRepository, CreatingMoneyStrategies creatingMoneyStrategies) {
+        this.bondRepository = bondRepository;
+        this.obligationStrategyRepository = obligationStrategyRepository;
+        this.userAccountInObligationGroupRepository = userAccountInObligationGroupRepository;
+        this.creatingMoneyStrategies = creatingMoneyStrategies;
+    }
 
     @Override
     @Transactional
-    public Bond createBondInObligationGroup(Long userAccountInObligationGroupId, Long obligationStrategyId, Integer amountOfUnitsToPay) {
+    public Bond createBondInObligationGroup(Long userAccountInObligationGroupId, Long obligationStrategyId, Integer amountOfUnitsToPay) throws Exception {
         Optional<UserAccountInObligationGroup> groupAccountById = userAccountInObligationGroupRepository.findById(userAccountInObligationGroupId);
         Optional<UserGroupObligationStrategyForRegisteredService> obligationStrategyById = obligationStrategyRepository.findById(obligationStrategyId);
 
@@ -46,8 +52,8 @@ public class BondServiceImpl implements BondService {
 
             int predictedAmountOfUnitsToPay = userGroupObligationStrategyForRegisteredService.getAlreadyObligatedUnitsOfWork() + amountOfUnitsToPay;
 
-            if (amountOfUnitsToPay > userGroupObligationStrategyForRegisteredService.getAlreadyObligatedUnitsOfWork()){
-
+            if (predictedAmountOfUnitsToPay > userGroupObligationStrategyForRegisteredService.getMaxAmountOfUnitsForObligation()){
+                throw new Exception("Creating a bond above the max limit is not allowed");
             }
 
             Bond bond = createBond(userAccountInObligationGroup, userGroupObligationStrategyForRegisteredService, amountOfUnitsToPay);
@@ -62,6 +68,8 @@ public class BondServiceImpl implements BondService {
             userAccountInObligationGroup.getBonds().add(bond);
 
             userAccountInObligationGroupRepository.save(userAccountInObligationGroup);
+        } else {
+            throw new Exception(GROUP_ACCOUNT_OR_OBLIGATION_STRATEGY_DOES_NOT_EXISTS);
         }
         return null;
     }

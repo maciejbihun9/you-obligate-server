@@ -26,7 +26,7 @@ import static org.mockito.Mockito.mock;
  * @author Maciej Bihun
  */
 @RunWith(MockitoJUnitRunner.class)
-public class BondServiceTest {
+public class BondControllerTest {
 
     @Mock
     BondRepository bondRepository;

@@ -20,13 +20,13 @@ public class UserGroupObligationStrategyForRegisteredService {
     public UserGroupObligationStrategyForRegisteredService(){}
 
     public UserGroupObligationStrategyForRegisteredService(UserRegisteredService userRegisteredService, ObligationGroup obligationGroup,
-                                                           UnitOfWork unitOfWork, BigDecimal unitOfWorkCost, BigDecimal interestRate, Integer debtUnitsLimit) {
+                                                           UnitOfWork unitOfWork, BigDecimal unitOfWorkCost, BigDecimal interestRate, Integer maxAmountOfUnitsForObligation) {
         this.userRegisteredService = userRegisteredService;
         this.obligationGroup = obligationGroup;
         this.unitOfWork = unitOfWork;
         this.unitOfWorkCost = unitOfWorkCost;
         this.interestRate = interestRate;
-        this.debtUnitsLimit = debtUnitsLimit;
+        this.maxAmountOfUnitsForObligation = maxAmountOfUnitsForObligation;
     }
 
     @Id
@@ -92,13 +92,6 @@ public class UserGroupObligationStrategyForRegisteredService {
     @Basic(optional = false)
     @Column(name = "MIN_AMOUNT_OF_UNITS_PER_BOND", nullable = false, updatable = true)
     private Integer minAmountOfUnitsPerBond = 1;
-
-    /**
-     * The amount of units that the user is able to create for given service.
-     */
-    @Basic(optional = false)
-    @Column(name = "DEBT_UNITS_LIMIT", nullable = false, updatable = true)
-    private Integer debtUnitsLimit;
 
     /**
      * How many units a user might obligate at once.
@@ -182,14 +175,6 @@ public class UserGroupObligationStrategyForRegisteredService {
 
     public void setMinAmountOfUnitsPerBond(Integer minAmountOfUnitsPerBond) {
         this.minAmountOfUnitsPerBond = minAmountOfUnitsPerBond;
-    }
-
-    public Integer getDebtUnitsLimit() {
-        return debtUnitsLimit;
-    }
-
-    public void setDebtUnitsLimit(Integer debtUnitsLimit) {
-        this.debtUnitsLimit = debtUnitsLimit;
     }
 
     public Integer getMaxAmountOfUnitsForObligation() {

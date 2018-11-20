@@ -8,6 +8,7 @@ import com.maciejbihun.models.UserGroupObligationStrategyForRegisteredService;
 import com.maciejbihun.repository.BondRepository;
 import com.maciejbihun.repository.UserAccountInObligationGroupRepository;
 import com.maciejbihun.repository.UserGroupObligationStrategyForRegisteredServiceRepository;
+import com.maciejbihun.service.BondService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,9 @@ import java.util.Optional;
 @Service
 @Transactional(readOnly = false, rollbackFor = Exception.class)
 public class BondControllerImpl implements BondController {
+
+    @Autowired
+    BondService bondService;
 
     private BondRepository bondRepository;
 
@@ -61,25 +65,32 @@ public class BondControllerImpl implements BondController {
 
             }
 
-            Bond bond = new Bond(userAccountInObligationGroup, userGroupObligationStrategyForRegisteredService, bondDto.getAmountOfUnitsToPay());
-            // save bond to generate id
-            bond = bondRepository.save(bond);
+            try {
+                Bond bond = bondService.createBondInObligationGroup(bondDto.getGroupAccountId(), bondDto.getObligationStrategyId(), bondDto.getAmountOfUnitsToPay());
+                // save bond to generate id
+                bond = bondRepository.save(bond);
 
-            // create money that covered by bonds
-            obligationStrategyById.get().getObligationGroup().addMoneyToAccount(bond.getAmountOfCreatedMoney());
+                // create money that covered by bonds
+                obligationStrategyById.get().getObligationGroup().addMoneyToAccount(bond.getAmountOfCreatedMoney());
 
-            // create money in the group account
-            userAccountInObligationGroup.addMoneyToAccount(bond.getAmountOfCreatedMoney());
-            userAccountInObligationGroup.getBonds().add(bond);
+                // create money in the group account
+                userAccountInObligationGroup.addMoneyToAccount(bond.getAmountOfCreatedMoney());
+                userAccountInObligationGroup.getBonds().add(bond);
 
-            userAccountInObligationGroupRepository.save(userAccountInObligationGroup);
-            return new ResponseEntity<Bond>(bond, HttpStatus.CREATED);
+                userAccountInObligationGroupRepository.save(userAccountInObligationGroup);
+                return new ResponseEntity<Bond>(bond, HttpStatus.CREATED);
+            } catch (Exception e) {
+
+
+            }
+
         } else {
             MultiValueMap<String, String> multiValueMap = new LinkedMultiValueMap<>();
             multiValueMap.set("info", String.format("Obligation strategy with id: %s or group account with id: " +
                     "%s was not found", bondDto.getObligationStrategyId(), bondDto.getGroupAccountId()));
             return new ResponseEntity<>(multiValueMap, HttpStatus.NOT_FOUND);
         }
+        return null;
     }
 
     /**

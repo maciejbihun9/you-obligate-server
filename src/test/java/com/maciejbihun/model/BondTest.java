@@ -38,7 +38,7 @@ public class BondTest {
         obligationStrategy.setMinAmountOfUnitsPerBond(10);
 
         Integer amountOfUnitsToPay = 1;
-        Bond testBond = new Bond(userAccountInObligationGroup, obligationStrategy, amountOfUnitsToPay);
+        Bond testBond = new Bond(userAccountInObligationGroup, obligationStrategy, amountOfUnitsToPay, new BigDecimal("100.00"), new BigDecimal("0.10"));
 
         assertEquals(new BigDecimal("90").multiply(new BigDecimal("12")), testBond.getAmountOfCreatedMoney());
 
@@ -51,7 +51,7 @@ public class BondTest {
         obligationStrategy.setMinAmountOfUnitsPerBond(10);
 
         Integer amountOfUnitsToPay = 1;
-        new Bond(userAccountInObligationGroup, obligationStrategy, amountOfUnitsToPay);
+        new Bond(userAccountInObligationGroup, obligationStrategy, amountOfUnitsToPay, new BigDecimal("100.00"), new BigDecimal("0.10"));
     }
 
     @Test
@@ -64,15 +64,15 @@ public class BondTest {
         obligationStrategy.setObligationGroup(obligationGroup);
 
         Integer amountOfUnitsToPay = 12;
-        Bond testBond = new Bond(userAccountInObligationGroup, obligationStrategy, amountOfUnitsToPay);
+        Bond testBond = new Bond(userAccountInObligationGroup, obligationStrategy, amountOfUnitsToPay, new BigDecimal("100.00"), new BigDecimal("0.10"));
         assertEquals(new BigDecimal("90.00").multiply(new BigDecimal(amountOfUnitsToPay)).setScale(2, RoundingMode.HALF_EVEN), testBond.getAmountOfCreatedMoney());
 
         obligationStrategy.setInterestRate(new BigDecimal("0.00"));
-        testBond = new Bond(userAccountInObligationGroup, obligationStrategy, amountOfUnitsToPay);
+        testBond = new Bond(userAccountInObligationGroup, obligationStrategy, amountOfUnitsToPay, new BigDecimal("100.00"), new BigDecimal("0.10"));
         assertEquals(new BigDecimal(amountOfUnitsToPay).multiply(obligationStrategy.getUnitOfWorkCost()), testBond.getAmountOfCreatedMoney());
 
         obligationStrategy.setInterestRate(new BigDecimal("-1.00"));
-        testBond = new Bond(userAccountInObligationGroup, obligationStrategy, amountOfUnitsToPay);
+        testBond = new Bond(userAccountInObligationGroup, obligationStrategy, amountOfUnitsToPay, new BigDecimal("100.00"), new BigDecimal("0.10"));
         assertEquals(new BigDecimal(amountOfUnitsToPay).multiply(obligationStrategy.getUnitOfWorkCost()), testBond.getAmountOfCreatedMoney());
     }
 
