@@ -20,14 +20,6 @@ public class BondServiceIntegrationTest {
     private BondService bondService;
 
     @Test(expected = Exception.class)
-    public void shouldThrowExceptionIfPredictedAmountOfUnitsToPayExceedsTheLimit() throws Exception {
-        Long userAccountInObligationGroupId = 1L;
-        Long obligationStrategyId = 1L;
-        Integer amountOfUnitsToPay = 1001;
-        bondService.createBondInObligationGroup(userAccountInObligationGroupId, obligationStrategyId, amountOfUnitsToPay);
-    }
-
-    @Test(expected = Exception.class)
     public void shouldThrowExceptionIfUserGroupAccountDoesNotExists() throws Exception {
         Long userAccountInObligationGroupId = -1L;
         Long obligationStrategyId = 1L;
