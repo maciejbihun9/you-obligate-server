@@ -1,6 +1,6 @@
 package com.maciejbihun.controller.impl;
 
-import com.maciejbihun.controller.BondService;
+import com.maciejbihun.controller.BondController;
 import com.maciejbihun.dto.BondDto;
 import com.maciejbihun.models.Bond;
 import com.maciejbihun.models.UserAccountInObligationGroup;
@@ -23,7 +23,7 @@ import java.util.Optional;
  */
 @Service
 @Transactional(readOnly = false, rollbackFor = Exception.class)
-public class BondServiceImpl implements BondService {
+public class BondControllerImpl implements BondController {
 
     private BondRepository bondRepository;
 
@@ -32,8 +32,8 @@ public class BondServiceImpl implements BondService {
     private UserAccountInObligationGroupRepository userAccountInObligationGroupRepository;
 
     @Autowired
-    public BondServiceImpl(BondRepository bondRepository, UserGroupObligationStrategyForRegisteredServiceRepository obligationStrategyRepository,
-                           UserAccountInObligationGroupRepository userAccountInObligationGroupRepository) {
+    public BondControllerImpl(BondRepository bondRepository, UserGroupObligationStrategyForRegisteredServiceRepository obligationStrategyRepository,
+                              UserAccountInObligationGroupRepository userAccountInObligationGroupRepository) {
         this.bondRepository = bondRepository;
         this.obligationStrategyRepository = obligationStrategyRepository;
         this.userAccountInObligationGroupRepository = userAccountInObligationGroupRepository;

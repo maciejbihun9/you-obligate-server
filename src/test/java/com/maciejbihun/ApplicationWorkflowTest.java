@@ -26,7 +26,7 @@ public class ApplicationWorkflowTest {
     ObligationGroupService obligationGroupService;
 
     @Autowired
-    BondService bondService;
+    BondController bondController;
 
     @Autowired
     UserGroupObligationStrategyForRegisteredServiceController userGroupObligationStrategyForRegisteredServiceController;
@@ -74,7 +74,7 @@ public class ApplicationWorkflowTest {
         // create bond object between a user and group:
         BondDto dentistBondDto = new BondDto(100, obligationStrategy.getBody().getId(), userObligationGroupAccount.getBody().getId());
         dentistBondDto.setAmountOfUnitsToPay(100);
-        ResponseEntity<Bond> bondInObligationGroup = bondService.createBondInObligationGroup(dentistBondDto);
+        ResponseEntity<Bond> bondInObligationGroup = bondController.createBondInObligationGroup(dentistBondDto);
         System.out.println();
 
         // create obligation strategy for each registered service

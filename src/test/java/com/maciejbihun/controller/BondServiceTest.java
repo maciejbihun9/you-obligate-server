@@ -1,6 +1,6 @@
 package com.maciejbihun.controller;
 
-import com.maciejbihun.controller.impl.BondServiceImpl;
+import com.maciejbihun.controller.impl.BondControllerImpl;
 import com.maciejbihun.datatype.UnitOfWork;
 import com.maciejbihun.dto.BondDto;
 import com.maciejbihun.models.*;
@@ -37,11 +37,11 @@ public class BondServiceTest {
     @Mock
     UserAccountInObligationGroupRepository userAccountInObligationGroupRepository;
 
-    private BondService bondService;
+    private BondController bondController;
 
     @Before
     public void setUp(){
-        this.bondService = new BondServiceImpl(bondRepository, obligationStrategyRepository, userAccountInObligationGroupRepository);
+        this.bondController = new BondControllerImpl(bondRepository, obligationStrategyRepository, userAccountInObligationGroupRepository);
 
 
     }
@@ -55,7 +55,7 @@ public class BondServiceTest {
 
         BondDto bondDto = new BondDto(100, 10L, 10L);
 
-        ResponseEntity<Bond> bondInObligationGroup = bondService.createBondInObligationGroup(bondDto);
+        ResponseEntity<Bond> bondInObligationGroup = bondController.createBondInObligationGroup(bondDto);
         assertEquals(HttpStatus.NOT_FOUND, bondInObligationGroup.getStatusCode());
     }
 
@@ -79,7 +79,7 @@ public class BondServiceTest {
         // when
         Mockito.when(obligationStrategyRepository.findById(id)).thenReturn(Optional.of(obligationStrategy));
         Mockito.when(userAccountInObligationGroupRepository.findById(id)).thenReturn(Optional.of(userAccountInObligationGroup));
-        bondService.createBondInObligationGroup(bondDto);
+        bondController.createBondInObligationGroup(bondDto);
 
         // then
         assertEquals(Integer.valueOf(100), userAccountInObligationGroup.getBonds().get(0).getAmountOfUnitsToPay()); // bond was stored in user group account bonds list
@@ -112,7 +112,7 @@ public class BondServiceTest {
         // when
         Mockito.when(obligationStrategyRepository.findById(id)).thenReturn(Optional.of(obligationStrategy));
         Mockito.when(userAccountInObligationGroupRepository.findById(id)).thenReturn(Optional.of(userAccountInObligationGroup));
-        bondService.createBondInObligationGroup(bondDto);
+        bondController.createBondInObligationGroup(bondDto);
     }
 
 }

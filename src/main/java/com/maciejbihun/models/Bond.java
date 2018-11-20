@@ -22,23 +22,21 @@ public class Bond {
 
     private static final String OBLIGATION_CLOSED_MESSAGE = "Obligation is closed, because has been paid. You can not subtract units from obligation that has been paid";
 
-    private static final String NOT_ACCEPTABLE_AMOUNT_OF_UNITS_PER_BOND = "Not acceptable amount of units per bond.";
-
     private Bond(){}
 
     public Bond(UserAccountInObligationGroup userAccountInObligationGroup,
-                UserGroupObligationStrategyForRegisteredService obligationStrategy, Integer amountOfUnitsToPay) throws IllegalArgumentException {
+                UserGroupObligationStrategyForRegisteredService obligationStrategy,
+                Integer amountOfUnitsToPay,
+                BigDecimal unitOfWorkCost,
+                BigDecimal amountOfCreatedMoney)
+    {
 
-        if (amountOfUnitsToPay < obligationStrategy.getMinAmountOfUnitsPerBond()){
-            throw new IllegalArgumentException(String.format(NOT_ACCEPTABLE_AMOUNT_OF_UNITS_PER_BOND + " It was %s, but it should be %s",
-                    amountOfUnitsToPay, obligationStrategy.getMinAmountOfUnitsPerBond()));
-        }
         this.amountOfUnitsToPay = amountOfUnitsToPay;
         this.userAccountInObligationGroup = userAccountInObligationGroup;
         this.interestRate = obligationStrategy.getInterestRate();
         this.obligationGroup = obligationStrategy.getObligationGroup();
-        this.unitOfWorkCost = obligationStrategy.getUnitOfWorkCost().subtract(this.interestRate.multiply(obligationStrategy.getUnitOfWorkCost()));
-        this.amountOfCreatedMoney = this.unitOfWorkCost.multiply(new BigDecimal(this.amountOfUnitsToPay)).setScale(2, RoundingMode.HALF_UP);
+        this.unitOfWorkCost = unitOfWorkCost;
+        this.amountOfCreatedMoney = amountOfCreatedMoney;
     }
 
     @Id

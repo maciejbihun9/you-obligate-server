@@ -4,7 +4,6 @@ import com.maciejbihun.Application;
 import com.maciejbihun.HibernateConf;
 import com.maciejbihun.dto.BondDto;
 import com.maciejbihun.models.Bond;
-import com.maciejbihun.models.User;
 import com.maciejbihun.models.UserAccountInObligationGroup;
 import com.maciejbihun.repository.BondRepository;
 import com.maciejbihun.repository.UserAccountInObligationGroupRepository;
@@ -18,11 +17,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.persistence.EntityGraph;
 import javax.sql.DataSource;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -35,7 +31,7 @@ import static org.junit.Assert.assertNotNull;
 public class BondServiceIntegrationTest {
 
     @Autowired
-    private BondService bondService;
+    private BondController bondController;
 
     @Autowired
     private BondRepository bondRepository;
@@ -71,7 +67,7 @@ public class BondServiceIntegrationTest {
         BondDto bondDto = new BondDto(amountOfUnitsToPay, obligationStrategyId, obligationGroupAccountId);
 
         // when
-        ResponseEntity<Bond> bondInObligationGroupResponseEntity = bondService.createBondInObligationGroup(bondDto);
+        ResponseEntity<Bond> bondInObligationGroupResponseEntity = bondController.createBondInObligationGroup(bondDto);
 
         ResponseEntity<UserAccountInObligationGroup> userAccountInObligationGroupWithBonds =
                 userAccountInObligationGroupService.getUserAccountInObligationGroupWithBonds(obligationGroupAccountId);

@@ -3,7 +3,6 @@ package com.maciejbihun.controller;
 import com.maciejbihun.Application;
 import com.maciejbihun.HibernateConf;
 import com.maciejbihun.dto.BondDto;
-import com.maciejbihun.models.Bond;
 import com.maciejbihun.models.UserAccountInObligationGroup;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,7 +24,7 @@ public class UserAccountInObligationGroupServiceIntegrationTest {
     UserAccountInObligationGroupService obligationGroupAccountService;
 
     @Autowired
-    BondService bondService;
+    BondController bondController;
 
     @Test
     public void getUserAccountInObligationGroupWithBonds(){
@@ -37,7 +36,7 @@ public class UserAccountInObligationGroupServiceIntegrationTest {
         BondDto bondDto = new BondDto(amountOfUnitsToPay, obligationStrategyId, obligationGroupAccountId);
 
         // when
-        bondService.createBondInObligationGroup(bondDto);
+        bondController.createBondInObligationGroup(bondDto);
 
         // then
         ResponseEntity<UserAccountInObligationGroup> userAccountInObligationGroupWithBonds =
