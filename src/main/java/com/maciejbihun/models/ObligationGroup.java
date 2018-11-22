@@ -1,5 +1,7 @@
 package com.maciejbihun.models;
 
+import com.maciejbihun.converters.AtomicReferenceConverter;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -53,6 +55,7 @@ public class ObligationGroup {
     @Column(name = "CREATED_DATE_TIME", nullable = true, updatable = true)
     private LocalDateTime createdDateTime = LocalDateTime.now();
 
+    @Convert(converter = AtomicReferenceConverter.class)
     @Column(name = "ACCOUNT_BALANCE", nullable = false, updatable = true, length = 400)
     private final AtomicReference<BigDecimal> accountBalance = new AtomicReference<>(BigDecimal.ZERO);
 

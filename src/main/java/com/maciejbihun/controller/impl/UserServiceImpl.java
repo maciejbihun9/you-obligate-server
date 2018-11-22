@@ -73,4 +73,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return new UserPrincipal(user);
     }
 
+    @Override
+    public List<User> getUsersWithManyAccounts() {
+        return null;
+    }
+
 }

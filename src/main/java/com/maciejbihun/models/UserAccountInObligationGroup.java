@@ -1,5 +1,7 @@
 package com.maciejbihun.models;
 
+import com.maciejbihun.converters.AtomicReferenceConverter;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -15,6 +17,8 @@ import java.util.concurrent.atomic.AtomicReference;
 @Entity
 @Table(name = "UserAccountInObligationGroup")
 @NamedEntityGraph(name = "graph.accountBonds", attributeNodes = @NamedAttributeNode("bonds"))
+@NamedEntityGraphs({@NamedEntityGraph(name = "graph.accountBonds", attributeNodes = @NamedAttributeNode("bonds")),
+                    @NamedEntityGraph(name = "graph.userObligationStrategies", attributeNodes = @NamedAttributeNode("userObligationStrategies"))})
 public class UserAccountInObligationGroup implements Serializable {
 
     public UserAccountInObligationGroup(){}
@@ -34,6 +38,7 @@ public class UserAccountInObligationGroup implements Serializable {
     @JoinColumn(name = "USER_ID", nullable = false)
     private User user;
 
+    @Convert(converter = AtomicReferenceConverter.class)
     @Basic(optional = false)
     @Column(name = "ACCOUNT_BALANCE", length = 400)
     private final AtomicReference<BigDecimal> accountBalance = new AtomicReference<>(BigDecimal.ZERO);
@@ -47,7 +52,6 @@ public class UserAccountInObligationGroup implements Serializable {
     private LocalDateTime createdDateTime = LocalDateTime.now();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "userAccountInObligationGroup")
-
     private List<Bond> bonds = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)

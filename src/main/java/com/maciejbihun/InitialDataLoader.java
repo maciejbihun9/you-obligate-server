@@ -70,78 +70,77 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
         user.setRoles(Arrays.asList(adminRole));
 
         // this is an admin for entire application, so this may stay
-        User adminUser = userRepository.save(user);
-
-        // Add initial users
-        Role userRole = roleRepository.findByName("ROLE_USER");
-        int i = 0;
-        List<String> names = Arrays.asList("Maciej", "Jakub", "Marian",
-                "Jason", "Marlena", "Kevin", "Robert", "Malecki", "Zaneta", "Pawel");
-        List<String> usernames = Arrays.asList("maciej", "jakub", "marian",
-                "jason", "marlena", "kevin", "robert", "malecki", "zaneta", "pawel");
+        userRepository.save(user);
 
         List<UserRegisteredService> userRegisteredServices = getUserRegisteredServices();
 
-        // create test obligation groups
-        List<User> users = Arrays.asList(adminUser, userRepository.findById(2L).get(), userRepository.findById(3L).get());
-        List<ObligationGroup> testObligationGroups = createTestObligationGroups(users);
+        List<User> users = new ArrayList<>();
 
-        while(i < amountOfUsers){
+        int i = 0;
+        while(i < amountOfUsers) {
             User testUser = new User();
-            testUser.setName(names.get(i));
-            testUser.setSurname("soe surname " + i);
-            testUser.setUsername(usernames.get(i));
+            testUser.setName("Name #" + i);
+            testUser.setSurname("Surname #" + i);
+            testUser.setUsername("user" + i);
             testUser.setPassword(passwordEncoder.encode("maciek1"));
-            testUser.setRoles(Arrays.asList(userRole));
+            testUser.setRoles(Arrays.asList(roleRepository.findByName("ROLE_USER")));
             UserRegisteredService userRegisteredService = userRegisteredServices.get(i);
             userRegisteredService.setUser(testUser);
             testUser.setUserRegisteredServices(Arrays.asList(userRegisteredService));
+            users.add(testUser);
             userRepository.save(testUser);
+            i++;
+        }
+
+        List<ObligationGroup> testObligationGroups = createTestObligationGroups(users.subList(0,3));
+
+        i = 0;
+        while(i < amountOfUsers){
 
             // create accounts for users in given obligation groups
             if (i < 5){
-                UserAccountInObligationGroup userAccountInObligationGroup = new UserAccountInObligationGroup(testUser, testObligationGroups.get(0));
+                UserAccountInObligationGroup userAccountInObligationGroup = new UserAccountInObligationGroup(users.get(i), testObligationGroups.get(0));
                 userAccountInObligationGroupRepository.save(userAccountInObligationGroup);
 
                 // create obligation strategy
-                createTestObligationStrategy(testUser.getUserRegisteredServices().get(0), testObligationGroups.get(0));
+                createTestObligationStrategy(users.get(i).getUserRegisteredServices().get(0), testObligationGroups.get(0));
 
             } else if (i >= 5 && i < 20){
                 // create user obligation group account
-                UserAccountInObligationGroup userAccountInObligationGroup = new UserAccountInObligationGroup(testUser, testObligationGroups.get(0));
+                UserAccountInObligationGroup userAccountInObligationGroup = new UserAccountInObligationGroup(users.get(i), testObligationGroups.get(0));
                 userAccountInObligationGroupRepository.save(userAccountInObligationGroup);
 
                 // create obligation strategy
-                createTestObligationStrategy(testUser.getUserRegisteredServices().get(0), testObligationGroups.get(0));
+                createTestObligationStrategy(users.get(i).getUserRegisteredServices().get(0), testObligationGroups.get(0));
 
                 // create user obligation group account
-                userAccountInObligationGroup = new UserAccountInObligationGroup(testUser, testObligationGroups.get(1));
+                userAccountInObligationGroup = new UserAccountInObligationGroup(users.get(i), testObligationGroups.get(1));
                 userAccountInObligationGroupRepository.save(userAccountInObligationGroup);
 
                 // create obligation strategy
-                createTestObligationStrategy(testUser.getUserRegisteredServices().get(0), testObligationGroups.get(1));
+                createTestObligationStrategy(users.get(i).getUserRegisteredServices().get(0), testObligationGroups.get(1));
 
             } else if(i >= 20 && i < 25){
                 // create user obligation group account
-                UserAccountInObligationGroup userAccountInObligationGroup = new UserAccountInObligationGroup(testUser, testObligationGroups.get(1));
+                UserAccountInObligationGroup userAccountInObligationGroup = new UserAccountInObligationGroup(users.get(i), testObligationGroups.get(1));
                 userAccountInObligationGroupRepository.save(userAccountInObligationGroup);
 
                 // create obligation strategy
-                createTestObligationStrategy(testUser.getUserRegisteredServices().get(0), testObligationGroups.get(1));
+                createTestObligationStrategy(users.get(i).getUserRegisteredServices().get(0), testObligationGroups.get(1));
 
                 // create user obligation group account
-                userAccountInObligationGroup = new UserAccountInObligationGroup(testUser, testObligationGroups.get(2));
+                userAccountInObligationGroup = new UserAccountInObligationGroup(users.get(i), testObligationGroups.get(2));
                 userAccountInObligationGroupRepository.save(userAccountInObligationGroup);
 
                 // create obligation strategy
-                createTestObligationStrategy(testUser.getUserRegisteredServices().get(0), testObligationGroups.get(2));
+                createTestObligationStrategy(users.get(i).getUserRegisteredServices().get(0), testObligationGroups.get(2));
             } else if (i >= 25){
                 // create user obligation group account
-                UserAccountInObligationGroup userAccountInObligationGroup = new UserAccountInObligationGroup(testUser, testObligationGroups.get(2));
+                UserAccountInObligationGroup userAccountInObligationGroup = new UserAccountInObligationGroup(users.get(i), testObligationGroups.get(2));
                 userAccountInObligationGroupRepository.save(userAccountInObligationGroup);
 
                 // create obligation strategy
-                createTestObligationStrategy(testUser.getUserRegisteredServices().get(0), testObligationGroups.get(2));
+                createTestObligationStrategy(users.get(i).getUserRegisteredServices().get(0), testObligationGroups.get(2));
             }
             i++;
         }
@@ -203,15 +202,15 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
     private List<UserRegisteredService> getUserRegisteredServices(){
         // people know better how to name his service,
         // people now better how to sell them self
-        List<String> servicesNames = Arrays.asList("dentist", "hairdresser", "thai massage", "gym", "swimming pool",
-                                                    "transport", "beers in a bar", "nail painting", "mowing the lawn", "personal trainer");
+        /*List<String> servicesNames = Arrays.asList("dentist", "hairdresser", "thai massage", "gym", "swimming pool",
+                                                    "transport", "beers in a bar", "nail painting", "mowing the lawn", "personal trainer");*/
         List<UserRegisteredService> userRegisteredServices = new ArrayList<>(amountOfUsers);
         int i = 0;
         while(i < amountOfUsers){
             // create registered service
             UserRegisteredService userRegisteredService = new UserRegisteredService();
             userRegisteredService.setCreatedDateTime(LocalDateTime.now());
-            userRegisteredService.setServiceName(servicesNames.get(i));
+            userRegisteredService.setServiceName("SERVICE #" + i);
             userRegisteredService.setServiceDescription("Any, because it is not important now");
             userRegisteredService.setExperienceDescription("Experience desciption is also not really important");
             userRegisteredService.setUserRegisteredServiceCategory(UserRegisteredServiceCategory.IT);

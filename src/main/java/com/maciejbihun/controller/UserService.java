@@ -17,4 +17,5 @@ public interface UserService {
     UserPrincipal loadUserByUsername(String username);
     ResponseEntity<User> saveUserData(UserDto userDto);
     ResponseEntity<User> saveUserData(User user);
+    List<User> getUsersWithManyAccounts();
 }
