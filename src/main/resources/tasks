@@ -1,0 +1,23 @@
+
+ * when is a good time to start writing integration tests - done
+
+ * should I create more data?:
+ - I will need more obligation groups, more userGroupAccounts to test if everything works in the right way
+ - I will need that for tests
+
+ * czy UserGroupObligationStrategyForRegisteredService powinno mieć stan konta? - done (może dodam to na dalszym etapie tworzenia produktu):
+ - posiada limit dla utworzonych jednostek pracy, posiada parametry zadłużania się także nie potrzeba wiedzieć, że akurat dla tej strategii utworzono
+ tyle, a tyle kasy
+ - ale może sie okazać, że jednak user bedzie chciał wiedzieć ile kasy posiada w danej strategii,
+ - siemka, chciałbym wiedzieć jak dużo kasy utworzyłem w danej strategii
+
+ * split users between obligation groups - done:
+
+ * create a method to get all users which has account in more that one obligation group
+
+ * create many obligation group accounts in one obligation group
+ - mix users in obligation groups, so I will be able to test what happens when one user has an account in many obligation groups,
+ - I will test if other account balances stay the same after some additional payments,
+ - here is a problem with the right association between obligation groups
+
+ * create many obligation groups to test interactions between those groups

@@ -60,12 +60,11 @@ public class BondServiceImpl implements BondService {
             // create money that covered by bonds
             obligationStrategyById.get().getObligationGroup().addMoneyToAccount(bond.getAmountOfCreatedMoney());
 
-            // save bond to generate id
-            bond = bondRepository.save(bond);
-
             // create money in the group account
             userAccountInObligationGroup.addMoneyToAccount(bond.getAmountOfCreatedMoney());
-            userAccountInObligationGroup.getBonds().add(bond);
+
+            // save bond to generate id
+            bondRepository.save(bond);
 
             userAccountInObligationGroupRepository.save(userAccountInObligationGroup);
         } else {

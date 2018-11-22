@@ -43,7 +43,7 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    private int amountOfUsers = 10;
+    private int amountOfUsers = 30;
 
     @Override
     @Transactional
@@ -68,6 +68,8 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
         user.setUsername("maciek1");
         user.setPassword(passwordEncoder.encode("maciek1"));
         user.setRoles(Arrays.asList(adminRole));
+
+        // this is an admin for entire application, so this may stay
         User adminUser = userRepository.save(user);
 
         // Add initial users
@@ -80,6 +82,10 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
 
         List<UserRegisteredService> userRegisteredServices = getUserRegisteredServices();
 
+        // create test obligation groups
+        List<User> users = Arrays.asList(adminUser, userRepository.findById(2L).get(), userRepository.findById(3L).get());
+        List<ObligationGroup> testObligationGroups = createTestObligationGroups(users);
+
         while(i < amountOfUsers){
             User testUser = new User();
             testUser.setName(names.get(i));
@@ -91,26 +97,81 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
             userRegisteredService.setUser(testUser);
             testUser.setUserRegisteredServices(Arrays.asList(userRegisteredService));
             userRepository.save(testUser);
+
+            // create accounts for users in given obligation groups
+            if (i < 5){
+                UserAccountInObligationGroup userAccountInObligationGroup = new UserAccountInObligationGroup(testUser, testObligationGroups.get(0));
+                userAccountInObligationGroupRepository.save(userAccountInObligationGroup);
+
+                // create obligation strategy
+                createTestObligationStrategy(testUser.getUserRegisteredServices().get(0), testObligationGroups.get(0));
+
+            } else if (i >= 5 && i < 20){
+                // create user obligation group account
+                UserAccountInObligationGroup userAccountInObligationGroup = new UserAccountInObligationGroup(testUser, testObligationGroups.get(0));
+                userAccountInObligationGroupRepository.save(userAccountInObligationGroup);
+
+                // create obligation strategy
+                createTestObligationStrategy(testUser.getUserRegisteredServices().get(0), testObligationGroups.get(0));
+
+                // create user obligation group account
+                userAccountInObligationGroup = new UserAccountInObligationGroup(testUser, testObligationGroups.get(1));
+                userAccountInObligationGroupRepository.save(userAccountInObligationGroup);
+
+                // create obligation strategy
+                createTestObligationStrategy(testUser.getUserRegisteredServices().get(0), testObligationGroups.get(1));
+
+            } else if(i >= 20 && i < 25){
+                // create user obligation group account
+                UserAccountInObligationGroup userAccountInObligationGroup = new UserAccountInObligationGroup(testUser, testObligationGroups.get(1));
+                userAccountInObligationGroupRepository.save(userAccountInObligationGroup);
+
+                // create obligation strategy
+                createTestObligationStrategy(testUser.getUserRegisteredServices().get(0), testObligationGroups.get(1));
+
+                // create user obligation group account
+                userAccountInObligationGroup = new UserAccountInObligationGroup(testUser, testObligationGroups.get(2));
+                userAccountInObligationGroupRepository.save(userAccountInObligationGroup);
+
+                // create obligation strategy
+                createTestObligationStrategy(testUser.getUserRegisteredServices().get(0), testObligationGroups.get(2));
+            } else if (i >= 25){
+                // create user obligation group account
+                UserAccountInObligationGroup userAccountInObligationGroup = new UserAccountInObligationGroup(testUser, testObligationGroups.get(2));
+                userAccountInObligationGroupRepository.save(userAccountInObligationGroup);
+
+                // create obligation strategy
+                createTestObligationStrategy(testUser.getUserRegisteredServices().get(0), testObligationGroups.get(2));
+            }
             i++;
         }
+        alreadySetup = true;
+    }
 
-        // create obligation group
-        ObligationGroup obligationGroup = new ObligationGroup(adminUser, "SPARTANS", "Bihun",
-                "BHN", "This is just simple little money name");
-        obligationGroupRepository.save(obligationGroup);
-
-        // create obligation group account
-        User userById = userRepository.findById(2L).get();
-        UserAccountInObligationGroup userAccountInObligationGroup = new UserAccountInObligationGroup(userById, obligationGroup);
-        userAccountInObligationGroupRepository.save(userAccountInObligationGroup);
-
+    private UserGroupObligationStrategyForRegisteredService createTestObligationStrategy(UserRegisteredService userRegisteredService, ObligationGroup obligationGroup){
         // create obligation strategy
         UserGroupObligationStrategyForRegisteredService obligationStrategy = new UserGroupObligationStrategyForRegisteredService(
-                userById.getUserRegisteredServices().get(0), obligationGroup, UnitOfWork.SERVICE, new BigDecimal("100.00"), new BigDecimal("0.05"), 1000
+                userRegisteredService, obligationGroup, UnitOfWork.SERVICE, new BigDecimal("100.00"), new BigDecimal("0.05"), 1000
         );
-        obligationStrategyRepository.save(obligationStrategy);
+        return obligationStrategyRepository.save(obligationStrategy);
+    }
 
-        alreadySetup = true;
+    /**
+     * I assume that each obligation group will have different admin user.
+     */
+    private List<ObligationGroup> createTestObligationGroups(List<User> adminUsers){
+        int i = 0;
+        int numberOfGroups = adminUsers.size();
+        List<ObligationGroup> testObligationGroups = new ArrayList<>();
+        while(i < numberOfGroups){
+            // create obligation group
+            ObligationGroup obligationGroup = new ObligationGroup(adminUsers.get(i), "GROUP #" + i, "Money #" + i,
+                    "Money #" + i, "test description");
+            obligationGroup = obligationGroupRepository.save(obligationGroup);
+            testObligationGroups.add(obligationGroup);
+            i++;
+        }
+        return testObligationGroups;
     }
 
     @Transactional

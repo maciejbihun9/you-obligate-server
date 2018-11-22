@@ -22,7 +22,7 @@ public class Bond {
 
     private static final String OBLIGATION_CLOSED_MESSAGE = "Obligation is closed, because has been paid. You can not subtract units from obligation that has been paid";
 
-    private Bond(){}
+    public Bond(){}
 
     public Bond(UserAccountInObligationGroup userAccountInObligationGroup,
                 UserGroupObligationStrategyForRegisteredService obligationStrategy,
