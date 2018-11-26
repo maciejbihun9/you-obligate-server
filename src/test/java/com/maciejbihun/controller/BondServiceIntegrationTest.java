@@ -46,7 +46,7 @@ public class BondServiceIntegrationTest {
     private DataSource testDataSource;
 
     @Autowired
-    private UserAccountInObligationGroupService userAccountInObligationGroupService;
+    private UserAccountInObligationGroupController userAccountInObligationGroupController;
 
     @Before
     public void initData(){
@@ -70,7 +70,7 @@ public class BondServiceIntegrationTest {
         ResponseEntity<Bond> bondInObligationGroupResponseEntity = bondController.createBondInObligationGroup(bondDto);
 
         ResponseEntity<UserAccountInObligationGroup> userAccountInObligationGroupWithBonds =
-                userAccountInObligationGroupService.getUserAccountInObligationGroupWithBonds(obligationGroupAccountId);
+                userAccountInObligationGroupController.getUserAccountInObligationGroupWithBonds(obligationGroupAccountId);
 
         Bond savedBond = userAccountInObligationGroupWithBonds.getBody().getBonds().get(0);
 

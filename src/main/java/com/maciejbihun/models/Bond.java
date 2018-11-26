@@ -1,6 +1,7 @@
 package com.maciejbihun.models;
 
 import com.maciejbihun.datatype.BondStatus;
+import com.maciejbihun.exceptions.NegativeValueException;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -13,6 +14,7 @@ import java.util.logging.Logger;
  * @author Maciej Bihun
  * <p>
  * Represents an obligation between a user and a group.
+ * A user obligates to do given amount of units of work for group members.
  */
 @Entity
 @Table(name = "Bond")
@@ -22,21 +24,24 @@ public class Bond {
 
     private static final String OBLIGATION_CLOSED_MESSAGE = "Obligation is closed, because has been paid. You can not subtract units from obligation that has been paid";
 
+    private static final String NOT_ACCEPTABLE_AMOUNT_OF_UNITS_PER_BOND = "Not acceptable amount of units per bond.";
+
     public Bond(){}
 
-    public Bond(UserAccountInObligationGroup userAccountInObligationGroup,
-                UserGroupObligationStrategyForRegisteredService obligationStrategy,
-                Integer amountOfUnitsToPay,
-                BigDecimal unitOfWorkCost,
-                BigDecimal amountOfCreatedMoney)
-    {
-
+    public Bond(UserGroupObligationStrategyForRegisteredService obligationStrategy, Integer amountOfUnitsToPay) {
+        if (amountOfUnitsToPay < obligationStrategy.getMinAmountOfUnitsPerBond()){
+            throw new IllegalArgumentException(String.format(NOT_ACCEPTABLE_AMOUNT_OF_UNITS_PER_BOND + " It was %s, but it should be %s",
+                    amountOfUnitsToPay, obligationStrategy.getMinAmountOfUnitsPerBond()));
+        }
         this.amountOfUnitsToPay = amountOfUnitsToPay;
-        this.userAccountInObligationGroup = userAccountInObligationGroup;
         this.interestRate = obligationStrategy.getInterestRate();
         this.obligationGroup = obligationStrategy.getObligationGroup();
-        this.unitOfWorkCost = unitOfWorkCost;
-        this.amountOfCreatedMoney = amountOfCreatedMoney;
+        this.unitOfWorkCost = obligationStrategy.getUnitOfWorkCost();
+        if (unitOfWorkCost.compareTo(BigDecimal.ZERO) < 0 || interestRate.compareTo(BigDecimal.ZERO) < 0 || amountOfUnitsToPay < 0){
+            throw new NegativeValueException();
+        }
+        this.unitOfWorkCost = unitOfWorkCost.subtract(interestRate.multiply(unitOfWorkCost));
+        this.amountOfCreatedMoney = unitOfWorkCost.multiply(new BigDecimal(amountOfUnitsToPay)).setScale(2, RoundingMode.HALF_UP);
     }
 
     @Id
@@ -48,10 +53,6 @@ public class Bond {
     @Basic(optional = false)
     @Column(name = "BOND_STATUS", updatable = true)
     private BondStatus bondStatus = BondStatus.CREATED;
-
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "OBLIGATION_GROUP_ACCOUNT_ID", nullable = false)
-    private UserAccountInObligationGroup userAccountInObligationGroup;
 
     @Basic(optional = false)
     @Column(name = "AMOUNT_OF_UNITS_TO_PAY", updatable = true)
@@ -103,6 +104,14 @@ public class Bond {
 
     public Long getId() {
         return id;
+    }
+
+    public BondStatus getBondStatus() {
+        return bondStatus;
+    }
+
+    public void setBondStatus(BondStatus bondStatus) {
+        this.bondStatus = bondStatus;
     }
 
     public UserAccountInObligationGroup getUserAccountInObligationGroup() {return userAccountInObligationGroup;}

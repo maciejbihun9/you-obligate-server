@@ -16,7 +16,6 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 @Entity
 @Table(name = "UserAccountInObligationGroup")
-@NamedEntityGraph(name = "graph.accountBonds", attributeNodes = @NamedAttributeNode("bonds"))
 @NamedEntityGraphs({@NamedEntityGraph(name = "graph.accountBonds", attributeNodes = @NamedAttributeNode("bonds")),
                     @NamedEntityGraph(name = "graph.userObligationStrategies", attributeNodes = @NamedAttributeNode("userObligationStrategies"))})
 public class UserAccountInObligationGroup implements Serializable {
@@ -52,9 +51,6 @@ public class UserAccountInObligationGroup implements Serializable {
     private LocalDateTime createdDateTime = LocalDateTime.now();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "userAccountInObligationGroup")
-    private List<Bond> bonds = new ArrayList<>();
-
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<UserGroupObligationStrategyForRegisteredService> userObligationStrategies = new ArrayList<>();
 
     // TODO
@@ -82,10 +78,6 @@ public class UserAccountInObligationGroup implements Serializable {
 
     public LocalDateTime getCreatedDateTime() {
         return createdDateTime;
-    }
-
-    public List<Bond> getBonds() {
-        return bonds;
     }
 
     public List<UserGroupObligationStrategyForRegisteredService> getUserObligationStrategies() {

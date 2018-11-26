@@ -1,6 +1,6 @@
 package com.maciejbihun.controller.impl;
 
-import com.maciejbihun.controller.UserAccountInObligationGroupService;
+import com.maciejbihun.controller.UserAccountInObligationGroupController;
 import com.maciejbihun.controller.UserService;
 import com.maciejbihun.dto.ObligationGroupAccountDto;
 import com.maciejbihun.models.ObligationGroup;
@@ -11,6 +11,7 @@ import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -23,9 +24,9 @@ import java.util.HashMap;
 /**
  * @author Maciej Bihun
  */
-@Service
+@Controller
 @Transactional
-public class UserAccountInObligationGroupServiceImpl implements UserAccountInObligationGroupService {
+public class UserAccountInObligationGroupControllerImpl implements UserAccountInObligationGroupController {
 
     @Autowired
     UserAccountInObligationGroupRepository userAccountInObligationGroupRepository;

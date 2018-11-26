@@ -32,7 +32,7 @@ public class ApplicationWorkflowTest {
     UserGroupObligationStrategyForRegisteredServiceController userGroupObligationStrategyForRegisteredServiceController;
 
     @Autowired
-    UserAccountInObligationGroupService obligationGroupAccountService;
+    UserAccountInObligationGroupController obligationGroupAccountService;
 
 
     @Test

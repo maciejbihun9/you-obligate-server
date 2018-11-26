@@ -12,6 +12,7 @@ import com.maciejbihun.service.BondService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
@@ -22,7 +23,7 @@ import java.util.Optional;
 /**
  * @author Maciej Bihun
  */
-@Service
+@Controller
 @Transactional(readOnly = false, rollbackFor = Exception.class)
 public class BondControllerImpl implements BondController {
 
@@ -66,7 +67,7 @@ public class BondControllerImpl implements BondController {
             }
 
             try {
-                Bond bond = bondService.createBondInObligationGroup(bondDto.getGroupAccountId(), bondDto.getObligationStrategyId(), bondDto.getAmountOfUnitsToPay());
+                Bond bond = bondService.createBondInObligationGroup(bondDto.getObligationStrategyId(), bondDto.getAmountOfUnitsToPay());
                 // save bond to generate id
                 bond = bondRepository.save(bond);
 

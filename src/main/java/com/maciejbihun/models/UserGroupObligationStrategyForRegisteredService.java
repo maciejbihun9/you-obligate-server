@@ -6,8 +6,13 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 
 /**
- * @author Maciej Bihun
  * Represents obligation strategy between the user registered service and concrete obligation group.
+ * <p>
+ * This is a contract between a user and obligation group. Strategy is immutable.
+ * Each change has to be reflected with another, fresh strategy instance.
+ * This approach assures that a strategy will be coherent with a service.
+ *
+ * @author Maciej Bihun
  */
 @Entity
 @Table(name="UserGroupObligationStrategyForRegisteredService")
@@ -32,7 +37,8 @@ public class UserGroupObligationStrategyForRegisteredService {
     @Id
     @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "USER_GROUP_OBLIGATION_STRATEGY_FOR_REGISTERED_SERVICE_SEQ")
-    @SequenceGenerator(name = "USER_GROUP_OBLIGATION_STRATEGY_FOR_REGISTERED_SERVICE_SEQ", sequenceName = "USER_GROUP_OBLIGATION_STRATEGY_FOR_REGISTERED_SERVICE_SEQ", allocationSize = 1)
+    @SequenceGenerator(name = "USER_GROUP_OBLIGATION_STRATEGY_FOR_REGISTERED_SERVICE_SEQ",
+            sequenceName = "USER_GROUP_OBLIGATION_STRATEGY_FOR_REGISTERED_SERVICE_SEQ", allocationSize = 1)
     private Long id;
 
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
@@ -42,6 +48,10 @@ public class UserGroupObligationStrategyForRegisteredService {
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "OBLIGATION_GROUP_ID", nullable = false)
     private ObligationGroup obligationGroup;
+
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @JoinColumn(name = "USER_ACCOUNT_IN_OBLIGATION_GROUP_ID", nullable = false)
+    private UserAccountInObligationGroup userAccountInObligationGroup;
 
     /**
      * Represents one unit of work type.
@@ -115,6 +125,10 @@ public class UserGroupObligationStrategyForRegisteredService {
             throw new IllegalArgumentException(NOT_ACCEPTED_INTEREST_RATE_VALUE);
         }
         this.interestRate = interestRate;
+    }
+
+    public UserAccountInObligationGroup getUserAccountInObligationGroup() {
+        return userAccountInObligationGroup;
     }
 
     public UserRegisteredService getUserRegisteredService() {

@@ -3,6 +3,7 @@ package com.maciejbihun.service;
 import com.maciejbihun.Application;
 import com.maciejbihun.HibernateConf;
 import com.maciejbihun.controller.UserService;
+import com.maciejbihun.models.Bond;
 import com.maciejbihun.models.ObligationGroup;
 import com.maciejbihun.models.User;
 import com.maciejbihun.models.UserAccountInObligationGroup;
@@ -16,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -27,6 +29,7 @@ import static org.junit.Assert.assertEquals;
 @ContextConfiguration
 @SpringBootTest(classes = {Application.class, HibernateConf.class})
 @ActiveProfiles("test")
+@Transactional
 public class BondServiceIntegrationTest {
 
     @Autowired
@@ -41,27 +44,21 @@ public class BondServiceIntegrationTest {
     @Autowired
     private UserRepository userRepository;
 
-    // createBondInObligationGroup() --- TEST METHODS --- //
+    @Autowired
+    private UserAccountInObligationGroupService userAccountInObligationGroupService;
 
-    @Test(expected = Exception.class)
-    public void shouldThrowExceptionIfUserGroupAccountDoesNotExists() throws Exception {
-        Long userAccountInObligationGroupId = -1L;
-        Long obligationStrategyId = 1L;
-        Integer amountOfUnitsToPay = 1001;
-        bondService.createBondInObligationGroup(userAccountInObligationGroupId, obligationStrategyId, amountOfUnitsToPay);
-    }
+    // createBondInObligationGroup() --- TEST METHODS --- //
 
     @Test
     public void shouldIncreaseAmountOfMoneyInObligationGroupAccount() throws Exception {
         // given
-        Long userAccountInObligationGroupId = 1L;
         Long obligationGroupId = 1L;
         Long obligationStrategyId = 1L;
         Integer amountOfUnitsToPay = 100;
         BigDecimal groupAccountBalance = BigDecimal.valueOf(950000, 2);
 
         // when
-        bondService.createBondInObligationGroup(userAccountInObligationGroupId, obligationStrategyId, amountOfUnitsToPay);
+        bondService.createBondInObligationGroup(obligationStrategyId, amountOfUnitsToPay);
 
         // then
         Optional<ObligationGroup> obligationGroupById = obligationGroupRepository.findById(obligationGroupId);
@@ -71,35 +68,32 @@ public class BondServiceIntegrationTest {
     @Test
     public void shouldIncreaseAmountOfMoneyInUserGroupAccount() throws Exception {
         // given
-        Long userAccountInObligationGroupId = 1L;
-        Long obligationStrategyId = 1L;
+        Long obligationStrategyId = 2L;
         Integer amountOfUnitsToPay = 100;
         BigDecimal groupAccountBalance = BigDecimal.valueOf(950000, 2);
 
         // when
-        bondService.createBondInObligationGroup(userAccountInObligationGroupId, obligationStrategyId, amountOfUnitsToPay);
-        Optional<UserAccountInObligationGroup> userAccountInObligationGroupById = userAccountInObligationGroupRepository.findById(userAccountInObligationGroupId);
-        UserAccountInObligationGroup userAccountInObligationGroup = userAccountInObligationGroupById.get();
+        Bond createdBond = bondService.createBondInObligationGroup(obligationStrategyId, amountOfUnitsToPay);
 
         // then
-        assertEquals(groupAccountBalance, userAccountInObligationGroup.getAccountBalance());
+        assertEquals(groupAccountBalance, createdBond.getUserAccountInObligationGroup().getAccountBalance());
     }
 
     // test what happens when user creates many bonds in the same group
     @Test
     public void shouldIncreaseAmountOfMoneyInTheSameUserGroupAccountForManyCreatedBonds() throws Exception {
         // given
-        Long userAccountInObligationGroupId = 1L;
-        Long obligationStrategyId = 1L;
-        BigDecimal expectedGroupAccountBalance = BigDecimal.valueOf(5700000, 2);
+        Long obligationStrategyId = 3L;
+        BigDecimal expectedGroupAccountBalance = BigDecimal.valueOf(3800000, 2);
 
         // when
-        bondService.createBondInObligationGroup(userAccountInObligationGroupId, obligationStrategyId, 100);
-        bondService.createBondInObligationGroup(userAccountInObligationGroupId, obligationStrategyId, 150);
-        bondService.createBondInObligationGroup(userAccountInObligationGroupId, obligationStrategyId, 250);
-        bondService.createBondInObligationGroup(userAccountInObligationGroupId, obligationStrategyId, 100);
+        bondService.createBondInObligationGroup(obligationStrategyId, 100);
+        bondService.createBondInObligationGroup(obligationStrategyId, 100);
+        bondService.createBondInObligationGroup(obligationStrategyId, 100);
+        Bond createdBond = bondService.createBondInObligationGroup(obligationStrategyId, 100);
 
-        Optional<UserAccountInObligationGroup> userAccountInObligationGroupById = userAccountInObligationGroupRepository.findById(userAccountInObligationGroupId);
+        Optional<UserAccountInObligationGroup> userAccountInObligationGroupById =
+                userAccountInObligationGroupRepository.findById(createdBond.getUserAccountInObligationGroup().getId());
         UserAccountInObligationGroup userAccountInObligationGroup = userAccountInObligationGroupById.get();
 
         // then
@@ -111,31 +105,25 @@ public class BondServiceIntegrationTest {
     public void shouldIncreaseAccountBalanceInBothAccountsSeparately() throws Exception {
         // given
         List<User> usersWithManyGroupAccounts = userRepository.getUsersWithManyGroupAccounts();
-        User userWithmanygroupAccounts = usersWithManyGroupAccounts.get(0);
-        List<UserAccountInObligationGroup> userAccountInObligationGroups = userWithmanygroupAccounts.getUserAccountInObligationGroups();
+        User userWithManyGroupAccounts = usersWithManyGroupAccounts.get(0);
+        List<UserAccountInObligationGroup> userAccountsInObligationGroups = userWithManyGroupAccounts.getUserAccountInObligationGroups();
         BigDecimal expectedGroupAccountBalance = BigDecimal.valueOf(950000, 2);
 
         // when
-        bondService.createBondInObligationGroup(userAccountInObligationGroups.get(0).getId(),
-                userAccountInObligationGroups.get(0).getUserObligationStrategies().get(0).getId(), 100);
-
-        bondService.createBondInObligationGroup(userAccountInObligationGroups.get(1).getId(),
-                userAccountInObligationGroups.get(1).getUserObligationStrategies().get(0).getId(), 100);
+        bondService.createBondInObligationGroup(userAccountInObligationGroupService.getUserAccountWithObligationStrategies(1L)
+                .getUserObligationStrategies().get(0).getId(), 100);
+        bondService.createBondInObligationGroup(userAccountInObligationGroupService.getUserAccountWithObligationStrategies(2L)
+                .getUserObligationStrategies().get(0).getId(), 100);
 
         // then
-        assertEquals(expectedGroupAccountBalance, userAccountInObligationGroups.get(0).getAccountBalance());
-        assertEquals(expectedGroupAccountBalance, userAccountInObligationGroups.get(1).getAccountBalance());
+        assertEquals(expectedGroupAccountBalance, userAccountsInObligationGroups.get(0).getAccountBalance());
+        assertEquals(expectedGroupAccountBalance, userAccountsInObligationGroups.get(1).getAccountBalance());
 
         //given
-        bondService.createBondInObligationGroup(userAccountInObligationGroups.get(1).getId(),
-                userAccountInObligationGroups.get(1).getUserObligationStrategies().get(0).getId(), 100);
+        bondService.createBondInObligationGroup(userAccountInObligationGroupService.getUserAccountWithObligationStrategies(1L).getUserObligationStrategies().get(0).getId(), 100);
         expectedGroupAccountBalance = BigDecimal.valueOf(1900000, 2);
-        assertEquals(expectedGroupAccountBalance, userAccountInObligationGroups.get(1).getAccountBalance());
-
-
+        assertEquals(expectedGroupAccountBalance, userAccountsInObligationGroups.get(1).getAccountBalance());
     }
-
-    // test if other group accounts are not affected after creating a bond in one group
 
     // createBond() --- TEST METHODS --- //
 }

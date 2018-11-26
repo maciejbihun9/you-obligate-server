@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
-public interface UserAccountInObligationGroupService {
+public interface UserAccountInObligationGroupController {
 
     /**
      * Creates an account in a ObligationGroup for given user.

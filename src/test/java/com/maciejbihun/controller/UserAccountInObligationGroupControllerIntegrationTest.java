@@ -18,10 +18,10 @@ import static org.junit.Assert.assertEquals;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {Application.class, HibernateConf.class})
 @ActiveProfiles("test")
-public class UserAccountInObligationGroupServiceIntegrationTest {
+public class UserAccountInObligationGroupControllerIntegrationTest {
 
     @Autowired
-    UserAccountInObligationGroupService obligationGroupAccountService;
+    UserAccountInObligationGroupController obligationGroupAccountService;
 
     @Autowired
     BondController bondController;

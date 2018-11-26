@@ -5,17 +5,16 @@ import com.maciejbihun.controller.UserGroupObligationStrategyForRegisteredServic
 import com.maciejbihun.controller.UserRegisteredServiceController;
 import com.maciejbihun.controller.UserService;
 import com.maciejbihun.datatype.UnitOfWork;
-import com.maciejbihun.dto.ObligationGroupDto;
-import com.maciejbihun.dto.UserDto;
-import com.maciejbihun.dto.UserGroupObligationStrategyForRegisteredServiceDto;
-import com.maciejbihun.dto.UserRegisteredServiceDto;
+import com.maciejbihun.dto.*;
 import com.maciejbihun.models.*;
 import com.maciejbihun.repository.UserGroupObligationStrategyForRegisteredServiceRepository;
+import com.maciejbihun.service.UserGroupObligationStrategyForRegisteredServiceService;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.util.LinkedMultiValueMap;
@@ -26,30 +25,21 @@ import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.List;
 
-@Service
-@Transactional()
+@Controller
 public class UserGroupObligationStrategyForRegisteredServiceControllerImpl implements UserGroupObligationStrategyForRegisteredServiceController {
 
     private static final String BAD_ARGUMENTS_WERE_PASSED_MESSAGE = "There was an exception associated with creating UserGroupObligationStrategyForRegisteredService object. \" +\n" +
             "                                \"Probably bad arguments were passed";
 
     @Autowired
-    UserService userService;
-
-    @Autowired
-    ObligationGroupService obligationGroupService;
-
-    @Autowired
-    UserRegisteredServiceController userRegisteredServiceController;
-
-    @Autowired
-    UserGroupObligationStrategyForRegisteredServiceRepository obligationStrategyRepository;
-
-    @Autowired
     EntityManager entityManager;
 
+    @Autowired
+    UserGroupObligationStrategyForRegisteredServiceService userGroupObligationStrategyForRegisteredServiceService;
+
     @Override
-    public ResponseEntity<UserGroupObligationStrategyForRegisteredService> createObligationStrategy(UserGroupObligationStrategyForRegisteredServiceDto userGroupObligationStrategyForRegisteredServiceDto) {
+    public ResponseEntity<UserGroupObligationStrategyForRegisteredService> createObligationStrategy(UserGroupObligationStrategyForRegisteredServiceDto
+                                                                                                    userGroupObligationStrategyForRegisteredServiceDto) {
 
         Session session = entityManager.unwrap(Session.class);
 
@@ -61,15 +51,14 @@ public class UserGroupObligationStrategyForRegisteredServiceControllerImpl imple
         if (obligationGroup != null && userRegisteredService != null){
             try {
                 // create new UserGroupObligationStrategyForRegisteredService
-                UserGroupObligationStrategyForRegisteredService obligationStrategy = new UserGroupObligationStrategyForRegisteredService(
-                        userRegisteredService,
+                UserGroupObligationStrategyForRegisteredService obligationStrategy = userGroupObligationStrategyForRegisteredServiceService.createObligationStrategy(
                         obligationGroup,
+                        userRegisteredService,
                         userGroupObligationStrategyForRegisteredServiceDto.getUnitOfWork(),
                         userGroupObligationStrategyForRegisteredServiceDto.getUnitOfWorkCost(),
                         userGroupObligationStrategyForRegisteredServiceDto.getInterestRate(),
-                        userGroupObligationStrategyForRegisteredServiceDto.getDebtUnitsLimit()
-                );
-                return new ResponseEntity<>(obligationStrategyRepository.save(obligationStrategy), HttpStatus.CREATED);
+                        userGroupObligationStrategyForRegisteredServiceDto.getDebtUnitsLimit());
+                return new ResponseEntity<>(obligationStrategy, HttpStatus.CREATED);
             } catch (Exception e){
                 MultiValueMap<String, String> multiValueMap = new LinkedMultiValueMap();
                 multiValueMap.set("error", BAD_ARGUMENTS_WERE_PASSED_MESSAGE);

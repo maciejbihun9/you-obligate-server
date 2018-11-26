@@ -70,7 +70,7 @@ public class BondControllerTest {
         UserAccountInObligationGroup userAccountInObligationGroup = new UserAccountInObligationGroup(userMock, obligationGroup);
 
         UserGroupObligationStrategyForRegisteredService obligationStrategy = new UserGroupObligationStrategyForRegisteredService(
-                mock(UserRegisteredService.class), obligationGroup,
+                mock(UserRegisteredService.class), obligationGroup, userAccountInObligationGroup,
                 UnitOfWork.SERVICE, new BigDecimal("100.00"), new BigDecimal("0.05"), 1000);
 
         // when

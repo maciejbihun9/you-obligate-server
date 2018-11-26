@@ -8,8 +8,8 @@ import java.math.BigDecimal;
 
 public interface BondService {
 
-    Bond createBondInObligationGroup(Long userAccountInObligationGroupId, Long obligationStrategyId, Integer amountOfUnitsToPay) throws Exception;
+    Bond createBondInObligationGroup(Long obligationStrategyId, Integer amountOfUnitsToPay) throws Exception;
 
-    Bond createBond(UserAccountInObligationGroup userAccountInObligationGroup,
-                            UserGroupObligationStrategyForRegisteredService obligationStrategy, Integer amountOfUnitsToPay);
+    // Bond createBond(UserGroupObligationStrategyForRegisteredService obligationStrategy, Integer amountOfUnitsToPay);
+
 }

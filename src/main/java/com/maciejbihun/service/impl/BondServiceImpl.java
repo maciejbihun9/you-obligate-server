@@ -1,6 +1,9 @@
 package com.maciejbihun.service.impl;
 
+import com.maciejbihun.datatype.BondStatus;
 import com.maciejbihun.exceptions.AmountOfUnitsExceededException;
+import com.maciejbihun.exceptions.BondNotFoundException;
+import com.maciejbihun.exceptions.ClosedBondException;
 import com.maciejbihun.exceptions.GroupAccountOrObligationStrategyDoesNotExistsException;
 import com.maciejbihun.models.Bond;
 import com.maciejbihun.models.UserAccountInObligationGroup;
@@ -14,13 +17,14 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.logging.Level;
 
 @Service
 public class BondServiceImpl implements BondService {
 
     private static final String NOT_ACCEPTABLE_AMOUNT_OF_UNITS_PER_BOND = "Not acceptable amount of units per bond.";
-
 
     private BondRepository bondRepository;
 
@@ -40,14 +44,11 @@ public class BondServiceImpl implements BondService {
 
     @Override
     @Transactional
-    public Bond createBondInObligationGroup(Long userAccountInObligationGroupId, Long obligationStrategyId, Integer amountOfUnitsToPay) throws Exception {
-        Optional<UserAccountInObligationGroup> groupAccountById = userAccountInObligationGroupRepository.findById(userAccountInObligationGroupId);
+    public Bond createBondInObligationGroup(Long obligationStrategyId, Integer amountOfUnitsToPay) throws Exception {
         Optional<UserGroupObligationStrategyForRegisteredService> obligationStrategyById = obligationStrategyRepository.findById(obligationStrategyId);
-
-        if (obligationStrategyById.isPresent() && groupAccountById.isPresent()){
+        if (obligationStrategyById.isPresent()){
 
             UserGroupObligationStrategyForRegisteredService userGroupObligationStrategyForRegisteredService = obligationStrategyById.get();
-            UserAccountInObligationGroup userAccountInObligationGroup = groupAccountById.get();
 
             int predictedAmountOfUnitsToPay = userGroupObligationStrategyForRegisteredService.getAlreadyObligatedUnitsOfWork() + amountOfUnitsToPay;
 
@@ -55,39 +56,34 @@ public class BondServiceImpl implements BondService {
                 throw new AmountOfUnitsExceededException();
             }
 
-            Bond bond = createBond(userAccountInObligationGroup, userGroupObligationStrategyForRegisteredService, amountOfUnitsToPay);
+            Bond bond = new Bond(userGroupObligationStrategyForRegisteredService, amountOfUnitsToPay);
 
-            // create money that covered by bonds
-            obligationStrategyById.get().getObligationGroup().addMoneyToAccount(bond.getAmountOfCreatedMoney());
+            // increase amount of money in the obligation group
+            userGroupObligationStrategyForRegisteredService.getObligationGroup().addMoneyToAccount(bond.getAmountOfCreatedMoney());
 
             // create money in the group account
-            userAccountInObligationGroup.addMoneyToAccount(bond.getAmountOfCreatedMoney());
+            userGroupObligationStrategyForRegisteredService.getUserAccountInObligationGroup().addMoneyToAccount(bond.getAmountOfCreatedMoney());
 
             // save bond to generate id
-            bondRepository.save(bond);
+            bond = bondRepository.save(bond);
 
-            userAccountInObligationGroupRepository.save(userAccountInObligationGroup);
+            obligationStrategyRepository.save(userGroupObligationStrategyForRegisteredService);
+            // userAccountInObligationGroupRepository.save(userGroupObligationStrategyForRegisteredService.getUserAccountInObligationGroup());
+
+            return bond;
         } else {
             throw new GroupAccountOrObligationStrategyDoesNotExistsException();
         }
-        return null;
     }
 
     /**
      * Bond has to be created with minimum amount of units to pay that is given in obligation strategy for given registered service.
      * Bond can be created with different creating money strategies.
      */
-    @Override
-    public Bond createBond(UserAccountInObligationGroup userAccountInObligationGroup, UserGroupObligationStrategyForRegisteredService obligationStrategy, Integer amountOfUnitsToPay) {
-        if (amountOfUnitsToPay < obligationStrategy.getMinAmountOfUnitsPerBond()){
-            throw new IllegalArgumentException(String.format(NOT_ACCEPTABLE_AMOUNT_OF_UNITS_PER_BOND + " It was %s, but it should be %s",
-                    amountOfUnitsToPay, obligationStrategy.getMinAmountOfUnitsPerBond()));
-        }
-        BigDecimal amountOfCreatedMoney = creatingMoneyStrategiesService.computeAmountOfCreatedMoneyForBondWithDiscount(obligationStrategy.getUnitOfWorkCost(),
-                obligationStrategy.getInterestRate(),
-                amountOfUnitsToPay);
-        Bond bond = new Bond(userAccountInObligationGroup, obligationStrategy, amountOfUnitsToPay, obligationStrategy.getUnitOfWorkCost(), amountOfCreatedMoney);
-        return bond;
-    }
+    /*@Override
+    public Bond createBond(UserGroupObligationStrategyForRegisteredService obligationStrategy, Integer amountOfUnitsToPay) {
+        return new Bond(obligationStrategy, amountOfUnitsToPay);
+    }*/
+
 
 }

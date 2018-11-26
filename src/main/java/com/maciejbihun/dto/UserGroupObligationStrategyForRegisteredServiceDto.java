@@ -12,6 +12,8 @@ public class UserGroupObligationStrategyForRegisteredServiceDto {
 
     private ObligationGroupDto obligationGroupDto;
 
+    private ObligationGroupAccountDto obligationGroupAccountDto;
+
     private UnitOfWork unitOfWork;
 
     private BigDecimal unitOfWorkCost;
@@ -37,7 +39,6 @@ public class UserGroupObligationStrategyForRegisteredServiceDto {
     public void setId(Long id) {
         this.id = id;
     }
-
 
     public UnitOfWork getUnitOfWork() {
         return unitOfWork;
@@ -125,5 +126,13 @@ public class UserGroupObligationStrategyForRegisteredServiceDto {
 
     public void setObligationGroupDto(ObligationGroupDto obligationGroupDto) {
         this.obligationGroupDto = obligationGroupDto;
+    }
+
+    public ObligationGroupAccountDto getObligationGroupAccountDto() {
+        return obligationGroupAccountDto;
+    }
+
+    public void setObligationGroupAccountDto(ObligationGroupAccountDto obligationGroupAccountDto) {
+        this.obligationGroupAccountDto = obligationGroupAccountDto;
     }
 }

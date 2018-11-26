@@ -45,7 +45,6 @@ public class ObligationGroup {
     @Basic(optional = false)
     @Column(name = "MONEY_SHORTCUT_NAME", nullable = false, updatable = true)
     private String moneyShortcutName;
-    // private Image image;
 
     @Basic(optional = false)
     @Column(name = "GROUP_DESCRIPTION", nullable = false, updatable = true)
@@ -58,9 +57,6 @@ public class ObligationGroup {
     @Convert(converter = AtomicReferenceConverter.class)
     @Column(name = "ACCOUNT_BALANCE", nullable = false, updatable = true, length = 400)
     private final AtomicReference<BigDecimal> accountBalance = new AtomicReference<>(BigDecimal.ZERO);
-
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "obligationGroup")
-    private List<UserGroupObligationStrategyForRegisteredService> userGroupObligationStrategyForRegisteredServices = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "obligationGroup")
     private List<UserAccountInObligationGroup> userAccountInObligationGroups = new ArrayList<>();
@@ -95,10 +91,6 @@ public class ObligationGroup {
 
     public String getMoneyName() {
         return moneyName;
-    }
-
-    public List<UserGroupObligationStrategyForRegisteredService> getUserGroupObligationStrategyForRegisteredServices() {
-        return userGroupObligationStrategyForRegisteredServices;
     }
 
     public List<UserAccountInObligationGroup> getUserAccountInObligationGroups() {
