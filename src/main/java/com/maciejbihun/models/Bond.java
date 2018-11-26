@@ -1,6 +1,7 @@
 package com.maciejbihun.models;
 
 import com.maciejbihun.datatype.BondStatus;
+import com.maciejbihun.exceptions.EmptyConstructorIsNotAvailableException;
 import com.maciejbihun.exceptions.NegativeValueException;
 
 import javax.persistence.*;
@@ -11,10 +12,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * @author Maciej Bihun
+ *
  * <p>
- * Represents an obligation between a user and a group.
+ * Represents an obligation between a user, his registered service and a group.
  * A user obligates to do given amount of units of work for group members.
+ * A user receives given amount of money for his obligation.
+ * @author Maciej Bihun
  */
 @Entity
 @Table(name = "Bond")
@@ -26,21 +29,20 @@ public class Bond {
 
     private static final String NOT_ACCEPTABLE_AMOUNT_OF_UNITS_PER_BOND = "Not acceptable amount of units per bond.";
 
-    public Bond(){}
+    public Bond(){
+        throw new EmptyConstructorIsNotAvailableException();
+    }
 
     public Bond(UserGroupObligationStrategyForRegisteredService obligationStrategy, Integer amountOfUnitsToPay) {
         if (amountOfUnitsToPay < obligationStrategy.getMinAmountOfUnitsPerBond()){
-            throw new IllegalArgumentException(String.format(NOT_ACCEPTABLE_AMOUNT_OF_UNITS_PER_BOND + " It was %s, but it should be %s",
+            throw new IllegalArgumentException(String.format(NOT_ACCEPTABLE_AMOUNT_OF_UNITS_PER_BOND + " It was %s, but it should be at least %s.",
                     amountOfUnitsToPay, obligationStrategy.getMinAmountOfUnitsPerBond()));
         }
-        this.amountOfUnitsToPay = amountOfUnitsToPay;
-        this.interestRate = obligationStrategy.getInterestRate();
-        this.obligationGroup = obligationStrategy.getObligationGroup();
-        this.unitOfWorkCost = obligationStrategy.getUnitOfWorkCost();
-        if (unitOfWorkCost.compareTo(BigDecimal.ZERO) < 0 || interestRate.compareTo(BigDecimal.ZERO) < 0 || amountOfUnitsToPay < 0){
+        if (obligationStrategy.getUnitOfWorkCost().compareTo(BigDecimal.ZERO) < 0 || obligationStrategy.getInterestRate().compareTo(BigDecimal.ZERO) < 0 || amountOfUnitsToPay < 0){
             throw new NegativeValueException();
         }
-        this.unitOfWorkCost = unitOfWorkCost.subtract(interestRate.multiply(unitOfWorkCost));
+        this.amountOfUnitsToPay = amountOfUnitsToPay;
+        this.unitOfWorkCost = obligationStrategy.getUnitOfWorkCost().subtract(obligationStrategy.getInterestRate().multiply(obligationStrategy.getUnitOfWorkCost()));
         this.amountOfCreatedMoney = unitOfWorkCost.multiply(new BigDecimal(amountOfUnitsToPay)).setScale(2, RoundingMode.HALF_UP);
     }
 
@@ -63,16 +65,8 @@ public class Bond {
     private BigDecimal unitOfWorkCost;
 
     @Basic(optional = false)
-    @Column(name = "INTEREST_RATE", updatable = false)
-    private BigDecimal interestRate;
-
-    @Basic(optional = false)
     @Column(name = "AMOUNT_OF_CREATED_MONEY", updatable = true)
     private BigDecimal amountOfCreatedMoney;
-
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "OBLIGATION_GROUP_ID", nullable = false)
-    private ObligationGroup obligationGroup;
 
     @Basic(optional = false)
     @Column(name = "CREATED_DATE_TIME", nullable = false, updatable = true)
@@ -114,8 +108,6 @@ public class Bond {
         this.bondStatus = bondStatus;
     }
 
-    public UserAccountInObligationGroup getUserAccountInObligationGroup() {return userAccountInObligationGroup;}
-
     public Integer getAmountOfUnitsToPay() {
         return amountOfUnitsToPay;
     }
@@ -124,16 +116,8 @@ public class Bond {
         return unitOfWorkCost;
     }
 
-    public BigDecimal getInterestRate() {
-        return interestRate;
-    }
-
     public BigDecimal getAmountOfCreatedMoney() {
         return amountOfCreatedMoney;
-    }
-
-    public ObligationGroup getObligationGroup() {
-        return obligationGroup;
     }
 
     public LocalDateTime getCreatedDateTime() {

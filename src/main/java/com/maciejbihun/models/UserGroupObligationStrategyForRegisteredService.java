@@ -24,10 +24,14 @@ public class UserGroupObligationStrategyForRegisteredService {
 
     public UserGroupObligationStrategyForRegisteredService(){}
 
-    public UserGroupObligationStrategyForRegisteredService(UserRegisteredService userRegisteredService, ObligationGroup obligationGroup,
-                                                           UnitOfWork unitOfWork, BigDecimal unitOfWorkCost, BigDecimal interestRate, Integer maxAmountOfUnitsForObligation) {
+    public UserGroupObligationStrategyForRegisteredService(UserRegisteredService userRegisteredService,
+                                                           UserAccountInObligationGroup userAccountInObligationGroup,
+                                                           UnitOfWork unitOfWork,
+                                                           BigDecimal unitOfWorkCost,
+                                                           BigDecimal interestRate,
+                                                           Integer maxAmountOfUnitsForObligation) {
         this.userRegisteredService = userRegisteredService;
-        this.obligationGroup = obligationGroup;
+        this.userAccountInObligationGroup = userAccountInObligationGroup;
         this.unitOfWork = unitOfWork;
         this.unitOfWorkCost = unitOfWorkCost;
         this.interestRate = interestRate;
@@ -44,10 +48,6 @@ public class UserGroupObligationStrategyForRegisteredService {
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "USER_REGISTERED_SERVICE_ID", nullable = false)
     private UserRegisteredService userRegisteredService;
-
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    @JoinColumn(name = "OBLIGATION_GROUP_ID", nullable = false)
-    private ObligationGroup obligationGroup;
 
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "USER_ACCOUNT_IN_OBLIGATION_GROUP_ID", nullable = false)
@@ -137,14 +137,6 @@ public class UserGroupObligationStrategyForRegisteredService {
 
     public void setUserRegisteredService(UserRegisteredService userRegisteredService) {
         this.userRegisteredService = userRegisteredService;
-    }
-
-    public ObligationGroup getObligationGroup() {
-        return obligationGroup;
-    }
-
-    public void setObligationGroup(ObligationGroup obligationGroup) {
-        this.obligationGroup = obligationGroup;
     }
 
     public UnitOfWork getUnitOfWork() {

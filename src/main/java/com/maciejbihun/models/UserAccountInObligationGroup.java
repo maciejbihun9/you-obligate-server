@@ -11,8 +11,10 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
- * @author Maciej Bihun
+ *
  * Stores user's data associated with given obligation group.
+ *
+ * @author Maciej Bihun
  */
 @Entity
 @Table(name = "UserAccountInObligationGroup")
@@ -52,9 +54,6 @@ public class UserAccountInObligationGroup implements Serializable {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "userAccountInObligationGroup")
     private List<UserGroupObligationStrategyForRegisteredService> userObligationStrategies = new ArrayList<>();
-
-    // TODO
-    // private userGroupActivities: Array<GroupActivity>:
 
     public Long getId() {
         return id;
