@@ -8,20 +8,13 @@ public class BondDto {
 
     private Long obligationStrategyId;
 
-    private Long groupAccountId;
-
-    public BondDto(Integer amountOfUnitsToPay, Long obligationStrategyId, Long groupAccountId) {
+    public BondDto(Integer amountOfUnitsToPay, Long obligationStrategyId) {
         this.amountOfUnitsToPay = amountOfUnitsToPay;
         this.obligationStrategyId = obligationStrategyId;
-        this.groupAccountId = groupAccountId;
     }
 
     public Long getObligationStrategyId() {
         return obligationStrategyId;
-    }
-
-    public Long getGroupAccountId() {
-        return groupAccountId;
     }
 
     public Integer getAmountOfUnitsToPay() {

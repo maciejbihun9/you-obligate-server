@@ -1,0 +1,11 @@
+package com.maciejbihun.controller;
+
+import com.maciejbihun.dto.UserGroupObligationStrategyForRegisteredServiceDto;
+import com.maciejbihun.models.RegisteredServiceObligationStrategy;
+import org.springframework.http.ResponseEntity;
+
+public interface RegisteredServiceObligationStrategyController {
+
+    ResponseEntity<RegisteredServiceObligationStrategy> createObligationStrategy(UserGroupObligationStrategyForRegisteredServiceDto userGroupObligationStrategyForRegisteredServiceDto);
+
+}

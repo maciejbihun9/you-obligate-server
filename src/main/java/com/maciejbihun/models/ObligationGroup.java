@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
+/**
+ * @author Maciej Bihun
+ */
 @Entity
 @Table(name="ObligationGroup")
 public class ObligationGroup {

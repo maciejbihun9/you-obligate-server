@@ -1,78 +1,99 @@
 package com.maciejbihun.controller.impl;
 
+import com.maciejbihun.controller.UserController;
 import com.maciejbihun.controller.UserRegisteredServiceController;
-import com.maciejbihun.controller.UserService;
+import com.maciejbihun.converters.UserRegisteredServiceConverter;
+import com.maciejbihun.dto.UserRegisteredServiceDto;
 import com.maciejbihun.models.User;
+import com.maciejbihun.models.UserPrincipal;
 import com.maciejbihun.models.UserRegisteredService;
 import com.maciejbihun.models.UserRegisteredServiceCategory;
 import com.maciejbihun.repository.UserRegisteredServiceRepository;
+import com.maciejbihun.service.UserRegisteredServiceService;
+import com.maciejbihun.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 /**
- * @author BHN
+ * @author Maciej Bihun
  */
-@RestController
-@Transactional(rollbackOn = Exception.class)
+@Controller
 public class UserRegisteredServiceControllerImpl implements UserRegisteredServiceController {
 
     @Autowired
-    UserRegisteredServiceRepository userRegisteredServiceRepository;
+    private UserRegisteredServiceService userRegisteredServiceService;
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
+    // TODO - IMPLEMENT EXCEPTION HANDLING
     @Override
     @RequestMapping(value = "/user-registered-services", method = RequestMethod.POST)
-    public ResponseEntity<UserRegisteredService> saveUserRegisteredService(@RequestBody UserRegisteredService userRegisteredService) {
-        UserDetails principal = (UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        userRegisteredService.setCreatedDateTime(LocalDateTime.now());
-        User loggedUser = userService.loadUserByUsername(principal.getUsername()).getUser();
-        userRegisteredService.setUser(loggedUser);
-        return new ResponseEntity<>(userRegisteredServiceRepository.save(userRegisteredService), HttpStatus.CREATED);
+    public ResponseEntity<UserRegisteredServiceDto> saveUserRegisteredService(@RequestBody UserRegisteredServiceDto userRegisteredServiceDto) {
+
+        UserPrincipal userPrincipal = userService.loadUserByUsername(userRegisteredServiceDto.getUserDto().getUsername());
+
+        UserRegisteredService userRegisteredService = UserRegisteredServiceConverter.convertToEntity(userRegisteredServiceDto);
+        userRegisteredService.setUser(userPrincipal.getUser());
+
+        userRegisteredService = userRegisteredServiceService.saveUserRegisteredService(userRegisteredService);
+
+        return new ResponseEntity<>(UserRegisteredServiceConverter.convertToDto(userRegisteredService), HttpStatus.CREATED);
     }
 
+    // TODO - IMPLEMENT EXCEPTION HANDLING
     @Override
     @RequestMapping(value = "/user-registered-services/{id}", method = RequestMethod.GET)
-    public ResponseEntity<UserRegisteredService> getUserRegisteredService(@PathVariable("id") Long id) {
-        Optional<UserRegisteredService> userRegisteredServiceOptional = userRegisteredServiceRepository.findById(id);
-        return userRegisteredServiceOptional.map(userRegisteredService -> new ResponseEntity<>(userRegisteredService, HttpStatus.FOUND)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    public ResponseEntity<UserRegisteredServiceDto> getUserRegisteredService(@PathVariable("id") Long id) {
+        Optional<UserRegisteredService> optionalUserRegisteredService = userRegisteredServiceService.getUserRegisteredService(id);
+        return optionalUserRegisteredService.map(userRegisteredService ->
+                new ResponseEntity<>(UserRegisteredServiceConverter.convertToDto(userRegisteredService), HttpStatus.FOUND)).orElseGet(() ->
+                new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
+    // TODO - IMPLEMENT EXCEPTION HANDLING
     @Override
     @RequestMapping(value = "/user-registered-services/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<String> deleteUserRegisteredService(@PathVariable("id") Long id) {
-        Optional<UserRegisteredService> userRegisteredServiceOptional = userRegisteredServiceRepository.findById(id);
-        if (userRegisteredServiceOptional.isPresent()){
-            this.userRegisteredServiceRepository.deleteById(id);
-            return new ResponseEntity<>("An entity has been deleted.", HttpStatus.NO_CONTENT);
+        if (userRegisteredServiceService.userRegisteredServiceExists(id)){
+            userRegisteredServiceService.deleteUserRegisteredService(id);
+            return new ResponseEntity<>("An entity has been deleted.", HttpStatus.OK);
         }
-        return new ResponseEntity<>("An entity not found.", HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>("An entity was not found.", HttpStatus.NOT_FOUND);
     }
 
+    // TODO - IMPLEMENT EXCEPTION HANDLING
     @Override
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(value = "/user-registered-services", method = RequestMethod.GET)
-    public ResponseEntity<List<UserRegisteredService>> getUserRegisteredServices(@RequestParam("category") String category) {
+    public ResponseEntity<List<UserRegisteredServiceDto>> getUserRegisteredServices(@RequestParam("category") String category) {
         UserRegisteredServiceCategory userRegisteredServiceCategory;
         if (category == null){
-            return new ResponseEntity<>(userRegisteredServiceRepository.findAll(), HttpStatus.FOUND);
+            List<UserRegisteredServiceDto> userRegisteredServiceDtos = new ArrayList<>();
+            userRegisteredServiceService.getUserRegisteredServices().forEach(userRegisteredService -> {
+                userRegisteredServiceDtos.add(UserRegisteredServiceConverter.convertToDto(userRegisteredService));
+            });
+            return new ResponseEntity<>(userRegisteredServiceDtos, HttpStatus.OK);
         }
         try {
             userRegisteredServiceCategory = UserRegisteredServiceCategory.valueOf(category);
-            List<UserRegisteredService> byUserRegisteredServiceCategory = userRegisteredServiceRepository.findByUserRegisteredServiceCategory(userRegisteredServiceCategory);
-            return new ResponseEntity<>(byUserRegisteredServiceCategory, HttpStatus.FOUND);
+            List<UserRegisteredService> byUserRegisteredServiceCategory = userRegisteredServiceService.getUserRegisteredServicesByCategory(userRegisteredServiceCategory);
+            List<UserRegisteredServiceDto> userRegisteredServiceDtos = new ArrayList<>();
+            byUserRegisteredServiceCategory.forEach(userRegisteredService -> {
+                userRegisteredServiceDtos.add(UserRegisteredServiceConverter.convertToDto(userRegisteredService));
+            });
+            return new ResponseEntity<>(userRegisteredServiceDtos, HttpStatus.FOUND);
         } catch (IllegalArgumentException il){
             return new ResponseEntity<>(new ArrayList<>(), HttpStatus.NOT_FOUND);
         }

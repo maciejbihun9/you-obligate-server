@@ -1,8 +1,7 @@
 package com.maciejbihun.service;
 
-import com.maciejbihun.exceptions.BondWithDiscountCanNotHaveNegativeInterestRateException;
 import com.maciejbihun.exceptions.NegativeValueException;
-import com.maciejbihun.service.impl.CreatingMoneyStrategiesServiceImpl;
+import com.maciejbihun.service.impl.CreatingMoneyStrategy;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,7 +18,7 @@ public class CreatingMoneyStrategiesServiceTest {
 
     @Before
     public void init(){
-        creatingMoneyStrategiesService = new CreatingMoneyStrategiesServiceImpl();
+        creatingMoneyStrategiesService = new CreatingMoneyStrategy();
     }
 
     @Test

@@ -1,7 +1,6 @@
 package com.maciejbihun.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -25,7 +24,7 @@ public class UserRegisteredService {
     @JsonBackReference
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID", nullable = false)
-    User user;
+    private User user;
 
     @Basic(optional = false)
     @Column(name = "SERVICE_NAME", updatable = true, length = 30)
@@ -46,18 +45,17 @@ public class UserRegisteredService {
 
     @Basic(optional = false)
     @Column(name = "CREATED_DATE_TIME", nullable = false)
-    private LocalDateTime createdDateTime;
+    private LocalDateTime createdDateTime = LocalDateTime.now();
 
     // this collection is for searching purposes
     @ElementCollection
     private List<String> registeredServiceTerms = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER) // fetch type is EAGER, because a user won't have many of UserGroupObligationStrategyForRegisteredService for one UserRegisteredService.
-    @JoinColumn(name = "USER_REGISTERED_SERVICE_ID")
-    private List<UserGroupObligationStrategyForRegisteredService> userGroupObligationStrategyForRegisteredServices = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "userRegisteredService") // fetch type is EAGER, because a user won't have many of RegisteredServiceObligationStrategy for one UserRegisteredService.
+    private List<RegisteredServiceObligationStrategy> registeredServiceObligationStrategies = new ArrayList<>();
 
-    public List<UserGroupObligationStrategyForRegisteredService> getUserGroupObligationStrategyForRegisteredServices() {
-        return userGroupObligationStrategyForRegisteredServices;
+    public List<RegisteredServiceObligationStrategy> getRegisteredServiceObligationStrategies() {
+        return registeredServiceObligationStrategies;
     }
 
     public Long getId() {
@@ -74,10 +72,6 @@ public class UserRegisteredService {
 
     public LocalDateTime getCreatedDateTime() {
         return createdDateTime;
-    }
-
-    public void setCreatedDateTime(LocalDateTime createdDateTime) {
-        this.createdDateTime = createdDateTime;
     }
 
     public String getServiceName() {

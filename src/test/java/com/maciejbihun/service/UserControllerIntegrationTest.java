@@ -13,7 +13,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @ContextConfiguration
 @SpringBootTest(classes = {Application.class, HibernateConf.class})
 @ActiveProfiles("test")
-public class UserServiceIntegrationTest {
+public class UserControllerIntegrationTest {
 
     @Test
     public void testMethod(){

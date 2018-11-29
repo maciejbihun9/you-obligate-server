@@ -1,44 +1,33 @@
 package com.maciejbihun.controller.impl;
 
-import com.maciejbihun.controller.ObligationGroupService;
-import com.maciejbihun.controller.UserGroupObligationStrategyForRegisteredServiceController;
-import com.maciejbihun.controller.UserRegisteredServiceController;
-import com.maciejbihun.controller.UserService;
-import com.maciejbihun.datatype.UnitOfWork;
+import com.maciejbihun.controller.RegisteredServiceObligationStrategyController;
 import com.maciejbihun.dto.*;
 import com.maciejbihun.models.*;
-import com.maciejbihun.repository.UserGroupObligationStrategyForRegisteredServiceRepository;
-import com.maciejbihun.service.UserGroupObligationStrategyForRegisteredServiceService;
-import org.hibernate.Hibernate;
+import com.maciejbihun.service.RegisteredServiceObligationStrategyService;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
-import java.math.BigDecimal;
-import java.util.List;
 
 @Controller
-public class UserGroupObligationStrategyForRegisteredServiceControllerImpl implements UserGroupObligationStrategyForRegisteredServiceController {
+public class RegisteredServiceObligationStrategyControllerImpl implements RegisteredServiceObligationStrategyController {
 
-    private static final String BAD_ARGUMENTS_WERE_PASSED_MESSAGE = "There was an exception associated with creating UserGroupObligationStrategyForRegisteredService object. \" +\n" +
+    private static final String BAD_ARGUMENTS_WERE_PASSED_MESSAGE = "There was an exception associated with creating RegisteredServiceObligationStrategy object. \" +\n" +
             "                                \"Probably bad arguments were passed";
 
     @Autowired
     EntityManager entityManager;
 
     @Autowired
-    UserGroupObligationStrategyForRegisteredServiceService userGroupObligationStrategyForRegisteredServiceService;
+    RegisteredServiceObligationStrategyService registeredServiceObligationStrategyService;
 
     @Override
-    public ResponseEntity<UserGroupObligationStrategyForRegisteredService> createObligationStrategy(UserGroupObligationStrategyForRegisteredServiceDto
+    public ResponseEntity<RegisteredServiceObligationStrategy> createObligationStrategy(UserGroupObligationStrategyForRegisteredServiceDto
                                                                                                     userGroupObligationStrategyForRegisteredServiceDto) {
 
         Session session = entityManager.unwrap(Session.class);
@@ -48,12 +37,14 @@ public class UserGroupObligationStrategyForRegisteredServiceControllerImpl imple
 
         UserRegisteredService userRegisteredService = session.load(UserRegisteredService.class, userGroupObligationStrategyForRegisteredServiceDto.getUserRegisteredServiceDto().getId());
 
+        UserAccountInObligationGroup userAccountInObligationGroup = session.load(UserAccountInObligationGroup.class, userGroupObligationStrategyForRegisteredServiceDto.getUserRegisteredServiceDto().getId());
+
         if (obligationGroup != null && userRegisteredService != null){
             try {
-                // create new UserGroupObligationStrategyForRegisteredService
-                UserGroupObligationStrategyForRegisteredService obligationStrategy = userGroupObligationStrategyForRegisteredServiceService.createObligationStrategy(
-                        obligationGroup,
+                // create new RegisteredServiceObligationStrategy
+                RegisteredServiceObligationStrategy obligationStrategy = registeredServiceObligationStrategyService.createObligationStrategy(
                         userRegisteredService,
+                        userAccountInObligationGroup,
                         userGroupObligationStrategyForRegisteredServiceDto.getUnitOfWork(),
                         userGroupObligationStrategyForRegisteredServiceDto.getUnitOfWorkCost(),
                         userGroupObligationStrategyForRegisteredServiceDto.getInterestRate(),

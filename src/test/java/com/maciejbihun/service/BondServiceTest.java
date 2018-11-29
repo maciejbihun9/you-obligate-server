@@ -2,16 +2,15 @@ package com.maciejbihun.service;
 
 import com.maciejbihun.datatype.UnitOfWork;
 import com.maciejbihun.exceptions.AmountOfUnitsExceededException;
-import com.maciejbihun.exceptions.GroupAccountOrObligationStrategyDoesNotExistsException;
+import com.maciejbihun.exceptions.ObligationStrategyDoesNotExistsException;
 import com.maciejbihun.models.*;
 import com.maciejbihun.repository.BondRepository;
 import com.maciejbihun.repository.UserAccountInObligationGroupRepository;
-import com.maciejbihun.repository.UserGroupObligationStrategyForRegisteredServiceRepository;
+import com.maciejbihun.repository.RegisteredServiceObligationStrategyRepository;
 import com.maciejbihun.service.impl.BondServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.AdditionalAnswers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
@@ -34,7 +33,7 @@ public class BondServiceTest {
     BondRepository bondRepository;
 
     @Mock
-    UserGroupObligationStrategyForRegisteredServiceRepository obligationStrategyRepository;
+    RegisteredServiceObligationStrategyRepository obligationStrategyRepository;
 
     @Mock
     UserAccountInObligationGroupRepository userAccountInObligationGroupRepository;
@@ -60,9 +59,9 @@ public class BondServiceTest {
         ObligationGroup obligationGroup = new ObligationGroup(userMock, "", "", "", "");
         UserAccountInObligationGroup userAccountInObligationGroup = new UserAccountInObligationGroup(userMock, obligationGroup);
 
-        UserGroupObligationStrategyForRegisteredService obligationStrategy = new UserGroupObligationStrategyForRegisteredService(
-                mock(UserRegisteredService.class), obligationGroup, userAccountInObligationGroup,
-                UnitOfWork.SERVICE, new BigDecimal("100.00"), new BigDecimal("0.05"), 1000);
+        RegisteredServiceObligationStrategy obligationStrategy = new RegisteredServiceObligationStrategy(
+                mock(UserRegisteredService.class), userAccountInObligationGroup,
+                UnitOfWork.SERVICE, new BigDecimal("100.00"), new BigDecimal("0.05"), 2, 1000);
 
         // when
         Mockito.when(obligationStrategyRepository.findById(obligationStrategyId)).thenReturn(Optional.of(obligationStrategy));
@@ -70,10 +69,10 @@ public class BondServiceTest {
         // creatingMoneyStrategiesService.computeAmountOfCreatedMoneyForBondWithDiscount
 
         // then
-        bondService.createBondInObligationGroup(obligationStrategyId, amountOfUnitsToPay);
+        bondService.createBondInObligationStrategy(obligationStrategyId, amountOfUnitsToPay);
     }
 
-    @Test(expected = GroupAccountOrObligationStrategyDoesNotExistsException.class)
+    @Test(expected = ObligationStrategyDoesNotExistsException.class)
     public void shouldThrowExceptionIfNoAccountOrObligation() throws Exception {
         // given
         Long userAccountInObligationGroupId = -1L;
@@ -84,16 +83,16 @@ public class BondServiceTest {
         ObligationGroup obligationGroup = new ObligationGroup(userMock, "", "", "", "");
         UserAccountInObligationGroup userAccountInObligationGroup = new UserAccountInObligationGroup(userMock, obligationGroup);
 
-        UserGroupObligationStrategyForRegisteredService obligationStrategy = new UserGroupObligationStrategyForRegisteredService(
-                mock(UserRegisteredService.class), obligationGroup, userAccountInObligationGroup,
-                UnitOfWork.SERVICE, new BigDecimal("100.00"), new BigDecimal("0.05"), 1000);
+        RegisteredServiceObligationStrategy obligationStrategy = new RegisteredServiceObligationStrategy(
+                mock(UserRegisteredService.class), userAccountInObligationGroup,
+                UnitOfWork.SERVICE, new BigDecimal("100.00"), new BigDecimal("0.05"), 2, 1000);
 
         // when
         Mockito.when(obligationStrategyRepository.findById(obligationStrategyId)).thenReturn(Optional.of(obligationStrategy));
         Mockito.when(userAccountInObligationGroupRepository.findById(userAccountInObligationGroupId)).thenReturn(Optional.empty());
 
         // then
-        bondService.createBondInObligationGroup(obligationStrategyId, amountOfUnitsToPay);
+        bondService.createBondInObligationStrategy(obligationStrategyId, amountOfUnitsToPay);
     }
 
     @Test
@@ -107,9 +106,9 @@ public class BondServiceTest {
         ObligationGroup obligationGroup = new ObligationGroup(userMock, "", "", "", "");
         UserAccountInObligationGroup userAccountInObligationGroup = new UserAccountInObligationGroup(userMock, obligationGroup);
 
-        UserGroupObligationStrategyForRegisteredService obligationStrategy = new UserGroupObligationStrategyForRegisteredService(
-                mock(UserRegisteredService.class), obligationGroup, userAccountInObligationGroup,
-                UnitOfWork.SERVICE, new BigDecimal("100.00"), new BigDecimal("0.05"), 1000);
+        RegisteredServiceObligationStrategy obligationStrategy = new RegisteredServiceObligationStrategy(
+                mock(UserRegisteredService.class), userAccountInObligationGroup,
+                UnitOfWork.SERVICE, new BigDecimal("100.00"), new BigDecimal("0.05"), 2, 1000);
 
         Bond bond = new Bond();
 
@@ -127,7 +126,7 @@ public class BondServiceTest {
                 return (Bond) args[0];
             }
         });
-        bondService.createBondInObligationGroup(obligationStrategyId, amountOfUnitsToPay);
+        bondService.createBondInObligationStrategy(obligationStrategyId, amountOfUnitsToPay);
 
         // then
         // assertEquals(Integer.valueOf(100), userAccountInObligationGroup.getBonds().get(0).getAmountOfUnitsToPay()); // bond was stored in user group account bonds list

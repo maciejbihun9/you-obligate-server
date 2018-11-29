@@ -1,77 +1,55 @@
 package com.maciejbihun.controller.impl;
 
 import com.maciejbihun.controller.UserAccountInObligationGroupController;
-import com.maciejbihun.controller.UserService;
-import com.maciejbihun.dto.ObligationGroupAccountDto;
-import com.maciejbihun.models.ObligationGroup;
+import com.maciejbihun.converters.UserAccountInObligationGroupConverter;
+import com.maciejbihun.dto.UserAccountInObligationGroupDto;
+import com.maciejbihun.exceptions.ObligationGroupDoesNotExistsException;
 import com.maciejbihun.models.UserAccountInObligationGroup;
-import com.maciejbihun.models.UserPrincipal;
-import com.maciejbihun.repository.UserAccountInObligationGroupRepository;
-import org.hibernate.Session;
+import com.maciejbihun.service.UserAccountInObligationGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-
-import javax.persistence.EntityGraph;
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
-import java.util.HashMap;
 
 /**
  * @author Maciej Bihun
  */
 @Controller
-@Transactional
 public class UserAccountInObligationGroupControllerImpl implements UserAccountInObligationGroupController {
 
     @Autowired
-    UserAccountInObligationGroupRepository userAccountInObligationGroupRepository;
-
-    @Autowired
-    UserService userService;
-
-    @Autowired
-    EntityManager entityManager;
+    UserAccountInObligationGroupService userAccountInObligationGroupService;
 
     /**
-     * A group admin is able create an account for a user.
+     * Creates an account for a user in given obligation group and returns new instance of UserAccountInObligationGroup to the user with convenient http status.
      */
     @Override
-    public ResponseEntity<UserAccountInObligationGroup> createGroupAccount(ObligationGroupAccountDto obligationGroupAccountDto) {
-        // ObligationGroup obligationGroup = entityManager.find(ObligationGroup.class, obligationGroupAccountDto.getObligationGroupId());
-        Session session = entityManager.unwrap(Session.class);
-        ObligationGroup obligationGroup = session.load(ObligationGroup.class, obligationGroupAccountDto.getObligationGroupId());
-        if (obligationGroup == null){
+    public ResponseEntity<UserAccountInObligationGroupDto> createUserAccountInObligationGroup(UserAccountInObligationGroupDto userAccountInObligationGroupDto) {
+        try {
+            UserAccountInObligationGroup userAccountInObligationGroup = userAccountInObligationGroupService
+                    .createUserAccountInObligationGroup(userAccountInObligationGroupDto.getUsername(), userAccountInObligationGroupDto.getObligationGroupId());
+            return new ResponseEntity<>(UserAccountInObligationGroupConverter.convertToDto(userAccountInObligationGroup), HttpStatus.CREATED);
+        } catch (ObligationGroupDoesNotExistsException e) {
             MultiValueMap <String, String> multiValueMap = new LinkedMultiValueMap();
-            multiValueMap.set("info", String.format("ObligationGroup with id: %s does not exist", obligationGroupAccountDto.getObligationGroupId()));
+            multiValueMap.set("info", String.format("ObligationGroup with id: %s does not exist", userAccountInObligationGroupDto.getObligationGroupId()));
             return new ResponseEntity<>(multiValueMap, HttpStatus.NOT_FOUND);
         }
-        UserPrincipal userPrincipal = userService.loadUserByUsername(obligationGroupAccountDto.getUsername());
-        UserAccountInObligationGroup userAccountInObligationGroup = new UserAccountInObligationGroup(userPrincipal.getUser(), obligationGroup);
-        userAccountInObligationGroup = userAccountInObligationGroupRepository.save(userAccountInObligationGroup);
-        return new ResponseEntity<>(userAccountInObligationGroup, HttpStatus.CREATED);
     }
 
     /**
      * Returns UserAccountInObligationGroup with eagerly initialized bonds list.
-     * @param userAccountInObligationGroupId
-     * @return UserAccountInObligationGroup entity with initialized bonds
      */
     @Override
-    public ResponseEntity<UserAccountInObligationGroup> getUserAccountInObligationGroupWithBonds(Long userAccountInObligationGroupId) {
-        EntityGraph<?> graph = entityManager.getEntityGraph("graph.accountBonds");
-        HashMap<String, Object> properties = new HashMap<>();
-        properties.put("javax.persistence.fetchgraph", graph);
-        UserAccountInObligationGroup userAccountInObligationGroup = entityManager.find(UserAccountInObligationGroup.class, userAccountInObligationGroupId, properties);
-        if (userAccountInObligationGroup == null){
+    public ResponseEntity<UserAccountInObligationGroup> getUserAccountInObligationGroupWithObligationStrategies(Long userAccountInObligationGroupId) {
+        UserAccountInObligationGroup userAccountInObligationGroupWithObligationStrategies =
+                userAccountInObligationGroupService.getUserAccountInObligationGroupWithObligationStrategies(userAccountInObligationGroupId);
+        if (userAccountInObligationGroupWithObligationStrategies == null){
             MultiValueMap <String, String> multiValueMap = new LinkedMultiValueMap();
             multiValueMap.set("info", String.format("UserAccountInObligationGroup with id: %s does not exist", userAccountInObligationGroupId));
             return new ResponseEntity<>(multiValueMap, HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(userAccountInObligationGroup, HttpStatus.OK);
+        return new ResponseEntity<>(userAccountInObligationGroupWithObligationStrategies, HttpStatus.OK);
     }
 }

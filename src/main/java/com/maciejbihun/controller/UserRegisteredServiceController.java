@@ -1,21 +1,22 @@
 package com.maciejbihun.controller;
 
+import com.maciejbihun.dto.UserRegisteredServiceDto;
 import com.maciejbihun.models.UserRegisteredService;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
 /**
- * @author BHN
+ * @author Maciej Bihun
  */
 public interface UserRegisteredServiceController {
 
-    ResponseEntity<UserRegisteredService> saveUserRegisteredService(UserRegisteredService userRegisteredService);
+    ResponseEntity<UserRegisteredServiceDto> saveUserRegisteredService(UserRegisteredServiceDto userRegisteredServiceDto);
 
-    ResponseEntity<UserRegisteredService> getUserRegisteredService(Long id);
+    ResponseEntity<UserRegisteredServiceDto> getUserRegisteredService(Long id);
 
     ResponseEntity<String> deleteUserRegisteredService(Long id);
 
-    ResponseEntity<List<UserRegisteredService>> getUserRegisteredServices(String category);
+    ResponseEntity<List<UserRegisteredServiceDto>> getUserRegisteredServices(String category);
 
 }

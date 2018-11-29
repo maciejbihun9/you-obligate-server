@@ -12,7 +12,7 @@ public class UserGroupObligationStrategyForRegisteredServiceDto {
 
     private ObligationGroupDto obligationGroupDto;
 
-    private ObligationGroupAccountDto obligationGroupAccountDto;
+    private UserAccountInObligationGroupDto userAccountInObligationGroupDto;
 
     private UnitOfWork unitOfWork;
 
@@ -128,11 +128,11 @@ public class UserGroupObligationStrategyForRegisteredServiceDto {
         this.obligationGroupDto = obligationGroupDto;
     }
 
-    public ObligationGroupAccountDto getObligationGroupAccountDto() {
-        return obligationGroupAccountDto;
+    public UserAccountInObligationGroupDto getUserAccountInObligationGroupDto() {
+        return userAccountInObligationGroupDto;
     }
 
-    public void setObligationGroupAccountDto(ObligationGroupAccountDto obligationGroupAccountDto) {
-        this.obligationGroupAccountDto = obligationGroupAccountDto;
+    public void setUserAccountInObligationGroupDto(UserAccountInObligationGroupDto userAccountInObligationGroupDto) {
+        this.userAccountInObligationGroupDto = userAccountInObligationGroupDto;
     }
 }

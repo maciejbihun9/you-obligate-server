@@ -1,13 +1,19 @@
 package com.maciejbihun.models;
 
+import com.maciejbihun.converters.AtomicReferenceConverter;
 import com.maciejbihun.datatype.UnitOfWork;
+import com.maciejbihun.exceptions.NegativeValueException;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Represents obligation strategy between the user registered service and concrete obligation group.
  * <p>
+ * Group contains accounts Accounts contains obligation strategies.
  * This is a contract between a user and obligation group. Strategy is immutable.
  * Each change has to be reflected with another, fresh strategy instance.
  * This approach assures that a strategy will be coherent with a service.
@@ -15,27 +21,34 @@ import java.math.BigDecimal;
  * @author Maciej Bihun
  */
 @Entity
-@Table(name="UserGroupObligationStrategyForRegisteredService")
-public class UserGroupObligationStrategyForRegisteredService {
+@Table(name="RegisteredServiceObligationStrategy")
+public class RegisteredServiceObligationStrategy {
 
     private static final String NOT_ACCEPTED_AMOUNT_OF_UNITS_PER_BOND = "Minimal amount of units per bond should be grater than 1";
 
     private static final String NOT_ACCEPTED_INTEREST_RATE_VALUE = "Interest rate should be grater than 0.00";
 
-    public UserGroupObligationStrategyForRegisteredService(){}
+    public RegisteredServiceObligationStrategy(){}
 
-    public UserGroupObligationStrategyForRegisteredService(UserRegisteredService userRegisteredService,
-                                                           UserAccountInObligationGroup userAccountInObligationGroup,
-                                                           UnitOfWork unitOfWork,
-                                                           BigDecimal unitOfWorkCost,
-                                                           BigDecimal interestRate,
-                                                           Integer maxAmountOfUnitsForObligation) {
+    public RegisteredServiceObligationStrategy(UserRegisteredService userRegisteredService,
+                                               UserAccountInObligationGroup userAccountInObligationGroup,
+                                               UnitOfWork unitOfWork,
+                                               BigDecimal unitOfWorkCost,
+                                               BigDecimal interestRate,
+                                               Integer minAmountOfUnitsPerBond,
+                                               Integer maxAmountOfUnitsAvailableToCreate) {
+
+        if (unitOfWorkCost.compareTo(BigDecimal.ZERO) < 0 || interestRate.compareTo(BigDecimal.ZERO) < 0 || maxAmountOfUnitsAvailableToCreate < 0){
+            throw new NegativeValueException();
+        }
+
         this.userRegisteredService = userRegisteredService;
         this.userAccountInObligationGroup = userAccountInObligationGroup;
         this.unitOfWork = unitOfWork;
         this.unitOfWorkCost = unitOfWorkCost;
         this.interestRate = interestRate;
-        this.maxAmountOfUnitsForObligation = maxAmountOfUnitsForObligation;
+        this.minAmountOfUnitsPerBond = minAmountOfUnitsPerBond;
+        this.maxAmountOfUnitsForObligation = maxAmountOfUnitsAvailableToCreate;
     }
 
     @Id
@@ -78,9 +91,10 @@ public class UserGroupObligationStrategyForRegisteredService {
     /**
      * Represents already created amount of money in given group based on obligated amount of work.
      */
+    @Convert(converter = AtomicReferenceConverter.class)
     @Basic(optional = false)
-    @Column(name = "ALREADY_CREATED_AMOUNT_OF_MONEY", nullable = false, updatable = true)
-    private BigDecimal alreadyCreatedAmountOfMoney = new BigDecimal("0.00");
+    @Column(name = "ALREADY_CREATED_AMOUNT_OF_MONEY", nullable = false, updatable = true, length = 400)
+    private AtomicReference<BigDecimal> alreadyCreatedAmountOfMoney = new AtomicReference<>(BigDecimal.ZERO);
 
     /**
      * Represents already obligated units of work that needs to be paid back.
@@ -101,7 +115,7 @@ public class UserGroupObligationStrategyForRegisteredService {
      */
     @Basic(optional = false)
     @Column(name = "MIN_AMOUNT_OF_UNITS_PER_BOND", nullable = false, updatable = true)
-    private Integer minAmountOfUnitsPerBond = 1;
+    private Integer minAmountOfUnitsPerBond;
 
     /**
      * How many units a user might obligate at once.
@@ -110,21 +124,15 @@ public class UserGroupObligationStrategyForRegisteredService {
     @Column(name = "MAX_AMOUNT_OF_UNITS_FOR_OBLIGATION", nullable = false, updatable = true)
     private Integer maxAmountOfUnitsForObligation;
 
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "registeredServiceObligationStrategy")
+    private List<Bond> bonds = new ArrayList<>();
+
     public Long getId() {
         return id;
     }
 
     public BigDecimal getInterestRate() {
         return interestRate;
-    }
-
-    public void setInterestRate(BigDecimal interestRate) {
-        int compareResult = new BigDecimal("0.00").compareTo(interestRate);
-        if (compareResult >= 1){
-            // picked interestRate was lower than 0.00 which is not acceptable
-            throw new IllegalArgumentException(NOT_ACCEPTED_INTEREST_RATE_VALUE);
-        }
-        this.interestRate = interestRate;
     }
 
     public UserAccountInObligationGroup getUserAccountInObligationGroup() {
@@ -135,68 +143,34 @@ public class UserGroupObligationStrategyForRegisteredService {
         return userRegisteredService;
     }
 
-    public void setUserRegisteredService(UserRegisteredService userRegisteredService) {
-        this.userRegisteredService = userRegisteredService;
-    }
+    public List<Bond> getBonds() {return bonds;}
 
     public UnitOfWork getUnitOfWork() {
         return unitOfWork;
-    }
-
-    public void setUnitOfWork(UnitOfWork unitOfWork) {
-        this.unitOfWork = unitOfWork;
     }
 
     public BigDecimal getUnitOfWorkCost() {
         return unitOfWorkCost;
     }
 
-    public void setUnitOfWorkCost(BigDecimal unitOfWorkCost) {
-        this.unitOfWorkCost = unitOfWorkCost;
-    }
-
     public BigDecimal getAlreadyCreatedAmountOfMoney() {
-        return alreadyCreatedAmountOfMoney;
+        return alreadyCreatedAmountOfMoney.get();
     }
 
-    public void setAlreadyCreatedAmountOfMoney(BigDecimal alreadyCreatedAmountOfMoney) {
-        this.alreadyCreatedAmountOfMoney = alreadyCreatedAmountOfMoney;
+    public BigDecimal increaseCreatedMoney(final BigDecimal moneyToCreate){
+        return this.alreadyCreatedAmountOfMoney.updateAndGet(amountOfCreatedMoney -> amountOfCreatedMoney.add(moneyToCreate));
     }
 
     public Integer getAlreadyObligatedUnitsOfWork() {
         return alreadyObligatedUnitsOfWork;
     }
 
-    public void setAlreadyObligatedUnitsOfWork(Integer alreadyObligatedUnitsOfWork) {
-        this.alreadyObligatedUnitsOfWork = alreadyObligatedUnitsOfWork;
-    }
-
     public Integer getAmountOfUnitsEverPaid() {
         return amountOfUnitsEverPaid;
     }
 
-    public void setAmountOfUnitsEverPaid(Integer amountOfUnitsEverPaid) {
-        this.amountOfUnitsEverPaid = amountOfUnitsEverPaid;
-    }
-
-    public void setMinAmountOfUnitsPerBond(Integer minAmountOfUnitsPerBond) {
-        this.minAmountOfUnitsPerBond = minAmountOfUnitsPerBond;
-    }
-
     public Integer getMaxAmountOfUnitsForObligation() {
         return maxAmountOfUnitsForObligation;
-    }
-
-    public void setMaxAmountOfUnitsForObligation(Integer maxAmountOfUnitsForObligation) {
-        this.maxAmountOfUnitsForObligation = maxAmountOfUnitsForObligation;
-    }
-
-    public void setMinAmountOfUnitsPerBond(int minAmountOfUnitsPerBond) throws IllegalArgumentException{
-        if (minAmountOfUnitsPerBond < 1){
-            throw new IllegalArgumentException(NOT_ACCEPTED_AMOUNT_OF_UNITS_PER_BOND);
-        } else {
-            this.minAmountOfUnitsPerBond = minAmountOfUnitsPerBond;
-        }
     }
 
     public int getMinAmountOfUnitsPerBond(){

@@ -20,10 +20,10 @@ import static org.junit.Assert.*;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {Application.class, HibernateConf.class})
 @ActiveProfiles("test")
-public class UserServiceTest {
+public class UserControllerTest {
 
     @Autowired
-    UserService userService;
+    UserController userController;
 
     /*@Before
     public void init(){
@@ -51,7 +51,7 @@ public class UserServiceTest {
                 j++;
             }
             user.setUserRegisteredServices(userRegisteredServices);
-            userService.createUserAccount(user);
+            userController.createUserAccount(user);
             users.add(user);
             i++;
         }
@@ -59,7 +59,7 @@ public class UserServiceTest {
 
     @Test
     public void getUserTest(){
-        UserPrincipal maciek1 = userService.loadUserByUsername("maciek1");
+        UserPrincipal maciek1 = userController.loadUserByUsername("maciek1");
         Collection<Role> roles = maciek1.getUser().getRoles();
         System.out.println(roles);
     }
@@ -73,21 +73,21 @@ public class UserServiceTest {
         // make sure that this username is different than in the InitialDataLoader (maciek1) class, because
         // you will end up with ConstraintViolationException
         userDto.setUsername("maciek");
-        ResponseEntity<User> userAccount = userService.createUserAccount(userDto);
+        ResponseEntity<User> userAccount = userController.createUserAccount(userDto);
         assertEquals(60 ,userAccount.getBody().getPassword().length());
     }
 
     @Test(expected = UsernameNotFoundException.class)
     public void havingUsername_thereIsNoUserWithGivenUsername_throwsException(){
         String testUsername = "some username";
-        userService.loadUserByUsername(testUsername);
+        userController.loadUserByUsername(testUsername);
     }
 
     /*@Test
     public void userRegisteredServicesIdsAreGeneratedCorrectly(){
         String username = "maciek1";
         List<Long> userRegisteredServicesIds = Arrays.asList(6L, 7L, 8L, 9L, 10L);
-        UserPrincipal userEntity = userService.loadUserByUsername(username);
+        UserPrincipal userEntity = userController.loadUserByUsername(username);
         assertNotNull("User with specified id is present", userEntity);
         List<Long> userEntityRegisteredServicesIds = userEntity.getUser().getUserRegisteredServices().stream().map(UserRegisteredService::getId).collect(toList());
         assertTrue(userRegisteredServicesIds.containsAll(userEntityRegisteredServicesIds));

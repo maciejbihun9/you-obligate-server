@@ -6,8 +6,7 @@ import com.maciejbihun.datatype.UnitOfWork;
 import com.maciejbihun.dto.ObligationGroupDto;
 import com.maciejbihun.dto.UserGroupObligationStrategyForRegisteredServiceDto;
 import com.maciejbihun.dto.UserRegisteredServiceDto;
-import com.maciejbihun.models.UserGroupObligationStrategyForRegisteredService;
-import com.maciejbihun.models.UserRegisteredService;
+import com.maciejbihun.models.RegisteredServiceObligationStrategy;
 import com.maciejbihun.repository.UserRegisteredServiceRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,18 +17,17 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigDecimal;
-import java.util.Optional;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {Application.class, HibernateConf.class})
 @ActiveProfiles("test")
-public class UserGroupObligationStrategyForRegisteredServiceControllerIntegrationTest {
+public class RegisteredServiceObligationStrategyControllerIntegrationTest {
 
     @Autowired
-    UserGroupObligationStrategyForRegisteredServiceController userGroupObligationStrategyForRegisteredServiceController;
+    RegisteredServiceObligationStrategyController registeredServiceObligationStrategyController;
 
     @Autowired
-    ObligationGroupService obligationGroupService;
+    ObligationGroupController obligationGroupController;
 
     @Autowired
     UserRegisteredServiceRepository userRegisteredServiceRepository;
@@ -61,8 +59,8 @@ public class UserGroupObligationStrategyForRegisteredServiceControllerIntegratio
         userGroupObligationStrategyForRegisteredServiceDto.setObligationGroupDto(obligationGroupDto);
         userGroupObligationStrategyForRegisteredServiceDto.setDebtUnitsLimit(debtUnitsLimit);
 
-        ResponseEntity<UserGroupObligationStrategyForRegisteredService> obligationStrategyResponseEntity =
-                userGroupObligationStrategyForRegisteredServiceController.createObligationStrategy(userGroupObligationStrategyForRegisteredServiceDto);
+        ResponseEntity<RegisteredServiceObligationStrategy> obligationStrategyResponseEntity =
+                registeredServiceObligationStrategyController.createObligationStrategy(userGroupObligationStrategyForRegisteredServiceDto);
     }
 
 }

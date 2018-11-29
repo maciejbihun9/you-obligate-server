@@ -36,16 +36,16 @@ public class UserAccountInObligationGroupControllerIntegrationTest {
         BondDto bondDto = new BondDto(amountOfUnitsToPay, obligationStrategyId, obligationGroupAccountId);
 
         // when
-        bondController.createBondInObligationGroup(bondDto);
+        bondController.createBondInObligationStrategy(bondDto);
 
         // then
         ResponseEntity<UserAccountInObligationGroup> userAccountInObligationGroupWithBonds =
-                obligationGroupAccountService.getUserAccountInObligationGroupWithBonds(obligationGroupAccountId);
-        assertEquals(amountOfUnitsToPay ,userAccountInObligationGroupWithBonds.getBody().getBonds().get(0).getAmountOfUnitsToPay());
+                obligationGroupAccountService.getUserAccountInObligationGroupWithObligationStrategies(obligationGroupAccountId);
+        assertEquals(amountOfUnitsToPay ,userAccountInObligationGroupWithBonds.getBody().getUserObligationStrategies().get(obligationStrategyId.intValue()).getBonds().get(0).getAmountOfUnitsToPay());
         assertEquals(HttpStatus.OK, userAccountInObligationGroupWithBonds.getStatusCode());
 
         Long notExistingObligationGroupAccountId = 10000L;
-        userAccountInObligationGroupWithBonds = obligationGroupAccountService.getUserAccountInObligationGroupWithBonds(notExistingObligationGroupAccountId);
+        userAccountInObligationGroupWithBonds = obligationGroupAccountService.getUserAccountInObligationGroupWithObligationStrategies(notExistingObligationGroupAccountId);
         assertEquals(HttpStatus.NOT_FOUND, userAccountInObligationGroupWithBonds.getStatusCode());
         // assertTrue(userAccountInObligationGroupWithBonds.getBody(). String);
     }

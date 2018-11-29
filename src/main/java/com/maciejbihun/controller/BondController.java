@@ -6,9 +6,11 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
+/**
+ * @author Maciej Bihun
+ */
 public interface BondController {
 
-    ResponseEntity<Bond> createBondInObligationGroup(BondDto bondDto);
-    ResponseEntity<String> subtractObligationUnitFromBond(Long bondId);
+    ResponseEntity<BondDto> createBondInObligationStrategy(BondDto bondDto);
 
 }

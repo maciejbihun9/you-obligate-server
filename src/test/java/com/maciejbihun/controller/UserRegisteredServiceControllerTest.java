@@ -2,7 +2,6 @@ package com.maciejbihun.controller;
 
 import com.maciejbihun.Application;
 import com.maciejbihun.HibernateConf;
-import com.maciejbihun.models.UserPrincipal;
 import com.maciejbihun.models.UserRegisteredService;
 import com.maciejbihun.models.UserRegisteredServiceCategory;
 import org.junit.Before;
@@ -39,7 +38,7 @@ public class UserRegisteredServiceControllerTest {
     UserRegisteredServiceController userRegisteredServiceController;
 
     @Autowired
-    UserService userService;
+    UserController userController;
 
     @Before
     public void init(){

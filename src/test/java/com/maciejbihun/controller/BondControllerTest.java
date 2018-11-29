@@ -6,7 +6,7 @@ import com.maciejbihun.dto.BondDto;
 import com.maciejbihun.models.*;
 import com.maciejbihun.repository.BondRepository;
 import com.maciejbihun.repository.UserAccountInObligationGroupRepository;
-import com.maciejbihun.repository.UserGroupObligationStrategyForRegisteredServiceRepository;
+import com.maciejbihun.repository.RegisteredServiceObligationStrategyRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,7 +32,7 @@ public class BondControllerTest {
     BondRepository bondRepository;
 
     @Mock
-    UserGroupObligationStrategyForRegisteredServiceRepository obligationStrategyRepository;
+    RegisteredServiceObligationStrategyRepository obligationStrategyRepository;
 
     @Mock
     UserAccountInObligationGroupRepository userAccountInObligationGroupRepository;
@@ -53,7 +53,7 @@ public class BondControllerTest {
 
         BondDto bondDto = new BondDto(100, 10L, 10L);
 
-        ResponseEntity<Bond> bondInObligationGroup = bondController.createBondInObligationGroup(bondDto);
+        ResponseEntity<Bond> bondInObligationGroup = bondController.createBondInObligationStrategy(bondDto);
         assertEquals(HttpStatus.NOT_FOUND, bondInObligationGroup.getStatusCode());
     }
 
@@ -69,14 +69,14 @@ public class BondControllerTest {
         ObligationGroup obligationGroup = new ObligationGroup(userMock, "", "", "", "");
         UserAccountInObligationGroup userAccountInObligationGroup = new UserAccountInObligationGroup(userMock, obligationGroup);
 
-        UserGroupObligationStrategyForRegisteredService obligationStrategy = new UserGroupObligationStrategyForRegisteredService(
-                mock(UserRegisteredService.class), obligationGroup, userAccountInObligationGroup,
-                UnitOfWork.SERVICE, new BigDecimal("100.00"), new BigDecimal("0.05"), 1000);
+        RegisteredServiceObligationStrategy obligationStrategy = new RegisteredServiceObligationStrategy(
+                mock(UserRegisteredService.class), userAccountInObligationGroup,
+                UnitOfWork.SERVICE, new BigDecimal("100.00"), new BigDecimal("0.05"),2,  1000);
 
         // when
         Mockito.when(obligationStrategyRepository.findById(id)).thenReturn(Optional.of(obligationStrategy));
         Mockito.when(userAccountInObligationGroupRepository.findById(id)).thenReturn(Optional.of(userAccountInObligationGroup));
-        bondController.createBondInObligationGroup(bondDto);
+        bondController.createBondInObligationStrategy(bondDto);
     }
 
 }

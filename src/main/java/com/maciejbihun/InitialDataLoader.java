@@ -38,7 +38,7 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
     private UserAccountInObligationGroupRepository userAccountInObligationGroupRepository;
 
     @Autowired
-    private UserGroupObligationStrategyForRegisteredServiceRepository obligationStrategyRepository;
+    private RegisteredServiceObligationStrategyRepository obligationStrategyRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -103,7 +103,7 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
                 userAccountInObligationGroupRepository.save(userAccountInObligationGroup);
 
                 // create obligation strategy
-                createTestObligationStrategy(users.get(i).getUserRegisteredServices().get(0), testObligationGroups.get(0), userAccountInObligationGroup);
+                createTestObligationStrategy(users.get(i).getUserRegisteredServices().get(0), userAccountInObligationGroup);
 
             } else if (i >= 5 && i < 20){
                 // create user obligation group account
@@ -111,14 +111,14 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
                 userAccountInObligationGroupRepository.save(userAccountInObligationGroup);
 
                 // create obligation strategy
-                createTestObligationStrategy(users.get(i).getUserRegisteredServices().get(0), testObligationGroups.get(0), userAccountInObligationGroup);
+                createTestObligationStrategy(users.get(i).getUserRegisteredServices().get(0), userAccountInObligationGroup);
 
                 // create user obligation group account
                 userAccountInObligationGroup = new UserAccountInObligationGroup(users.get(i), testObligationGroups.get(1));
                 userAccountInObligationGroupRepository.save(userAccountInObligationGroup);
 
                 // create obligation strategy
-                createTestObligationStrategy(users.get(i).getUserRegisteredServices().get(0), testObligationGroups.get(1), userAccountInObligationGroup);
+                createTestObligationStrategy(users.get(i).getUserRegisteredServices().get(0), userAccountInObligationGroup);
 
             } else if(i >= 20 && i < 25){
                 // create user obligation group account
@@ -126,33 +126,33 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
                 userAccountInObligationGroupRepository.save(userAccountInObligationGroup);
 
                 // create obligation strategy
-                createTestObligationStrategy(users.get(i).getUserRegisteredServices().get(0), testObligationGroups.get(1), userAccountInObligationGroup);
+                createTestObligationStrategy(users.get(i).getUserRegisteredServices().get(0), userAccountInObligationGroup);
 
                 // create user obligation group account
                 userAccountInObligationGroup = new UserAccountInObligationGroup(users.get(i), testObligationGroups.get(2));
                 userAccountInObligationGroupRepository.save(userAccountInObligationGroup);
 
                 // create obligation strategy
-                createTestObligationStrategy(users.get(i).getUserRegisteredServices().get(0), testObligationGroups.get(2));
+                createTestObligationStrategy(users.get(i).getUserRegisteredServices().get(0), userAccountInObligationGroup);
             } else if (i >= 25){
                 // create user obligation group account
                 UserAccountInObligationGroup userAccountInObligationGroup = new UserAccountInObligationGroup(users.get(i), testObligationGroups.get(2));
                 userAccountInObligationGroupRepository.save(userAccountInObligationGroup);
 
                 // create obligation strategy
-                createTestObligationStrategy(users.get(i).getUserRegisteredServices().get(0), testObligationGroups.get(2));
+                createTestObligationStrategy(users.get(i).getUserRegisteredServices().get(0), userAccountInObligationGroup);
             }
             i++;
         }
         alreadySetup = true;
     }
 
-    private UserGroupObligationStrategyForRegisteredService createTestObligationStrategy(UserRegisteredService userRegisteredService,
-                                                                                         ObligationGroup obligationGroup){
+    private RegisteredServiceObligationStrategy createTestObligationStrategy(UserRegisteredService userRegisteredService,
+                                                                             UserAccountInObligationGroup userAccountInObligationGroup){
         // create obligation strategy
-        UserGroupObligationStrategyForRegisteredService obligationStrategy = new UserGroupObligationStrategyForRegisteredService(
-                userRegisteredService, obligationGroup,
-                UnitOfWork.SERVICE, new BigDecimal("100.00"), new BigDecimal("0.05"), 1000
+        RegisteredServiceObligationStrategy obligationStrategy = new RegisteredServiceObligationStrategy(
+                userRegisteredService, userAccountInObligationGroup,
+                UnitOfWork.SERVICE, new BigDecimal("100.00"), new BigDecimal("0.05"), 2, 1000
         );
         return obligationStrategyRepository.save(obligationStrategy);
     }

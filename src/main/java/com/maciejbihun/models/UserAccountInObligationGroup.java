@@ -53,7 +53,7 @@ public class UserAccountInObligationGroup implements Serializable {
     private LocalDateTime createdDateTime = LocalDateTime.now();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "userAccountInObligationGroup")
-    private List<UserGroupObligationStrategyForRegisteredService> userObligationStrategies = new ArrayList<>();
+    private List<RegisteredServiceObligationStrategy> userObligationStrategies = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -79,7 +79,7 @@ public class UserAccountInObligationGroup implements Serializable {
         return createdDateTime;
     }
 
-    public List<UserGroupObligationStrategyForRegisteredService> getUserObligationStrategies() {
+    public List<RegisteredServiceObligationStrategy> getUserObligationStrategies() {
         return userObligationStrategies;
     }
 

@@ -37,7 +37,7 @@ public class BondServiceIntegrationTest {
     private BondRepository bondRepository;
 
     @Autowired
-    private UserService userService;
+    private UserController userController;
 
     @Autowired
     private UserAccountInObligationGroupRepository userAccountInObligationGroupRepository;
@@ -67,12 +67,12 @@ public class BondServiceIntegrationTest {
         BondDto bondDto = new BondDto(amountOfUnitsToPay, obligationStrategyId, obligationGroupAccountId);
 
         // when
-        ResponseEntity<Bond> bondInObligationGroupResponseEntity = bondController.createBondInObligationGroup(bondDto);
+        ResponseEntity<Bond> bondInObligationGroupResponseEntity = bondController.createBondInObligationStrategy(bondDto);
 
         ResponseEntity<UserAccountInObligationGroup> userAccountInObligationGroupWithBonds =
-                userAccountInObligationGroupController.getUserAccountInObligationGroupWithBonds(obligationGroupAccountId);
+                userAccountInObligationGroupController.getUserAccountInObligationGroupWithObligationStrategies(obligationGroupAccountId);
 
-        Bond savedBond = userAccountInObligationGroupWithBonds.getBody().getBonds().get(0);
+        Bond savedBond = userAccountInObligationGroupWithBonds.getBody().getUserObligationStrategies().get(bondDto.getObligationStrategyId().intValue()).getBonds().get(bondId.intValue());
 
         Bond bondById = bondRepository.findById(bondId).get();
         List<Bond> allBonds = bondRepository.findAll();

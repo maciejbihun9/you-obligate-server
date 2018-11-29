@@ -2,88 +2,92 @@ package com.maciejbihun.service.impl;
 
 import com.maciejbihun.datatype.BondStatus;
 import com.maciejbihun.exceptions.AmountOfUnitsExceededException;
-import com.maciejbihun.exceptions.BondNotFoundException;
+import com.maciejbihun.exceptions.BondDoesNotExistsException;
 import com.maciejbihun.exceptions.ClosedBondException;
-import com.maciejbihun.exceptions.GroupAccountOrObligationStrategyDoesNotExistsException;
+import com.maciejbihun.exceptions.ObligationStrategyDoesNotExistsException;
 import com.maciejbihun.models.Bond;
-import com.maciejbihun.models.UserAccountInObligationGroup;
-import com.maciejbihun.models.UserGroupObligationStrategyForRegisteredService;
+import com.maciejbihun.models.RegisteredServiceObligationStrategy;
 import com.maciejbihun.repository.BondRepository;
-import com.maciejbihun.repository.UserAccountInObligationGroupRepository;
-import com.maciejbihun.repository.UserGroupObligationStrategyForRegisteredServiceRepository;
+import com.maciejbihun.repository.RegisteredServiceObligationStrategyRepository;
 import com.maciejbihun.service.BondService;
-import com.maciejbihun.service.CreatingMoneyStrategiesService;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.logging.Level;
 
+/**
+ * @author Maciej Bihun
+ */
 @Service
+@Transactional
 public class BondServiceImpl implements BondService {
-
-    private static final String NOT_ACCEPTABLE_AMOUNT_OF_UNITS_PER_BOND = "Not acceptable amount of units per bond.";
 
     private BondRepository bondRepository;
 
-    private UserGroupObligationStrategyForRegisteredServiceRepository obligationStrategyRepository;
+    private RegisteredServiceObligationStrategyRepository obligationStrategyRepository;
 
-    private UserAccountInObligationGroupRepository userAccountInObligationGroupRepository;
-
-    private CreatingMoneyStrategiesService creatingMoneyStrategiesService;
-
-    public BondServiceImpl(BondRepository bondRepository, UserGroupObligationStrategyForRegisteredServiceRepository obligationStrategyRepository,
-                           UserAccountInObligationGroupRepository userAccountInObligationGroupRepository, CreatingMoneyStrategiesService creatingMoneyStrategiesService) {
+    public BondServiceImpl(BondRepository bondRepository, RegisteredServiceObligationStrategyRepository obligationStrategyRepository) {
         this.bondRepository = bondRepository;
         this.obligationStrategyRepository = obligationStrategyRepository;
-        this.userAccountInObligationGroupRepository = userAccountInObligationGroupRepository;
-        this.creatingMoneyStrategiesService = creatingMoneyStrategiesService;
     }
 
+    /**
+     * Creates bond in given obligation strategy.
+     * This method increases account balance in all of these
+     * RegisteredServiceObligationStrategy, ObligationGroup, GroupAccount, Bond accounts.
+     * Hibernate will take care of cascade saving of all of those dependencies.
+     * @param obligationStrategyId
+     * @param amountOfUnitsToPay
+     * @return
+     * @throws Exception
+     */
     @Override
-    @Transactional
-    public Bond createBondInObligationGroup(Long obligationStrategyId, Integer amountOfUnitsToPay) throws Exception {
-        Optional<UserGroupObligationStrategyForRegisteredService> obligationStrategyById = obligationStrategyRepository.findById(obligationStrategyId);
+    public Bond createBondInObligationStrategy(Long obligationStrategyId, Integer amountOfUnitsToPay) throws Exception {
+        Optional<RegisteredServiceObligationStrategy> obligationStrategyById = obligationStrategyRepository.findById(obligationStrategyId);
         if (obligationStrategyById.isPresent()){
 
-            UserGroupObligationStrategyForRegisteredService userGroupObligationStrategyForRegisteredService = obligationStrategyById.get();
+            RegisteredServiceObligationStrategy registeredServiceObligationStrategy = obligationStrategyById.get();
 
-            int predictedAmountOfUnitsToPay = userGroupObligationStrategyForRegisteredService.getAlreadyObligatedUnitsOfWork() + amountOfUnitsToPay;
+            int predictedAmountOfUnitsToPay = registeredServiceObligationStrategy.getAlreadyObligatedUnitsOfWork() + amountOfUnitsToPay;
 
-            if (predictedAmountOfUnitsToPay > userGroupObligationStrategyForRegisteredService.getMaxAmountOfUnitsForObligation()){
+            if (predictedAmountOfUnitsToPay > registeredServiceObligationStrategy.getMaxAmountOfUnitsForObligation()){
                 throw new AmountOfUnitsExceededException();
             }
 
-            Bond bond = new Bond(userGroupObligationStrategyForRegisteredService, amountOfUnitsToPay);
+            Bond bond = new Bond(registeredServiceObligationStrategy, amountOfUnitsToPay);
 
             // increase amount of money in the obligation group
-            userGroupObligationStrategyForRegisteredService.getObligationGroup().addMoneyToAccount(bond.getAmountOfCreatedMoney());
+            registeredServiceObligationStrategy.getUserAccountInObligationGroup().getObligationGroup().addMoneyToAccount(bond.getAmountOfCreatedMoney());
 
             // create money in the group account
-            userGroupObligationStrategyForRegisteredService.getUserAccountInObligationGroup().addMoneyToAccount(bond.getAmountOfCreatedMoney());
+            registeredServiceObligationStrategy.getUserAccountInObligationGroup().addMoneyToAccount(bond.getAmountOfCreatedMoney());
+
+            // create money in obligation strategy
+            registeredServiceObligationStrategy.increaseCreatedMoney(bond.getAmountOfCreatedMoney());
 
             // save bond to generate id
             bond = bondRepository.save(bond);
 
-            obligationStrategyRepository.save(userGroupObligationStrategyForRegisteredService);
-            // userAccountInObligationGroupRepository.save(userGroupObligationStrategyForRegisteredService.getUserAccountInObligationGroup());
-
+            // saving obligation strategy hibernate will store all associated values
+            obligationStrategyRepository.save(registeredServiceObligationStrategy);
             return bond;
         } else {
-            throw new GroupAccountOrObligationStrategyDoesNotExistsException();
+            throw new ObligationStrategyDoesNotExistsException();
         }
     }
 
-    /**
-     * Bond has to be created with minimum amount of units to pay that is given in obligation strategy for given registered service.
-     * Bond can be created with different creating money strategies.
-     */
-    /*@Override
-    public Bond createBond(UserGroupObligationStrategyForRegisteredService obligationStrategy, Integer amountOfUnitsToPay) {
-        return new Bond(obligationStrategy, amountOfUnitsToPay);
-    }*/
-
+    @Override
+    public Integer subtractObligationUnitFromBond(Long bondId) {
+        Optional<Bond> bondById = bondRepository.findById(bondId);
+        if (!bondById.isPresent()){
+            throw new BondDoesNotExistsException();
+        }
+        Bond bond = bondById.get();
+        if (bond.getBondStatus().equals(BondStatus.CLOSED)){
+            throw new ClosedBondException();
+        }
+        bondRepository.save(bond);
+        return bond.subtractBondUnit();
+    }
 
 }

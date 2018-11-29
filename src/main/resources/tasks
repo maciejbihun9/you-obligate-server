@@ -1,34 +1,9 @@
 
- * find out how to write integration tests - done:
+ * split services and controllers logic in the right way:
+ - nie zwracanie większej uwagi na kontrolery, szcególnie na ich testowanie,
+ bo bardzo możliwe, że się zmienią,
+ - skup się bardziej na serwisach, ale jeszcze nie testuj nic!
 
- * immutability in objects:
- - a user might change his service,
- - registeredService is associated with bond,
- - if I change a service that is associated with bond then it might now look,
- - if a service is not associated with even one strategy then I will remove that old service,
- - if a service is associated with at least one strategy then there is not way to change that service before
- paying all obligations that user obligated,
- + what if I have a service and also a strategy, but no bonds, should I remove a service and a strategy also?:
- - it is a time after negotiations, so people from a group spent a lot time on negotiations,
- - it could be like, a user creates another service after editing previous one
- - if a service is not associated with a strategy, then a service will be updated.
- If there is a already strategy then it won't be possible to change that service,
+ * napisz impl dla metody createUserRegisteredService - dla serwis'u oraz kontroller'a - done,
 
- strategy #1:
- - register service, if no strategies -> simple update,
- - if there are strategies associated with a registeredService then
-
- * read about immutable objects - done:
-
- * consider creating a history of user registered services - done:
- - it would be great to have that,
-
- * having many bonds in one strategy:
- - this opens an ability to create new strategy for each change of the strategy,
- so that after each change I create new obligation strategy and I am creating bonds under that,
- - I can have another service that I would like to register in one obligation group
-
- * create a service for obligation strategy and refactor controller:
-
- * strategy for creating the database for tests:
- + remove added money to an account after each test:
+ * write implementation for getUserRegisteredService - done
