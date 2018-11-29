@@ -211,7 +211,6 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
         while(i < amountOfUsers){
             // create registered service
             UserRegisteredService userRegisteredService = new UserRegisteredService();
-            userRegisteredService.setCreatedDateTime(LocalDateTime.now());
             userRegisteredService.setServiceName("SERVICE #" + i);
             userRegisteredService.setServiceDescription("Any, because it is not important now");
             userRegisteredService.setExperienceDescription("Experience desciption is also not really important");

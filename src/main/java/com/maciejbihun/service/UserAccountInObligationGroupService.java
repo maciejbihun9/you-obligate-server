@@ -12,4 +12,6 @@ public interface UserAccountInObligationGroupService {
 
     UserAccountInObligationGroup createUserAccountInObligationGroup(String username, Long obligationGroupId) throws ObligationGroupDoesNotExistsException;
 
+
+
 }

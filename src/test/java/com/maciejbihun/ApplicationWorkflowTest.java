@@ -44,7 +44,7 @@ public class ApplicationWorkflowTest {
         ObligationGroup obligationGroup = new ObligationGroup(groupCreator,"SPARTANS", "BIHUN", "BHN", "desc");
 
         // obligation group should be saved first
-        obligationGroup = obligationGroupService.createObligationGroup(obligationGroup);
+        obligationGroup = obligationGroupService.saveObligationGroup(obligationGroup);
 
         User user = allUsers.get(1);
 

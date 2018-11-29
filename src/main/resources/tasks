@@ -8,4 +8,21 @@
 
  * write implementation for getUserRegisteredService - done
 
- * hibernate
+ * create methods for concrete user interactions:
+ - createUserRegisteredService - done,
+ - update UserRegisteredService (for saving that service works also),
+ - create obligation group - done
+ - update obligation group (save works for creating and obligation group entity),
+ - create an account for given user in obligation group,
+ - make possible to update a user account in obligation group
+ - add new RegisteredServiceObligationStrategy to an account
+
+ * user story #1:
+ + user creates and account,
+ + user registers his strategies,
+ + during creating registered service user specifies terms that describes given registered service:
+ - I will search for services for a group using those terms + category
+
+ * creating terms for registeredService:
+ - a user will send entire registered service with those terms,
+

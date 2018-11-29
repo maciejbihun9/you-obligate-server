@@ -18,8 +18,11 @@ public class ObligationGroupServiceImpl implements ObligationGroupService {
     @Autowired
     private ObligationGroupRepository obligationGroupRepository;
 
+    /**
+     * Saves and updates given obligation group.
+     */
     @Override
-    public ObligationGroup createObligationGroup(ObligationGroup obligationGroup) {
+    public ObligationGroup saveObligationGroup(ObligationGroup obligationGroup) {
         return obligationGroupRepository.save(obligationGroup);
     }
 

@@ -25,7 +25,7 @@ public class ObligationGroupControllerImpl implements ObligationGroupController 
     @Override
     public ResponseEntity<ObligationGroupDto> saveObligationGroup(ObligationGroupDto obligationGroupDto) {
         ObligationGroup obligationGroup = ObligationGroupConverter.convertToEntity(obligationGroupDto);
-        obligationGroup = obligationGroupService.createObligationGroup(obligationGroup);
+        obligationGroup = obligationGroupService.saveObligationGroup(obligationGroup);
         return new ResponseEntity<>(ObligationGroupConverter.convertToDto(obligationGroup), HttpStatus.CREATED);
     }
 

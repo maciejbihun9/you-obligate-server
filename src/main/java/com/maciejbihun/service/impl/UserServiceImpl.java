@@ -1,6 +1,5 @@
 package com.maciejbihun.service.impl;
 
-import com.maciejbihun.controller.UserController;
 import com.maciejbihun.models.User;
 import com.maciejbihun.models.UserPrincipal;
 import com.maciejbihun.repository.UserRepository;

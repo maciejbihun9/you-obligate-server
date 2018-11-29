@@ -4,7 +4,7 @@ import com.maciejbihun.models.ObligationGroup;
 
 public interface ObligationGroupService {
 
-    ObligationGroup createObligationGroup(ObligationGroup obligationGroup);
+    ObligationGroup saveObligationGroup(ObligationGroup obligationGroup);
 
     boolean obligationGroupExists(Long obligationGroupId);
 
