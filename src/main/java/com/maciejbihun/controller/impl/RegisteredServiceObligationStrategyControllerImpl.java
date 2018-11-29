@@ -42,7 +42,7 @@ public class RegisteredServiceObligationStrategyControllerImpl implements Regist
         if (obligationGroup != null && userRegisteredService != null){
             try {
                 // create new RegisteredServiceObligationStrategy
-                RegisteredServiceObligationStrategy obligationStrategy = registeredServiceObligationStrategyService.createObligationStrategy(
+                RegisteredServiceObligationStrategy obligationStrategy = registeredServiceObligationStrategyService.saveObligationStrategy(
                         userRegisteredService,
                         userAccountInObligationGroup,
                         userGroupObligationStrategyForRegisteredServiceDto.getUnitOfWork(),

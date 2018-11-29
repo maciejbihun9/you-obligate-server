@@ -27,7 +27,7 @@ public class RegisteredServiceObligationStrategyControllerIntegrationTest {
     RegisteredServiceObligationStrategyController registeredServiceObligationStrategyController;
 
     @Autowired
-    ObligationGroupController obligationGroupController;
+    ObligationGroupController obligationGroupService;
 
     @Autowired
     UserRegisteredServiceRepository userRegisteredServiceRepository;

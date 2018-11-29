@@ -5,7 +5,6 @@ import com.maciejbihun.converters.ObligationGroupConverter;
 import com.maciejbihun.dto.ObligationGroupDto;
 import com.maciejbihun.models.ObligationGroup;
 import com.maciejbihun.repository.ObligationGroupRepository;
-import com.maciejbihun.service.ObligationGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +20,7 @@ public class ObligationGroupControllerImpl implements ObligationGroupController 
     private ObligationGroupRepository obligationGroupRepository;
 
     @Autowired
-    private ObligationGroupService obligationGroupService;
+    private com.maciejbihun.service.ObligationGroupService obligationGroupService;
 
     @Override
     public ResponseEntity<ObligationGroupDto> saveObligationGroup(ObligationGroupDto obligationGroupDto) {

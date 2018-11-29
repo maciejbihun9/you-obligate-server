@@ -1,13 +1,13 @@
 package com.maciejbihun;
 
-import com.maciejbihun.controller.*;
-import com.maciejbihun.dto.*;
+import com.maciejbihun.datatype.UnitOfWork;
+import com.maciejbihun.exceptions.ObligationGroupDoesNotExistsException;
 import com.maciejbihun.models.*;
+import com.maciejbihun.service.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -20,62 +20,59 @@ import java.util.List;
 public class ApplicationWorkflowTest {
 
     @Autowired
-    UserController userController;
+    UserService userService;
 
     @Autowired
-    ObligationGroupController obligationGroupController;
+    ObligationGroupService obligationGroupService;
 
     @Autowired
-    BondController bondController;
+    BondService bondService;
 
     @Autowired
-    RegisteredServiceObligationStrategyController registeredServiceObligationStrategyController;
+    RegisteredServiceObligationStrategyService registeredServiceObligationStrategyService;
 
     @Autowired
-    UserAccountInObligationGroupController obligationGroupAccountService;
+    UserAccountInObligationGroupService obligationGroupAccountService;
 
 
     @Test
     public void testApplicationWorkflow(){
         // load all users
-        List<User> allUsers = userController.getAllUsers().getBody();
+        List<User> allUsers = userService.getAllUsers();
         User groupCreator = allUsers.get(0);
 
         ObligationGroup obligationGroup = new ObligationGroup(groupCreator,"SPARTANS", "BIHUN", "BHN", "desc");
 
         // obligation group should be saved first
-        obligationGroup = obligationGroupController.saveObligationGroup(obligationGroup);
+        obligationGroup = obligationGroupService.createObligationGroup(obligationGroup);
 
         User user = allUsers.get(1);
 
-        UserAccountInObligationGroupDto userAccountInObligationGroupDto = new UserAccountInObligationGroupDto(user.getUsername(), obligationGroup.getId());
-        ResponseEntity<UserAccountInObligationGroup> userObligationGroupAccount = obligationGroupAccountService.createGroupAccount(userAccountInObligationGroupDto);
+        UserAccountInObligationGroup userAccountInObligationGroup = null;
+        try {
+            userAccountInObligationGroup = obligationGroupAccountService.createUserAccountInObligationGroup(user.getUsername(), obligationGroup.getId());
+        } catch (ObligationGroupDoesNotExistsException e) {
+            e.printStackTrace();
+        }
 
-        UserGroupObligationStrategyForRegisteredServiceDto obligationStrategyDto =
-                new UserGroupObligationStrategyForRegisteredServiceDto();
-        obligationStrategyDto.setAlreadyCreatedAmountOfMoney(new BigDecimal("0.00"));
-        obligationStrategyDto.setAlreadyObligatedUnitsOfWork(0);
-        obligationStrategyDto.setInterestRate(new BigDecimal("0.00"));
-        obligationStrategyDto.setAmountOfUnitsEverPaid(0);
-        obligationStrategyDto.setMaxAmountOfUnitsForObligation(100);
-        obligationStrategyDto.setUnitOfWorkCost(new BigDecimal("100.00"));
-
-        ObligationGroupDto obligationGroupDto = new ObligationGroupDto();
-        obligationGroupDto.setId(obligationGroup.getId());
-        obligationStrategyDto.setObligationGroupDto(obligationGroupDto);
-
-        UserRegisteredServiceDto userRegisteredServiceDto = new UserRegisteredServiceDto();
-        userRegisteredServiceDto.setId(user.getUserRegisteredServices().get(0).getId());
-        obligationStrategyDto.setUserRegisteredServiceDto(userRegisteredServiceDto);
-
-        ResponseEntity<RegisteredServiceObligationStrategy> obligationStrategy =
-                registeredServiceObligationStrategyController.createObligationStrategy(obligationStrategyDto);
+        RegisteredServiceObligationStrategy obligationStrategy =
+                new RegisteredServiceObligationStrategy(
+                        user.getUserRegisteredServices().get(0),
+                        userAccountInObligationGroup,
+                        UnitOfWork.SERVICE,
+                        new BigDecimal("100.00"),
+                        new BigDecimal("0.00"),
+                        2,
+                        100
+                );
+        obligationStrategy = registeredServiceObligationStrategyService.saveObligationStrategy(obligationStrategy);
 
         // create bond object between a user and group:
-        BondDto dentistBondDto = new BondDto(100, obligationStrategy.getBody().getId(), userObligationGroupAccount.getBody().getId());
-        dentistBondDto.setAmountOfUnitsToPay(100);
-        ResponseEntity<Bond> bondInObligationGroup = bondController.createBondInObligationStrategy(dentistBondDto);
-        System.out.println();
+        try {
+            Bond bondInObligationStrategy = bondService.createBondInObligationStrategy(obligationStrategy.getId(), 10);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         // create obligation strategy for each registered service
         // define an obligation strategy for each registered service itself

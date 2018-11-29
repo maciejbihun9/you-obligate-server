@@ -5,7 +5,6 @@ import com.maciejbihun.converters.UserAccountInObligationGroupConverter;
 import com.maciejbihun.dto.UserAccountInObligationGroupDto;
 import com.maciejbihun.exceptions.ObligationGroupDoesNotExistsException;
 import com.maciejbihun.models.UserAccountInObligationGroup;
-import com.maciejbihun.service.UserAccountInObligationGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +19,7 @@ import org.springframework.util.MultiValueMap;
 public class UserAccountInObligationGroupControllerImpl implements UserAccountInObligationGroupController {
 
     @Autowired
-    UserAccountInObligationGroupService userAccountInObligationGroupService;
+    com.maciejbihun.service.UserAccountInObligationGroupService userAccountInObligationGroupService;
 
     /**
      * Creates an account for a user in given obligation group and returns new instance of UserAccountInObligationGroup to the user with convenient http status.
