@@ -11,15 +11,12 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
- *
  * Stores user's data associated with given obligation group.
- *
  * @author Maciej Bihun
  */
 @Entity
 @Table(name = "UserAccountInObligationGroup")
-@NamedEntityGraphs({@NamedEntityGraph(name = "graph.accountBonds", attributeNodes = @NamedAttributeNode("bonds")),
-                    @NamedEntityGraph(name = "graph.userObligationStrategies", attributeNodes = @NamedAttributeNode("userObligationStrategies"))})
+@NamedEntityGraphs({@NamedEntityGraph(name = "graph.userObligationStrategies", attributeNodes = @NamedAttributeNode("userObligationStrategies"))})
 public class UserAccountInObligationGroup implements Serializable {
 
     public UserAccountInObligationGroup(){}

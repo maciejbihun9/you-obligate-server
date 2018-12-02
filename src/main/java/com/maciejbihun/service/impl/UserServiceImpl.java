@@ -31,18 +31,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     /**
-     * Register new user in the system.
+     * Creates or updates a user in the system.
      */
     @Override
-    public User createUser(User user) {
-        return userRepository.save(user);
-    }
-
-    /**
-     * Update user data in the system.
-     */
-    @Override
-    public User saveUserData(User user){
+    public User saveUser(User user) {
         return userRepository.save(user);
     }
 

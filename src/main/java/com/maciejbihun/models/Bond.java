@@ -31,18 +31,17 @@ public class Bond {
 
     private static final String NOT_ACCEPTABLE_AMOUNT_OF_UNITS_PER_BOND = "Not acceptable amount of units per bond.";
 
-    public Bond(){
-        throw new EmptyConstructorIsNotAvailableException();
-    }
+    public Bond(){}
 
-    public Bond(RegisteredServiceObligationStrategy obligationStrategy, Integer amountOfUnitsToPay) {
-        if (amountOfUnitsToPay < obligationStrategy.getMinAmountOfUnitsPerBond()){
+    public Bond(RegisteredServiceObligationStrategy registeredServiceObligationStrategy, Integer amountOfUnitsToPay) {
+        if (amountOfUnitsToPay < registeredServiceObligationStrategy.getMinAmountOfUnitsPerBond()){
             throw new IllegalArgumentException(String.format(NOT_ACCEPTABLE_AMOUNT_OF_UNITS_PER_BOND + " It was %s, but it should be at least %s.",
-                    amountOfUnitsToPay, obligationStrategy.getMinAmountOfUnitsPerBond()));
+                    amountOfUnitsToPay, registeredServiceObligationStrategy.getMinAmountOfUnitsPerBond()));
         }
-        this.obligationStrategy = obligationStrategy;
+        this.registeredServiceObligationStrategy = registeredServiceObligationStrategy;
         this.amountOfUnitsToPay = amountOfUnitsToPay;
-        this.unitOfWorkCost = obligationStrategy.getUnitOfWorkCost().subtract(obligationStrategy.getInterestRate().multiply(obligationStrategy.getUnitOfWorkCost()));
+        this.unitOfWorkCost = registeredServiceObligationStrategy.getUnitOfWorkCost()
+                .subtract(registeredServiceObligationStrategy.getInterestRate().multiply(registeredServiceObligationStrategy.getUnitOfWorkCost()));
         this.amountOfCreatedMoney.updateAndGet(bigDecimal -> unitOfWorkCost.multiply(new BigDecimal(amountOfUnitsToPay)).setScale(2, RoundingMode.HALF_UP));
     }
 
@@ -78,7 +77,7 @@ public class Bond {
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "OBLIGATION_STRATEGY_ID", nullable = false)
-    private RegisteredServiceObligationStrategy obligationStrategy;
+    private RegisteredServiceObligationStrategy registeredServiceObligationStrategy;
 
     public Integer subtractBondUnit() throws ClosedBondException {
         if (bondStatus.equals(BondStatus.CLOSED)){
@@ -98,8 +97,8 @@ public class Bond {
         }
     }
 
-    public RegisteredServiceObligationStrategy getObligationStrategy() {
-        return obligationStrategy;
+    public RegisteredServiceObligationStrategy getRegisteredServiceObligationStrategy() {
+        return registeredServiceObligationStrategy;
     }
 
     public Long getId() {

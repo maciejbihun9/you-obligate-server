@@ -42,13 +42,19 @@ public class RegisteredServiceObligationStrategyControllerImpl implements Regist
         if (obligationGroup != null && userRegisteredService != null){
             try {
                 // create new RegisteredServiceObligationStrategy
-                RegisteredServiceObligationStrategy obligationStrategy = registeredServiceObligationStrategyService.saveObligationStrategy(
+                RegisteredServiceObligationStrategy registeredServiceObligationStrategy = new RegisteredServiceObligationStrategy(
                         userRegisteredService,
                         userAccountInObligationGroup,
                         userGroupObligationStrategyForRegisteredServiceDto.getUnitOfWork(),
                         userGroupObligationStrategyForRegisteredServiceDto.getUnitOfWorkCost(),
                         userGroupObligationStrategyForRegisteredServiceDto.getInterestRate(),
-                        userGroupObligationStrategyForRegisteredServiceDto.getDebtUnitsLimit());
+                        2,
+                        userGroupObligationStrategyForRegisteredServiceDto.getDebtUnitsLimit()
+                );
+
+                RegisteredServiceObligationStrategy obligationStrategy =
+                        registeredServiceObligationStrategyService.saveObligationStrategy(registeredServiceObligationStrategy);
+
                 return new ResponseEntity<>(obligationStrategy, HttpStatus.CREATED);
             } catch (Exception e){
                 MultiValueMap<String, String> multiValueMap = new LinkedMultiValueMap();

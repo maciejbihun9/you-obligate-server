@@ -40,7 +40,7 @@ public class UserControllerImpl implements UserController {
     public ResponseEntity<UserDto> createUser(UserDto userDto) {
         userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
         User user = UserConverter.convertToEntity(userDto);
-        userDto = UserConverter.convertToDto(userService.createUser(user));
+        userDto = UserConverter.convertToDto(userService.saveUser(user));
         return new ResponseEntity<>(userDto, HttpStatus.CREATED);
     }
 
@@ -48,7 +48,7 @@ public class UserControllerImpl implements UserController {
     public ResponseEntity<UserDto> saveUserData(@RequestBody UserDto userDto){
         userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
         User user = UserConverter.convertToEntity(userDto);
-        userDto = UserConverter.convertToDto(userService.createUser(user));
+        userDto = UserConverter.convertToDto(userService.saveUser(user));
         return new ResponseEntity<>(userDto, HttpStatus.ACCEPTED);
     }
 

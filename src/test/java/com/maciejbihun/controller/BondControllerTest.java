@@ -28,7 +28,7 @@ import static org.mockito.Mockito.mock;
 @RunWith(MockitoJUnitRunner.class)
 public class BondControllerTest {
 
-    @Mock
+    /*@Mock
     BondRepository bondRepository;
 
     @Mock
@@ -77,6 +77,6 @@ public class BondControllerTest {
         Mockito.when(obligationStrategyRepository.findById(id)).thenReturn(Optional.of(obligationStrategy));
         Mockito.when(userAccountInObligationGroupRepository.findById(id)).thenReturn(Optional.of(userAccountInObligationGroup));
         bondController.createBondInObligationStrategy(bondDto);
-    }
+    }*/
 
 }

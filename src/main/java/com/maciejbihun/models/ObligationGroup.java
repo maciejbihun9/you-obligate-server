@@ -14,6 +14,7 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 @Entity
 @Table(name="ObligationGroup")
+@NamedEntityGraphs({@NamedEntityGraph(name = "graph.userAccountsInObligationGroup", attributeNodes = @NamedAttributeNode("userAccountsInObligationGroup"))})
 public class ObligationGroup {
 
     public ObligationGroup(){}
@@ -62,7 +63,7 @@ public class ObligationGroup {
     private final AtomicReference<BigDecimal> accountBalance = new AtomicReference<>(BigDecimal.ZERO);
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "obligationGroup")
-    private List<UserAccountInObligationGroup> userAccountInObligationGroups = new ArrayList<>();
+    private List<UserAccountInObligationGroup> userAccountsInObligationGroup = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -96,8 +97,8 @@ public class ObligationGroup {
         return moneyName;
     }
 
-    public List<UserAccountInObligationGroup> getUserAccountInObligationGroups() {
-        return userAccountInObligationGroups;
+    public List<UserAccountInObligationGroup> getUserAccountsInObligationGroup() {
+        return userAccountsInObligationGroup;
     }
 
     public String getMoneyShortcutName() {

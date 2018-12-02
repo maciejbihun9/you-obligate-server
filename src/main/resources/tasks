@@ -18,11 +18,54 @@
  - add new RegisteredServiceObligationStrategy to an account
 
  * user story #1:
- + user creates and account,
+ + user creates an account,
  + user registers his strategies,
  + during creating registered service user specifies terms that describes given registered service:
- - I will search for services for a group using those terms + category
+ - I will search for services for a group using those terms + category,
+ + user specifies what he would like to receive from other groups, from other users:
+ - it will be specified during creating an user account,
+ - a user will be able to update those terms later on,
+ - a user will add or remove terms from ui, send entire new list of items to the backend,
+ set to RegisteredService.
+ - Saving a user will cause saving entire list of terms
+ + a user would like to find an obligation group:
+ - he might use a search bar to do it,
+ + based on terms that he has provided, a system will propose obligation groups to obligate
+ - obligation groups has to expose her users registered services terms,
+ - a system will expose all terms without duplicates,
+ - I might return all terms as a set - return that in one query (this might be a lot of those),
+ - this might be (max. 2000 terms),
+ - create method findSatisfingObligationGroups, recommendObligationGroupsForUser
+ - find groups that contain the most terms from user terms group
+ - groups also are able to look for people, so this should be take into concern,
+ - create set from all
 
- * creating terms for registeredService:
- - a user will send entire registered service with those terms,
+ * Should I search for groups using elastic search?
+ - elastic search was created for big data sets,
+ - for know i belive i won't have that many groups,
+ - this guy was saying about switching to elastic search at later stages,
+ - I will test this basic resolution, because I belive that this is the right way to do at the beginning,
+ - this will be simple searching pattern
+
+ * what to do to optimize sql query?:
+ - not really important right now,
+ - when it is needed, then i will take care of that
+
+ * what might be added with a term?:
+ - an id of a term,
+ - name of a term,
+ - groups to which belongs to (many to many with an obligation group),
+ - we gonna create an additional field in the database table
+
+ * is it good to create many-to-many associations
+
+ * strategy:
+ - create a class named RegisteredServiceTag,
+ - add id, value, fields,
+ - create many-to-many association with registered services,
+ - create many-to-many association with groups,
+ - set lazy to all of them,
+ - use set as a container to not replicate the data,
+ - create query to get all terms for given group and try to match with a user expectations
+
 

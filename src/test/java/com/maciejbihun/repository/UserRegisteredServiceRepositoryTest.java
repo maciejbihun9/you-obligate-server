@@ -33,7 +33,6 @@ public class UserRegisteredServiceRepositoryTest {
     @Test
     public void annotationsInEntitiesAreWellDefined(){
         UserRegisteredService userRegisteredService = new UserRegisteredService();
-        userRegisteredService.setCreatedDateTime(LocalDateTime.now());
         userRegisteredService.setUserRegisteredServiceCategory(UserRegisteredServiceCategory.HEALTH);
         userRegisteredService.setServiceName("dsafa");
         userRegisteredService.setExperienceDescription("dsafads");
@@ -63,7 +62,6 @@ public class UserRegisteredServiceRepositoryTest {
             } else {
                 userRegisteredService.setUserRegisteredServiceCategory(UserRegisteredServiceCategory.LEARNING);
             }
-            userRegisteredService.setCreatedDateTime(LocalDateTime.now());
 
             UserUnitsRequest userUnitsRequest = new UserUnitsRequest();
             userUnitsRequest.setUserRegisteredService(userRegisteredService);

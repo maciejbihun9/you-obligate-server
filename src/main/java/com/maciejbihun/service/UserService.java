@@ -12,7 +12,6 @@ import java.util.List;
  */
 public interface UserService {
     List<User> getAllUsers();
-    User createUser(User user);
+    User saveUser(User user);
     UserPrincipal loadUserByUsername(String username);
-    User saveUserData(User user);
 }

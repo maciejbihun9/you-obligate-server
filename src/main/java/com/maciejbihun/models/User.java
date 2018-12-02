@@ -39,7 +39,7 @@ public class User {
     private String password;
 
     /**
-     * A list of words that describe services the user would like to see in the group in which he obliges
+     * A list of words that describe services the user would like to see in the group in which he obliges.
      */
     @ElementCollection
     private List<String> expectedServicesTerms = new ArrayList<>();

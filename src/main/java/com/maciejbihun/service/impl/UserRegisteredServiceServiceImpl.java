@@ -21,6 +21,11 @@ public class UserRegisteredServiceServiceImpl implements UserRegisteredServiceSe
     @Autowired
     private UserRegisteredServiceRepository userRegisteredServiceRepository;
 
+    /**
+     * Saving UserRegisteredService system saves or updates registeredServiceTerms also.
+     * If you add or delete at least one item from registeredServiceTerms then hibernate will
+     * destroy entire list and will create a new list removing old ones and creating completely new list of items.
+     */
     @Override
     public UserRegisteredService saveUserRegisteredService(UserRegisteredService userRegisteredService) {
         return userRegisteredServiceRepository.save(userRegisteredService);

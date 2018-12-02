@@ -106,6 +106,10 @@ public class UserRegisteredService {
         this.experienceDescription = experienceDescription;
     }
 
+    public void setRegisteredServiceTerms(List<String> registeredServiceTerms) {
+        this.registeredServiceTerms = registeredServiceTerms;
+    }
+
     public List<String> getRegisteredServiceTerms() {
         return registeredServiceTerms;
     }

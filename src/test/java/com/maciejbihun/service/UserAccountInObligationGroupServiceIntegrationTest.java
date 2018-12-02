@@ -23,7 +23,7 @@ public class UserAccountInObligationGroupServiceIntegrationTest {
     private UserAccountInObligationGroupService userAccountInObligationGroupService;
 
     // getUserAccountWithObligationStrategies() --- TEST METHODS --- //
-    @Test
+    /*@Test
     public void obligationStrategiesShouldBeInitialized(){
         // given
         Long userAccountId = 1L;
@@ -34,6 +34,6 @@ public class UserAccountInObligationGroupServiceIntegrationTest {
         // then
         assertNotNull(userAccountWithObligationStrategies.getUserObligationStrategies().get(0));
 
-    }
+    }*/
 
 }

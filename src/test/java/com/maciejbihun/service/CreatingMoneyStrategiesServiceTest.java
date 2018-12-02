@@ -14,7 +14,7 @@ import static org.junit.Assert.assertEquals;
 @RunWith(MockitoJUnitRunner.class)
 public class CreatingMoneyStrategiesServiceTest {
 
-    private CreatingMoneyStrategiesService creatingMoneyStrategiesService;
+    /*private CreatingMoneyStrategiesService creatingMoneyStrategiesService;
 
     @Before
     public void init(){
@@ -80,5 +80,5 @@ public class CreatingMoneyStrategiesServiceTest {
         // then
         creatingMoneyStrategiesService.computeAmountOfCreatedMoneyForBondWithDiscount(unitOfWorkCost, interestRate, amountOfUnitsToPay);
     }
-
+*/
 }

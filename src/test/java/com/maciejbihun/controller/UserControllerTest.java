@@ -57,14 +57,14 @@ public class UserControllerTest {
         }
     }*/
 
-    @Test
+  /*  @Test
     public void getUserTest(){
         UserPrincipal maciek1 = userController.loadUserByUsername("maciek1");
         Collection<Role> roles = maciek1.getUser().getRoles();
         System.out.println(roles);
-    }
+    }*/
 
-    @Test
+    /*@Test
     public void userPasswordShouldHave60OfLength(){
         UserDto userDto = new UserDto();
         userDto.setName("Maciej");
@@ -81,7 +81,7 @@ public class UserControllerTest {
     public void havingUsername_thereIsNoUserWithGivenUsername_throwsException(){
         String testUsername = "some username";
         userController.loadUserByUsername(testUsername);
-    }
+    }*/
 
     /*@Test
     public void userRegisteredServicesIdsAreGeneratedCorrectly(){

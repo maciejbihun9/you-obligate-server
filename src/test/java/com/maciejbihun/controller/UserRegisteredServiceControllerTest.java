@@ -40,7 +40,7 @@ public class UserRegisteredServiceControllerTest {
     @Autowired
     UserController userController;
 
-    @Before
+    /*@Before
     public void init(){
         int i = 0;
         while(i < 150){
@@ -119,6 +119,6 @@ public class UserRegisteredServiceControllerTest {
         ResponseEntity<List<UserRegisteredService>> userRegisteredServicesByLearning =
                 userRegisteredServiceController.getUserRegisteredServices(UserRegisteredServiceCategory.LEARNING.getCategory());
 
-    }
+    }*/
 
 }

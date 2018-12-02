@@ -33,7 +33,7 @@ public class UserAccountInObligationGroupServiceIntegrationTest {
         Long obligationStrategyId = 1L;
         Long obligationGroupAccountId = 1L;
         Integer amountOfUnitsToPay = 100;
-        BondDto bondDto = new BondDto(amountOfUnitsToPay, obligationStrategyId, obligationGroupAccountId);
+        BondDto bondDto = new BondDto(amountOfUnitsToPay, obligationStrategyId);
 
         // when
         bondController.createBondInObligationStrategy(bondDto);
