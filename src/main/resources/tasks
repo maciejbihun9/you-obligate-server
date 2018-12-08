@@ -152,6 +152,14 @@
  - I will increase the number of users that used given tag,
  - from now this tag will be shown when a user registers or expects something,
 
+ implementation:
+ - Create class Tag (id, value, numberOfRegisteredServices: 23, numberOfExpectedServices: 45),
+ - Create RegisteredServiceTag - many-to-many association in tag class (id, user_registered_service_id, tag_id),
+ - Create ExpectedServiceTag - many-to-many association in tag class (id, user_id, tag_id),
+ - Create many-to-many associations on both sides,
+ - create test data,
+ - test this solution
+
  questions:
  + how to cover synonyms?:
  - there won't be any synonyms,
