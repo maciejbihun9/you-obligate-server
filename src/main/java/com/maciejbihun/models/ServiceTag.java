@@ -1,7 +1,8 @@
 package com.maciejbihun.models;
 
 import javax.persistence.*;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Maciej Bihun
@@ -16,14 +17,21 @@ public class ServiceTag extends Tag{
     @SequenceGenerator(name = "TAG_SEQ", sequenceName = "TAG_SEQ", allocationSize = 1)
     Long id;
 
-    @Basic(optional = false)
-    @Column(name = "NUMBER_OF_REGISTERED_SERVICES", nullable = false, updatable = true)
-    private AtomicInteger numberOfRegisteredServices = new AtomicInteger(0);
+    @ManyToMany(mappedBy = "expectedServicesTags")
+    private Set<User> users = new HashSet<>();
 
-    @Basic(optional = false)
-    @Column(name = "NUMBER_OF_EXPECTED_SERVICES", nullable = false, updatable = true)
-    private AtomicInteger numberOfExpectedServices = new AtomicInteger(0);
+    @ManyToMany(mappedBy = "userRegisteredServicesTags")
+    private Set<UserRegisteredService> userRegisteredServices = new HashSet<>();
 
+    public Long getId() {
+        return id;
+    }
 
+    public Set<User> getUsers() {
+        return users;
+    }
 
+    public Set<UserRegisteredService> getUserRegisteredServices() {
+        return userRegisteredServices;
+    }
 }

@@ -1,6 +1,8 @@
 package com.maciejbihun.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -57,7 +59,19 @@ public class UserRegisteredService {
                     referencedColumnName = "ID"))
     private Set<RegisteredServiceTag> registeredServiceTags = new HashSet<>();
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "userRegisteredService") // fetch type is EAGER, because a user won't have many of RegisteredServiceObligationStrategy for one UserRegisteredService.
+    /**
+     * User registered services tags which tags user registered service.
+     */
+    @ManyToMany
+    @JoinTable(
+            name = "UserRegisteredServicesTags",
+            joinColumns = @JoinColumn(
+                    name = "USER_REGISTERED_SERVICE_ID", referencedColumnName = "ID"),
+            inverseJoinColumns = @JoinColumn(
+                    name = "SERVICE_TAG_ID", referencedColumnName = "ID"))
+    private Set<ServiceTag> userRegisteredServicesTags = new HashSet<>();
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "userRegisteredService")
     private List<RegisteredServiceObligationStrategy> registeredServiceObligationStrategies = new ArrayList<>();
 
     public List<RegisteredServiceObligationStrategy> getRegisteredServiceObligationStrategies() {
@@ -66,6 +80,10 @@ public class UserRegisteredService {
 
     public void setRegisteredServiceTags(Set<RegisteredServiceTag> registeredServiceTags) {
         this.registeredServiceTags = registeredServiceTags;
+    }
+
+    public Set<ServiceTag> getUserRegisteredServicesTags() {
+        return userRegisteredServicesTags;
     }
 
     public Set<RegisteredServiceTag> getRegisteredServiceTags() {
