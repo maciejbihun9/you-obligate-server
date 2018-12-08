@@ -5,9 +5,7 @@ import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author BHN
@@ -38,11 +36,7 @@ public class User {
     @Column(name = "PASSWORD", updatable = true, length = 60 /* length 60 for BCrypt */)
     private String password;
 
-    /**
-     * A list of words that describe services the user would like to see in the group in which he obliges.
-     */
-    @ElementCollection
-    private List<String> expectedServicesTerms = new ArrayList<>();
+
 
     /**
      * User won't have many UserRegisteredService, so it is ok to load them eagerly.
@@ -56,6 +50,19 @@ public class User {
     @JoinColumn(name = "OBLIGATION_GROUP_ACCOUNT_ID")
     private List<UserAccountInObligationGroup> userAccountInObligationGroups = new ArrayList<>();
 
+    /**
+     * Expected services tags that describes what user wants in exchange for his services.
+     */
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @ManyToMany
+    @JoinTable(
+            name = "UserExpectedServicesTags",
+            joinColumns = @JoinColumn(
+                    name = "USER_ID", referencedColumnName = "ID"),
+            inverseJoinColumns = @JoinColumn(
+                    name = "SERVICE_TAG_ID", referencedColumnName = "ID"))
+    private Set<ServiceTag> expectedServicesTags = new HashSet<>();
+
     // LazyCollection is an annotation to omit exception with fetching multiple bags at the same time
     @LazyCollection(LazyCollectionOption.FALSE)
     @ManyToMany
@@ -66,6 +73,10 @@ public class User {
             inverseJoinColumns = @JoinColumn(
                     name = "ROLE_ID", referencedColumnName = "ID"))
     private Collection<Role> roles;
+
+    public Set<ServiceTag> getExpectedServicesTags() {
+        return expectedServicesTags;
+    }
 
     public Collection<Role> getRoles() {
         return roles;
@@ -123,7 +134,4 @@ public class User {
         return id;
     }
 
-    public List<String> getExpectedServicesTerms() {
-        return expectedServicesTerms;
-    }
 }
