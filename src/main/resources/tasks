@@ -144,11 +144,6 @@
  - expectedServiceId: 16, tagId: 6,
  - expectedServiceId: 17, tagId: 6,
 
- + solution architecture:
- - one table for all tags: Tag,
- - this table will have only id's and tag name,
- - how many times given tag was used for registered services and expected services
-
  + how tagging might work:
  - a user type a service name,
  - if that tag already exists in the database then would show up in the recommendations,
