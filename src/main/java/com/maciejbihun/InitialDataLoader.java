@@ -213,7 +213,7 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
             UserRegisteredService userRegisteredService = new UserRegisteredService();
             userRegisteredService.setServiceName("SERVICE #" + i);
             userRegisteredService.setServiceDescription("Any, because it is not important now");
-            userRegisteredService.setExperienceDescription("Experience desciption is also not really important");
+            userRegisteredService.setExperienceDescription("Experience description is also not really important");
             userRegisteredService.setUserRegisteredServiceCategory(UserRegisteredServiceCategory.IT);
             userRegisteredServices.add(userRegisteredService);
             i++;

@@ -9,9 +9,9 @@ public interface ObligationGroupService {
 
     ObligationGroup saveObligationGroup(ObligationGroup obligationGroup);
 
-    boolean obligationGroupExists(Long obligationGroupId);
+    ObligationGroup getObligationGroupWithRegisteredServicesTags(Long obligationGroupId);
 
-    List<String> getObligationGroupRegisteredServicesTerms(Long obligationGroupId);
+    boolean obligationGroupExists(Long obligationGroupId);
 
     List<ObligationGroup> recommendObligationGroupsForUser(User user);
 

@@ -2,6 +2,7 @@ package com.maciejbihun.service;
 
 import com.maciejbihun.Application;
 import com.maciejbihun.HibernateConf;
+import com.maciejbihun.models.RegisteredServiceTag;
 import com.maciejbihun.models.UserPrincipal;
 import com.maciejbihun.models.UserRegisteredService;
 import org.junit.Test;
@@ -13,10 +14,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 
@@ -39,9 +37,9 @@ public class UserRegisteredServiceServiceTest {
         Long userRegisteredServiceId = 2L;
         Optional<UserRegisteredService> userRegisteredServiceOptional = userRegisteredServiceService.getUserRegisteredService(userRegisteredServiceId);
         UserRegisteredService userRegisteredService = userRegisteredServiceOptional.get();
-        userRegisteredService.getRegisteredServiceTerms().add("term 1");
-        userRegisteredService.getRegisteredServiceTerms().add("term 2");
-        userRegisteredService.getRegisteredServiceTerms().add("term 3");
+        /*userRegisteredService.getRegisteredServiceTags().add("term 1");
+        userRegisteredService.getRegisteredServiceTags().add("term 2");
+        userRegisteredService.getRegisteredServiceTags().add("term 3");*/
 
         // when
         userRegisteredService = userRegisteredServiceService.saveUserRegisteredService(userRegisteredService);
@@ -49,11 +47,19 @@ public class UserRegisteredServiceServiceTest {
         userRegisteredService = userRegisteredServiceOptional.get();
 
         // then
-        assertEquals(3, userRegisteredService.getRegisteredServiceTerms().size());
+        assertEquals(3, userRegisteredService.getRegisteredServiceTags().size());
 
         // given
-        List<String> userRegisteredServiceTerms = new ArrayList<>(Arrays.asList("term 4", "term 5", "term 6", "term 7"));
-        userRegisteredService.setRegisteredServiceTerms(userRegisteredServiceTerms);
+
+        List<String> strings = Arrays.asList("term 4", "term 5", "term 6", "term 7");
+        Set<RegisteredServiceTag> userRegisteredServiceTags = new HashSet<>();
+
+        for (String string : strings){
+            RegisteredServiceTag registeredServiceTag = new RegisteredServiceTag();
+            registeredServiceTag.setValue(string);
+            userRegisteredServiceTags.add(registeredServiceTag);
+        }
+        userRegisteredService.setRegisteredServiceTags(userRegisteredServiceTags);
 
         // when
         userRegisteredService = userRegisteredServiceService.saveUserRegisteredService(userRegisteredService);
@@ -62,8 +68,8 @@ public class UserRegisteredServiceServiceTest {
 
         // then
 
-        assertEquals(4, userRegisteredService.getRegisteredServiceTerms().size());
-        assertEquals("term 4", userRegisteredService.getRegisteredServiceTerms().get(0));
+        assertEquals(4, userRegisteredService.getRegisteredServiceTags().size());
+        // assertEquals("term 4", userRegisteredService.getRegisteredServiceTags().get(0));
     }
 
 

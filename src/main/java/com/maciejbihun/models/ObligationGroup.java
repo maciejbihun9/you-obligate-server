@@ -6,7 +6,9 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -14,7 +16,10 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 @Entity
 @Table(name="ObligationGroup")
-@NamedEntityGraphs({@NamedEntityGraph(name = "graph.userAccountsInObligationGroup", attributeNodes = @NamedAttributeNode("userAccountsInObligationGroup"))})
+@NamedEntityGraphs({
+        @NamedEntityGraph(name = "graph.userAccountsInObligationGroup", attributeNodes = @NamedAttributeNode("userAccountsInObligationGroup")),
+        //@NamedEntityGraph(name = "graph.registeredServicesTags", attributeNodes = @NamedAttributeNode("registeredServicesTags"))
+})
 public class ObligationGroup {
 
     public ObligationGroup(){}
@@ -63,7 +68,7 @@ public class ObligationGroup {
     private final AtomicReference<BigDecimal> accountBalance = new AtomicReference<>(BigDecimal.ZERO);
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "obligationGroup")
-    private List<UserAccountInObligationGroup> userAccountsInObligationGroup = new ArrayList<>();
+    private Set<UserAccountInObligationGroup> userAccountsInObligationGroup = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -97,7 +102,7 @@ public class ObligationGroup {
         return moneyName;
     }
 
-    public List<UserAccountInObligationGroup> getUserAccountsInObligationGroup() {
+    public Set<UserAccountInObligationGroup> getUserAccountsInObligationGroup() {
         return userAccountsInObligationGroup;
     }
 

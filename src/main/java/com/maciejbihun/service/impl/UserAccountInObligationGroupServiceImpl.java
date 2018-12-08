@@ -14,12 +14,14 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
 import java.util.HashMap;
 
 /**
  * @author Maciej Bihun
  */
 @Service
+@Transactional
 public class UserAccountInObligationGroupServiceImpl implements UserAccountInObligationGroupService {
 
     @Autowired

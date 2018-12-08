@@ -5,7 +5,9 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Maciej Bihun
@@ -47,15 +49,27 @@ public class UserRegisteredService {
     @Column(name = "CREATED_DATE_TIME", nullable = false)
     private LocalDateTime createdDateTime = LocalDateTime.now();
 
-    // this collection is for searching purposes
-    @ElementCollection
-    private List<String> registeredServiceTerms = new ArrayList<>();
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(name = "UserRegisteredService_UserRegisteredServiceTerm",
+            joinColumns = @JoinColumn(name = "USER_REGISTERED_SERVICE_ID",
+                    referencedColumnName = "ID"),
+            inverseJoinColumns = @JoinColumn(name = "REGISTERED_SERVICE_TAG_ID",
+                    referencedColumnName = "ID"))
+    private Set<RegisteredServiceTag> registeredServiceTags = new HashSet<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "userRegisteredService") // fetch type is EAGER, because a user won't have many of RegisteredServiceObligationStrategy for one UserRegisteredService.
     private List<RegisteredServiceObligationStrategy> registeredServiceObligationStrategies = new ArrayList<>();
 
     public List<RegisteredServiceObligationStrategy> getRegisteredServiceObligationStrategies() {
         return registeredServiceObligationStrategies;
+    }
+
+    public void setRegisteredServiceTags(Set<RegisteredServiceTag> registeredServiceTags) {
+        this.registeredServiceTags = registeredServiceTags;
+    }
+
+    public Set<RegisteredServiceTag> getRegisteredServiceTags() {
+        return registeredServiceTags;
     }
 
     public Long getId() {
@@ -104,14 +118,6 @@ public class UserRegisteredService {
 
     public void setExperienceDescription(String experienceDescription) {
         this.experienceDescription = experienceDescription;
-    }
-
-    public void setRegisteredServiceTerms(List<String> registeredServiceTerms) {
-        this.registeredServiceTerms = registeredServiceTerms;
-    }
-
-    public List<String> getRegisteredServiceTerms() {
-        return registeredServiceTerms;
     }
 
     @Override

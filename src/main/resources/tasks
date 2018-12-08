@@ -57,15 +57,136 @@
  - groups to which belongs to (many to many with an obligation group),
  - we gonna create an additional field in the database table
 
- * is it good to create many-to-many associations
+ * how important will be to have obligation group get registered services:
+ - to show users how many services has been registered in a group
 
- * strategy:
- - create a class named RegisteredServiceTag,
- - add id, value, fields,
- - create many-to-many association with registered services,
- - create many-to-many association with groups,
- - set lazy to all of them,
- - use set as a container to not replicate the data,
- - create query to get all terms for given group and try to match with a user expectations
+ * read about many-to-many associations:
+ - if it is available to use, then I would say that we could use that,
+ - jesli byłoby, aż tak strasznie nie efektywne to usunięto by te połączenie,
+ a jednak ludzie go używają
 
+ * how to express obligation group needs?:
+ solution #1:
+ - get all expected service terms from all users,
+ - there has to be some kind of an algorithm that will promote users
+ with bigger impact in the group,
+ so users with larger amount debt will be ranked higher than other users,
+ - I will get expected services from users from members of a group,
+ - i will show only those with the highest numbers,
+ - those will be expected services + algorithm
+
+ * is obligation group needs should be matched with what users really want? - yes
+
+ * write all requirements for recommendations mechanism
+
+ * recommend obligation groups to a user with given list of registered services terms:
+ + is this association is implemented in the right way?
+ - get all terms for given group,
+ - i won't poll for duplicates
+ + i might end up with situation like:
+ - java script language from a user and java from obligation group registered services,
+ - I would miss that,
+ - elastic search works great for those,
+
+ requirements:
+ - recommend obligation groups to a user based on the
+ number of terms that matches in all registered services,
+ - recommend users for obligation groups, because groups might fight for a user,
+ - count tags in all obligation groups, create a ranking for the hottest services on the market
+ it will be the number of tags used in registered services,
+ - search for services based on tags that describes given service,
+ search for obligation groups, search for users that provide services
+ - show to users what is happening on the market,
+ - introduce demand/supply ratio,
+ - group will know that given service is very hot and it is good to make a good offer,
+ + what about recommendation algorithm?:
+ - the number of tags matched will decide whether I will recommend it or not,
+
+ questions:
+ + how many queries I might make to poll for my results?
+
+ solution #1 - (store stuff in elastic search database):
+ - I have to store obligation groups and registeredServicesTerms,
+ - store all registeredServicesTerms in the elastic search database,
+ - a user sends a query with his data to elastic database,
+ - provide likes to all keywords that a user uses in his query,
+ so i can get every thing using a query
+ - data has to be stored in elastic database too,
+
+ questions:
+ - should I store the data in the relational database and elastic? - it is not really clear,
+ - find a resolution for managing the relational database and elastic search - there is no resolution
+ the data has to be duplicated,
+ + how to store tags in relational database?:
+
+ solution #2 - (store stuff in simple oracle database):
+ - registeredServiceTag -> tags that described user registered service - ok,
+ - user expected service -> tags that describes user expected service - ok,
+ - those tags will have probably the same names - ok,
+ - create tag abstract class for those classes,
+ - this will be ok, I won't have any duplicates with this approach,
+ - I will poll from tag table to get all those entities,
+ - If I add example registered service tag: java, java will be in the table,
+ - there has to be many-to-many association, to omit duplicates,
+
+ + tag class:
+ - this might be used to estimate the demand and supply for given service,
+ - tagId: 3, tagValue: java, numberOfRegisteredServices: 23, numberOfExpectedServices: 45,
+ - tagId: 4, tagValue: java script, numberOfRegisteredServices: 0, numberOfExpectedServices: 0,
+
+ + registeredServiceTag:
+ - registeredServiceId (associated with a user): 15, tagId: 3,
+ - registeredServiceId: 16, tagId: 3,
+ - registeredServiceId: 17, tagId: 3,
+
+ + expectedServiceTag:
+ - expectedServiceId (associated with a user): 13, tagId: 5,
+ - expectedServiceId: 16, tagId: 6,
+ - expectedServiceId: 17, tagId: 6,
+
+ + solution architecture:
+ - one table for all tags: Tag,
+ - this table will have only id's and tag name,
+ - how many times given tag was used for registered services and expected services
+
+ + how tagging might work:
+ - a user type a service name,
+ - if that tag already exists in the database then would show up in the recommendations,
+ - if not then will be created in the database and will be recommended for both user registered services tags and
+ user expected tags,
+ - I will increase the number of users that used given tag,
+ - from now this tag will be shown when a user registers or expects something,
+
+ questions:
+ + how to cover synonyms?:
+ - there won't be any synonyms,
+
+ + Do you think it will be easy to add more tag types later?
+
+ solution #3 - (one table):
+ - put all tags into tags column that are separated by space
+
+ implementation:
+ - create UserRegisteredService table,
+ - add column tags and put those tags as a text into it
+ - create UserExpectedService table and add tags column,
+ - I would save it as a full text,
+ - after each poll request I would have to split it by space and display,
+ - searching:
+ - get all user registered services, get all tags as text, split it, create set to eliminate duplicates,
+
+
+ questions:
+ + how would I connect them with registered services and expected services in the same time?:
+ - save tags as text for registered service
+
+ + is it ok to search by tags?:
+ - put all registered service tags as a text
+
+ + how to get obligation groups by tags that a user is offering?:
+ - split user tags by space - I would say that this might be 20 - 30,
+ - make a sql query: select * from obligationGroup where registeredService tags like %item1%
+
+ + how to get all tags that describes what a group might offer?:
+ - get all services, get all tags as a text, split it
 

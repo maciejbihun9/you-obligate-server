@@ -7,10 +7,10 @@ import com.maciejbihun.service.ObligationGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityGraph;
+import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * @author Maciej Bihun
@@ -18,6 +18,9 @@ import java.util.Optional;
 @Service
 @Transactional
 public class ObligationGroupServiceImpl implements ObligationGroupService {
+
+    @Autowired
+    private EntityManager entityManager;
 
     @Autowired
     private ObligationGroupRepository obligationGroupRepository;
@@ -32,26 +35,29 @@ public class ObligationGroupServiceImpl implements ObligationGroupService {
 
     /**
      * Checks if obligation group with given id exists.
-     * @param obligationGroupId
-     * @return
      */
     @Override
     public boolean obligationGroupExists(Long obligationGroupId) {
         return obligationGroupRepository.existsById(obligationGroupId);
     }
 
+    /**
+     * Returns Obligation group with all registered services in given group tags.
+     */
     @Override
-    public List<String> getObligationGroupRegisteredServicesTerms(Long obligationGroupId) {
-        List<String> obligationGroupRegisteredServicesTerms = new ArrayList<>();
-        Optional<ObligationGroup> obligationGroupById = obligationGroupRepository.findById(obligationGroupId);
-        ObligationGroup obligationGroup = obligationGroupById.get();
-        obligationGroup.getUserAccountsInObligationGroup().forEach(userAccountInObligationGroup -> {
-            userAccountInObligationGroup.getUserObligationStrategies().forEach(registeredServiceObligationStrategy -> {
-                List<String> registeredServiceTerms = registeredServiceObligationStrategy.getUserRegisteredService().getRegisteredServiceTerms();
-                obligationGroupRegisteredServicesTerms.addAll(registeredServiceTerms);
-            });
-        });
-        return obligationGroupRegisteredServicesTerms;
+    public ObligationGroup getObligationGroupWithRegisteredServicesTags(Long obligationGroupId) {
+        List<ObligationGroup> obligationGroups = entityManager.createQuery(
+                "select o " +
+                        "from ObligationGroup o " +
+                        "join fetch o.userAccountsInObligationGroup u " +
+                        "join fetch u.userObligationStrategies uo " +
+                        "join fetch uo.userRegisteredService ur " +
+                        "join fetch ur.registeredServiceTags urt "
+                , ObligationGroup.class).getResultList();
+        // HashMap<String, Object> properties = new HashMap<>();
+        // properties.put("javax.persistence.fetchgraph", graph);
+        // return entityManager.find(ObligationGroup.class, obligationGroupId, properties);
+        return obligationGroups.get(0);
     }
 
     /**
