@@ -1,8 +1,6 @@
 package com.maciejbihun.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -51,25 +49,17 @@ public class UserRegisteredService {
     @Column(name = "CREATED_DATE_TIME", nullable = false)
     private LocalDateTime createdDateTime = LocalDateTime.now();
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(name = "UserRegisteredService_UserRegisteredServiceTerm",
-            joinColumns = @JoinColumn(name = "USER_REGISTERED_SERVICE_ID",
-                    referencedColumnName = "ID"),
-            inverseJoinColumns = @JoinColumn(name = "REGISTERED_SERVICE_TAG_ID",
-                    referencedColumnName = "ID"))
-    private Set<RegisteredServiceTag> registeredServiceTags = new HashSet<>();
-
     /**
      * User registered services tags which tags user registered service.
      */
-    @ManyToMany
+    @ManyToMany(cascade=CascadeType.ALL)
     @JoinTable(
             name = "UserRegisteredServicesTags",
             joinColumns = @JoinColumn(
                     name = "USER_REGISTERED_SERVICE_ID", referencedColumnName = "ID"),
             inverseJoinColumns = @JoinColumn(
                     name = "SERVICE_TAG_ID", referencedColumnName = "ID"))
-    private Set<ServiceTag> userRegisteredServicesTags = new HashSet<>();
+    private Set<ServiceTag> userRegisteredServiceTags = new HashSet<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "userRegisteredService")
     private List<RegisteredServiceObligationStrategy> registeredServiceObligationStrategies = new ArrayList<>();
@@ -78,16 +68,8 @@ public class UserRegisteredService {
         return registeredServiceObligationStrategies;
     }
 
-    public void setRegisteredServiceTags(Set<RegisteredServiceTag> registeredServiceTags) {
-        this.registeredServiceTags = registeredServiceTags;
-    }
-
-    public Set<ServiceTag> getUserRegisteredServicesTags() {
-        return userRegisteredServicesTags;
-    }
-
-    public Set<RegisteredServiceTag> getRegisteredServiceTags() {
-        return registeredServiceTags;
+    public Set<ServiceTag> getUserRegisteredServiceTags() {
+        return userRegisteredServiceTags;
     }
 
     public Long getId() {

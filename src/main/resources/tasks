@@ -158,7 +158,7 @@
  - Create ExpectedServiceTag - many-to-many association in tag class (id, user_id, tag_id),
  - Create many-to-many associations on both sides,
  - create test data,
- - test this solution
+ - I wont create any test data yet
 
  questions:
  + how to cover synonyms?:

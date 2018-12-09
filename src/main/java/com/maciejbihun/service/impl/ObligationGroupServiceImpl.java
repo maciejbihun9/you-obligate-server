@@ -1,6 +1,7 @@
 package com.maciejbihun.service.impl;
 
 import com.maciejbihun.models.ObligationGroup;
+import com.maciejbihun.models.ServiceTag;
 import com.maciejbihun.models.User;
 import com.maciejbihun.repository.ObligationGroupRepository;
 import com.maciejbihun.service.ObligationGroupService;
@@ -52,7 +53,7 @@ public class ObligationGroupServiceImpl implements ObligationGroupService {
                         "join fetch o.userAccountsInObligationGroup u " +
                         "join fetch u.userObligationStrategies uo " +
                         "join fetch uo.userRegisteredService ur " +
-                        "join fetch ur.registeredServiceTags urt "
+                        "join fetch ur.userRegisteredServiceTags urt "
                 , ObligationGroup.class).getResultList();
         // HashMap<String, Object> properties = new HashMap<>();
         // properties.put("javax.persistence.fetchgraph", graph);
@@ -61,11 +62,14 @@ public class ObligationGroupServiceImpl implements ObligationGroupService {
     }
 
     /**
-     * Recommends ObligationGroups for given user taking into account all services terms.
+     * Recommends obligation groups for a user.
      */
     @Override
     public List<ObligationGroup> recommendObligationGroupsForUser(User user) {
-        List<String> expectedServicesTerms = user.getExpectedServicesTerms();
+        Set<ServiceTag> expectedServicesTags = user.getExpectedServicesTags();
+
+
+
         // try to develop that searching using java
         // get all groups with users registered services terms,
         // iterate through all groups and count how many items matches expectedServicesTerms
@@ -76,6 +80,17 @@ public class ObligationGroupServiceImpl implements ObligationGroupService {
             obligationGroup.getUserAccountsInObligationGroup();
         });
 
+        return null;
+    }
+
+    /**
+     * Returns Obligation groups that contains registered services with given registered services tags.
+     */
+    @Override
+    public List<ObligationGroup> getObligationGroupsWithGivenRegisteredServicesTags(Set<ServiceTag> registeredServicesTags) {
+        // get all obligation groups with registered services tags in one query
+        // check how many item matches
+        // return top couple of them
         return null;
     }
 

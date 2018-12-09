@@ -9,7 +9,7 @@ import java.util.Set;
  */
 @Entity
 @Table(name="ServiceTag")
-public class ServiceTag extends Tag{
+public class ServiceTag extends Tag {
 
     @Id
     @Column(name = "ID")
@@ -20,7 +20,7 @@ public class ServiceTag extends Tag{
     @ManyToMany(mappedBy = "expectedServicesTags")
     private Set<User> users = new HashSet<>();
 
-    @ManyToMany(mappedBy = "userRegisteredServicesTags")
+    @ManyToMany(mappedBy = "userRegisteredServiceTags")
     private Set<UserRegisteredService> userRegisteredServices = new HashSet<>();
 
     public Long getId() {

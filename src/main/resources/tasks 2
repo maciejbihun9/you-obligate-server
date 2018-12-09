@@ -1,14 +1,4 @@
 
- * how user should describe his expectations?:
+ * recommend obligation groups to user based on expected services tags
 
- solution #1:
- - specifies tags that describes his wants,
- - user tags might be a part of many different services,
- so user will get recommendations
-
- implementation:
- - user specifies expected services tags,
- - we will create additional table UserExpectedServiceTag that will
- match users with tags,
- - there won't be any
-
+ * make notes for fetching nested data items - done
