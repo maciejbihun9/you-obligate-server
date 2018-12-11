@@ -12,6 +12,18 @@
  + a user searches by tags to find groups that are convenient for him
  - user is able to search for obligation groups that are not well suited for him - done
  - get all groups that have the largest amount of registered services,
- - find a user or group that serves given services
+ - find a user or group that serves given services - done
+
+ * get all registered services in the obligation group:
+ - there will be a list of all registered services,
+ - user will be able to filter all those registered services
+ - user will see all registered services and will be able to buy given service
+
+ * take care about buying services from other people:
+ - buy service
+ - decrease amount of money in the user account,
+ - decrease amount of obligations in the group for given user
+ + how to name given service? - it might be in obligation group service
+ - buy service
 
 

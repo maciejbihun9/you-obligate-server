@@ -52,7 +52,7 @@ public class UserRegisteredService {
     /**
      * User registered services tags which tags user registered service.
      */
-    @ManyToMany(cascade=CascadeType.ALL)
+    @ManyToMany(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(
             name = "UserRegisteredServicesTags",
             joinColumns = @JoinColumn(
@@ -61,7 +61,7 @@ public class UserRegisteredService {
                     name = "SERVICE_TAG_ID", referencedColumnName = "ID"))
     private Set<ServiceTag> userRegisteredServiceTags = new HashSet<>();
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "userRegisteredService")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "userRegisteredService")
     private List<RegisteredServiceObligationStrategy> registeredServiceObligationStrategies = new ArrayList<>();
 
     public List<RegisteredServiceObligationStrategy> getRegisteredServiceObligationStrategies() {

@@ -1,5 +1,6 @@
 package com.maciejbihun.repository;
 
+import com.maciejbihun.models.ObligationGroup;
 import com.maciejbihun.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,5 +18,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("select u from User u where u.id IN (select user from UserAccountInObligationGroup group by user having COUNT(user) > 1)")
     List<User> getUsersWithManyGroupAccounts();
+
+    @Query("select u " +
+            "from User u " +
+            "join fetch u.userRegisteredServices ur ")
+    List<User> getAllUsersWithRegisteredServices();
 
 }

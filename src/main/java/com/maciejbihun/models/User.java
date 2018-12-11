@@ -12,6 +12,7 @@ import java.util.*;
  */
 @Entity
 @Table(name = "User_")
+@NamedEntityGraphs({@NamedEntityGraph(name = "graph.userRegisteredServices", attributeNodes = @NamedAttributeNode("userRegisteredServices"))})
 public class User {
 
     @Id
@@ -39,7 +40,6 @@ public class User {
     /**
      * User won't have many UserRegisteredService, so it is ok to load them eagerly.
      */
-    @JsonManagedReference
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID")
     private List<UserRegisteredService> userRegisteredServices = new ArrayList<>();
