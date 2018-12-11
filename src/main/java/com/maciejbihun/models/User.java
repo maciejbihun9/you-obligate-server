@@ -36,8 +36,6 @@ public class User {
     @Column(name = "PASSWORD", updatable = true, length = 60 /* length 60 for BCrypt */)
     private String password;
 
-
-
     /**
      * User won't have many UserRegisteredService, so it is ok to load them eagerly.
      */
@@ -53,8 +51,7 @@ public class User {
     /**
      * Expected services tags that describes what user wants in exchange for his services.
      */
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "UserExpectedServicesTags",
             joinColumns = @JoinColumn(
@@ -64,7 +61,6 @@ public class User {
     private Set<ServiceTag> expectedServicesTags = new HashSet<>();
 
     // LazyCollection is an annotation to omit exception with fetching multiple bags at the same time
-    @LazyCollection(LazyCollectionOption.FALSE)
     @ManyToMany
     @JoinTable(
             name = "Users_Roles",

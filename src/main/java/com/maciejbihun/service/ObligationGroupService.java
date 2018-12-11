@@ -11,11 +11,11 @@ public interface ObligationGroupService {
 
     ObligationGroup saveObligationGroup(ObligationGroup obligationGroup);
 
-    ObligationGroup getObligationGroupWithRegisteredServicesTags(Long obligationGroupId);
+    List<ObligationGroup> getObligationGroupsWithRegisteredServicesTags();
 
     boolean obligationGroupExists(Long obligationGroupId);
 
-    List<ObligationGroup> recommendObligationGroupsForUser(User user);
+    List<ObligationGroup> getRecommendObligationGroups(Set<ServiceTag> userExpectedServicesTags, List<ObligationGroup> obligationGroupsWithServicesTags);
 
     List<ObligationGroup> getObligationGroupsWithGivenRegisteredServicesTags(Set<ServiceTag> registeredServicesTags);
 

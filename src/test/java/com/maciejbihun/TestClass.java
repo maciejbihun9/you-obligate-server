@@ -1,11 +1,11 @@
 package com.maciejbihun;
 
+import com.maciejbihun.models.ServiceTag;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
@@ -17,31 +17,18 @@ public class TestClass {
 
     @Test
     public void testMethod(){
-        List mockedList = mock(List.class);
 
-// using mock object - it does not throw any "unexpected interaction" exception
-        mockedList.add("one");
-        mockedList.get(0);
-        mockedList.clear();
+        ServiceTag serviceTag1 = new ServiceTag();
+        serviceTag1.setValue("TAG1");
 
-// selective, explicit, highly readable verification
-        verify(mockedList).add("one");
-        verify(mockedList).clear();
+        ServiceTag serviceTag2 = new ServiceTag();
+        serviceTag2.setValue("TAG2");
 
-        // -------------------------------- //
+        ServiceTag serviceTag3 = new ServiceTag();
+        serviceTag3.setValue("TAG3");
 
-        // you can mock concrete classes, not only interfaces
-        LinkedList mockedLinkedList = mock(LinkedList.class);
-
-// stubbing appears before the actual execution
-        when(mockedList.get(0)).thenReturn("first");
-        given(mockedList.get(0)).willReturn("first");
-
-// the following prints "first"
-        System.out.println(mockedList.get(0));
-
-// the following prints "null" because get(999) was not stubbed
-        System.out.println(mockedList.get(999));
+        Set<ServiceTag> serviceTagSet = new HashSet<>(Arrays.asList(serviceTag1, serviceTag2, serviceTag3));
+        System.out.println(serviceTagSet);
     }
 
 }

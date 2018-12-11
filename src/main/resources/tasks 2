@@ -2,3 +2,7 @@
  * recommend obligation groups to user based on expected services tags
 
  * make notes for fetching nested data items - done
+
+ * get all obligation groups for a user with given set of registered services tags
+
+

@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicReference;
         @NamedEntityGraph(name = "graph.userAccountsInObligationGroup", attributeNodes = @NamedAttributeNode("userAccountsInObligationGroup")),
         //@NamedEntityGraph(name = "graph.registeredServicesTags", attributeNodes = @NamedAttributeNode("registeredServicesTags"))
 })
-public class ObligationGroup {
+public class ObligationGroup implements Comparable<ObligationGroup> {
 
     public ObligationGroup(){}
 
@@ -130,5 +130,10 @@ public class ObligationGroup {
         return this.accountBalance.updateAndGet(amountOfCreatedMoney -> amountOfCreatedMoney.add(moneyToCreate));
     }
 
-
+    @Override
+    public int compareTo(ObligationGroup o) {
+        if (this == o)
+            return 0;
+        else return 0;
+    }
 }

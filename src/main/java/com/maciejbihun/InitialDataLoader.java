@@ -218,7 +218,7 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
             userRegisteredServices.add(userRegisteredService);
 
             ServiceTag serviceTag = new ServiceTag();
-            serviceTag.setValue("SERVICE TAG #" + i);
+            serviceTag.setValue("TAG" + i);
             userRegisteredService.getUserRegisteredServiceTags().add(serviceTag);
             i++;
         }

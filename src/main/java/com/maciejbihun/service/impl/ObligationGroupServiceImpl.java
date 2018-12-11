@@ -43,44 +43,42 @@ public class ObligationGroupServiceImpl implements ObligationGroupService {
     }
 
     /**
-     * Returns Obligation group with all registered services in given group tags.
+     * Returns Obligation groups with all registered services tags fetched.
      */
     @Override
-    public ObligationGroup getObligationGroupWithRegisteredServicesTags(Long obligationGroupId) {
-        List<ObligationGroup> obligationGroups = entityManager.createQuery(
-                "select o " +
-                        "from ObligationGroup o " +
-                        "join fetch o.userAccountsInObligationGroup u " +
-                        "join fetch u.userObligationStrategies uo " +
-                        "join fetch uo.userRegisteredService ur " +
-                        "join fetch ur.userRegisteredServiceTags urt "
-                , ObligationGroup.class).getResultList();
-        // HashMap<String, Object> properties = new HashMap<>();
-        // properties.put("javax.persistence.fetchgraph", graph);
-        // return entityManager.find(ObligationGroup.class, obligationGroupId, properties);
-        return obligationGroups.get(0);
+    public List<ObligationGroup> getObligationGroupsWithRegisteredServicesTags() {
+        return obligationGroupRepository.getObligationGroupsWithRegisteredServicesTags();
     }
 
     /**
-     * Recommends obligation groups for a user.
+     * Returns obligation groups that are recommended for given user taking into account his expected services.
      */
     @Override
-    public List<ObligationGroup> recommendObligationGroupsForUser(User user) {
-        Set<ServiceTag> expectedServicesTags = user.getExpectedServicesTags();
-
-
-
-        // try to develop that searching using java
-        // get all groups with users registered services terms,
-        // iterate through all groups and count how many items matches expectedServicesTerms
-
-        // final result - Map<ObligationGroup, Integer (numberOfSimilarItems)>
-        List<ObligationGroup> obligationGroups = obligationGroupRepository.findAll();
-        obligationGroups.forEach(obligationGroup -> {
-            obligationGroup.getUserAccountsInObligationGroup();
+    public List<ObligationGroup> getRecommendObligationGroups(final Set<ServiceTag> userExpectedServicesTags,
+                                                              final List<ObligationGroup> obligationGroupsWithServicesTags) {
+         // use the copy constructor
+        Map<ObligationGroup, Integer> numberOfCommonTagsInObligationGroup = new TreeMap<>();
+        obligationGroupsWithServicesTags.forEach(obligationGroup -> {
+            Set<ServiceTag> commonServicesTags = new HashSet<>(userExpectedServicesTags);
+            obligationGroup.getUserAccountsInObligationGroup().forEach(userAccountInObligationGroup -> {
+                userAccountInObligationGroup.getUserObligationStrategies().forEach(registeredServiceObligationStrategy -> {
+                    Set<ServiceTag> userRegisteredServiceTags =
+                            registeredServiceObligationStrategy.getUserRegisteredService().getUserRegisteredServiceTags();
+                    commonServicesTags.retainAll(userRegisteredServiceTags);
+                    numberOfCommonTagsInObligationGroup.put(obligationGroup, commonServicesTags.size());
+                });
+            });
         });
 
-        return null;
+        List<Map.Entry<ObligationGroup, Integer>> list = new ArrayList<>(numberOfCommonTagsInObligationGroup.entrySet());
+        list.sort(Map.Entry.comparingByValue());
+        Collections.reverse(list);
+
+        List<ObligationGroup> recommendedObligationGroups = new ArrayList<>();
+        for (Map.Entry<ObligationGroup, Integer> entry : list) {
+            recommendedObligationGroups.add(entry.getKey());
+        }
+        return recommendedObligationGroups.subList(0, 3);
     }
 
     /**

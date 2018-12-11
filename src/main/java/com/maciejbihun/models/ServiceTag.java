@@ -34,4 +34,14 @@ public class ServiceTag extends Tag {
     public Set<UserRegisteredService> getUserRegisteredServices() {
         return userRegisteredServices;
     }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return super.equals(o);
+    }
 }
