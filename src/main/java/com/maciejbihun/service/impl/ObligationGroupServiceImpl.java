@@ -3,6 +3,7 @@ package com.maciejbihun.service.impl;
 import com.maciejbihun.models.ObligationGroup;
 import com.maciejbihun.models.ServiceTag;
 import com.maciejbihun.models.User;
+import com.maciejbihun.models.UserRegisteredService;
 import com.maciejbihun.repository.ObligationGroupRepository;
 import com.maciejbihun.service.ObligationGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -108,6 +109,11 @@ public class ObligationGroupServiceImpl implements ObligationGroupService {
         // get all obligation groups with registered services tags in one query
         // check how many item matches
         // return top couple of them
+        return null;
+    }
+
+    @Override
+    public List<UserRegisteredService> getObligationGroupWithRegisteredServices(Long obligationGroupId) {
         return null;
     }
 

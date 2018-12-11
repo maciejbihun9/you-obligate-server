@@ -18,7 +18,6 @@ import java.util.concurrent.atomic.AtomicReference;
 @Table(name="ObligationGroup")
 @NamedEntityGraphs({
         @NamedEntityGraph(name = "graph.userAccountsInObligationGroup", attributeNodes = @NamedAttributeNode("userAccountsInObligationGroup")),
-        //@NamedEntityGraph(name = "graph.registeredServicesTags", attributeNodes = @NamedAttributeNode("registeredServicesTags"))
 })
 public class ObligationGroup implements Comparable<ObligationGroup> {
 

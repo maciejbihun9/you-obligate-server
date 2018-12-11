@@ -19,5 +19,13 @@ public interface ObligationGroupRepository extends JpaRepository<ObligationGroup
             "join fetch ur.userRegisteredServiceTags urt ")
     List<ObligationGroup> getObligationGroupsWithRegisteredServicesTags();
 
+    @Query("select o " +
+            "from ObligationGroup o " +
+            "join fetch o.userAccountsInObligationGroup u " +
+            "join fetch u.userObligationStrategies uos " +
+            "join fetch uos.userRegisteredService urs " +
+            "where o.id = ?1")
+    ObligationGroup getObligationGroupWithRegisteredServices(Long obligationGroupId);
+
 }
 
