@@ -42,6 +42,8 @@ public class ObligationGroupServiceImpl implements ObligationGroupService {
         return obligationGroupRepository.existsById(obligationGroupId);
     }
 
+
+
     /**
      * Returns Obligation groups with all registered services tags fetched.
      */
@@ -78,7 +80,24 @@ public class ObligationGroupServiceImpl implements ObligationGroupService {
         for (Map.Entry<ObligationGroup, Integer> entry : list) {
             recommendedObligationGroups.add(entry.getKey());
         }
-        return recommendedObligationGroups.subList(0, 3);
+        return recommendedObligationGroups;
+    }
+
+    /**
+     * Returns obligation groups sorted by the amount of registered services.
+     * This number is much need to
+     */
+    @Override
+    public List<ObligationGroup> getObligationGroupsWithTheLargestAmountOfRegisteredServices() {
+        return null;
+    }
+
+    /**
+     * Returns obligation groups sorted by provided servicesTags.
+     */
+    @Override
+    public List<ObligationGroup> getObligationGroupsByServicesTags(Set<ServiceTag> servicesTags) {
+        return getRecommendObligationGroups(servicesTags, getObligationGroupsWithRegisteredServicesTags());
     }
 
     /**

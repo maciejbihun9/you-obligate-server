@@ -15,7 +15,12 @@ public interface ObligationGroupService {
 
     boolean obligationGroupExists(Long obligationGroupId);
 
-    List<ObligationGroup> getRecommendObligationGroups(Set<ServiceTag> userExpectedServicesTags, List<ObligationGroup> obligationGroupsWithServicesTags);
+    List<ObligationGroup> getObligationGroupsByServicesTags(Set<ServiceTag> servicesTags);
+
+    List<ObligationGroup> getRecommendObligationGroups(Set<ServiceTag> userExpectedServicesTags,
+                                                       List<ObligationGroup> obligationGroupsWithServicesTags);
+
+    List<ObligationGroup> getObligationGroupsWithTheLargestAmountOfRegisteredServices();
 
     List<ObligationGroup> getObligationGroupsWithGivenRegisteredServicesTags(Set<ServiceTag> registeredServicesTags);
 

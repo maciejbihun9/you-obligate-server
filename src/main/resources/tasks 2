@@ -1,8 +1,17 @@
+# ELON MUSK
 
- * recommend obligation groups to user based on expected services tags
+ * recommend obligation groups to user based on expected services tags - done
 
  * make notes for fetching nested data items - done
 
- * get all obligation groups for a user with given set of registered services tags
+ * get all obligation groups for a user with given set of registered services tags - done
+
+ * what next?:
+ - user log in into a system,
+ - a system recommends obligation groups for him,
+ + a user searches by tags to find groups that are convenient for him
+ - user is able to search for obligation groups that are not well suited for him - done
+ - get all groups that have the largest amount of registered services,
+ - find a user or group that serves given services
 
 
