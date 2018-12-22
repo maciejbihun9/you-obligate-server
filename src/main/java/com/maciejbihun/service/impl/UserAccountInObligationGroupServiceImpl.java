@@ -70,4 +70,9 @@ public class UserAccountInObligationGroupServiceImpl implements UserAccountInObl
         return userAccountInObligationGroupRepository.save(userAccountInObligationGroup);
     }
 
+    @Override
+    public UserAccountInObligationGroup getUserAccountInObligationGroupByObligationGroupId(Long obligationGroupId) {
+        return null;
+    }
+
 }

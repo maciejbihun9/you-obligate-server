@@ -129,7 +129,7 @@ public class BondServiceTest {
         bondService.createBondInObligationStrategy(obligationStrategyId, amountOfUnitsToPay);
 
         // then
-        // assertEquals(Integer.valueOf(100), userAccountInObligationGroup.getBonds().get(0).getAmountOfUnitsToPay()); // bond was stored in user group account bonds list
+        // assertEquals(Integer.valueOf(100), userAccountInObligationGroup.getBonds().get(0).getAmountOfServiceUnitsToBeDelivered()); // bond was stored in user group account bonds list
         assertEquals(new BigDecimal("9500.00"), userAccountInObligationGroup.getAccountBalance()); // user group account balance has been increased
         assertEquals(new BigDecimal("9500.00"), obligationGroup.getAccountBalance()); // obligation group account balance has been increased
     }*/

@@ -57,13 +57,13 @@ public class BondServiceImpl implements BondService {
             Bond bond = new Bond(registeredServiceObligationStrategy, amountOfUnitsToPay);
 
             // increase amount of money in the obligation group
-            registeredServiceObligationStrategy.getUserAccountInObligationGroup().getObligationGroup().addMoneyToAccount(bond.getAmountOfCreatedMoney());
+            registeredServiceObligationStrategy.getUserAccountInObligationGroup().getObligationGroup().addMoneyToAccount(bond.getAvailableBalance());
 
             // create money in the group account
-            registeredServiceObligationStrategy.getUserAccountInObligationGroup().addMoneyToAccount(bond.getAmountOfCreatedMoney());
+            registeredServiceObligationStrategy.getUserAccountInObligationGroup().addMoneyToAccount(bond.getAvailableBalance());
 
             // create money in obligation strategy
-            registeredServiceObligationStrategy.increaseCreatedMoney(bond.getAmountOfCreatedMoney());
+            registeredServiceObligationStrategy.increaseCreatedMoney(bond.getAvailableBalance());
 
             // save bond to generate id
             bond = bondRepository.save(bond);

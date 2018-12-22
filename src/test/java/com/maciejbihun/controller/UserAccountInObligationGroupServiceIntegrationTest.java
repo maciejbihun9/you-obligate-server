@@ -41,7 +41,7 @@ public class UserAccountInObligationGroupServiceIntegrationTest {
         // then
         ResponseEntity<UserAccountInObligationGroup> userAccountInObligationGroupWithBonds =
                 obligationGroupAccountService.getUserAccountInObligationGroupWithObligationStrategies(obligationGroupAccountId);
-        assertEquals(amountOfUnitsToPay ,userAccountInObligationGroupWithBonds.getBody().getUserObligationStrategies().get(obligationStrategyId.intValue()).getBonds().get(0).getAmountOfUnitsToPay());
+        assertEquals(amountOfUnitsToPay ,userAccountInObligationGroupWithBonds.getBody().getUserObligationStrategies().get(obligationStrategyId.intValue()).getBonds().get(0).getAmountOfServiceUnitsToBeDelivered());
         assertEquals(HttpStatus.OK, userAccountInObligationGroupWithBonds.getStatusCode());
 
         Long notExistingObligationGroupAccountId = 10000L;

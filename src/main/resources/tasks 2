@@ -1,29 +1,12 @@
-# ELON MUSK
 
- * recommend obligation groups to user based on expected services tags - done
+ * pay for a service using a coupon:
+ - family comes to a service issuer,
+ - they want to spend 3 service units
 
- * make notes for fetching nested data items - done
-
- * get all obligation groups for a user with given set of registered services tags - done
-
- * what next?:
- - user log in into a system,
- - a system recommends obligation groups for him,
- + a user searches by tags to find groups that are convenient for him
- - user is able to search for obligation groups that are not well suited for him - done
- - get all groups that have the largest amount of registered services,
- - find a user or group that serves given services - done
-
- * get all registered services in the obligation group:
- - there will be a list of all registered services,
- - user will be able to filter all those registered services
- - user will see all registered services and will be able to buy given service
-
- * take care about buying services from other people:
- - buy service
- - decrease amount of money in the user account,
- - decrease amount of obligations in the group for given user
- + how to name given service? - it might be in obligation group service
- - buy service
-
-
+ solution #1 (generate a code for number of items a family wants):
+ - they find a coupon on a list,
+ - they tipe a number of units to spend,
+ - a code is generated,
+ - they show this number to a service issuer,
+ - he tipes that into his screen and this coupon loses 3 items
+ - this code will be available for given amount of time

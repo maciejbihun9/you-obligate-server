@@ -1,195 +1,100 @@
 
- * split services and controllers logic in the right way:
- - nie zwracanie większej uwagi na kontrolery, szcególnie na ich testowanie,
- bo bardzo możliwe, że się zmienią,
- - skup się bardziej na serwisach, ale jeszcze nie testuj nic!
+ * should I have an account balance in group account if I have also balance
+ in all bonds
+ - I can make a query for all bonds associated with an account and then get that variable
+ - no, i think this is cool, i will have that variable in account, because i will miss those huge
+ big fat queries
 
- * napisz impl dla metody createUserRegisteredService - dla serwis'u oraz kontroller'a - done,
+ * how this purchase token will be used?:
 
- * write implementation for getUserRegisteredService - done
+ * what happens after transaction is completed?:
+ - one user has to check
 
- * create methods for concrete user interactions:
- - createUserRegisteredService - done,
- - update UserRegisteredService (for saving that service works also),
- - create obligation group - done
- - update obligation group (save works for creating and obligation group entity),
- - create an account for given user in obligation group,
- - make possible to update a user account in obligation group
- - add new RegisteredServiceObligationStrategy to an account
+ * should I go through all those considerations about how to pay for stuff?:
+ - If something, I will introduce credit cards later,
+ Bit coin does not have credit cards yet
+ - this paying method might be very primitive, because it is all about the concept,
 
- * user story #1:
- + user creates an account,
- + user registers his strategies,
- + during creating registered service user specifies terms that describes given registered service:
- - I will search for services for a group using those terms + category,
- + user specifies what he would like to receive from other groups, from other users:
- - it will be specified during creating an user account,
- - a user will be able to update those terms later on,
- - a user will add or remove terms from ui, send entire new list of items to the backend,
- set to RegisteredService.
- - Saving a user will cause saving entire list of terms
- + a user would like to find an obligation group:
- - he might use a search bar to do it,
- + based on terms that he has provided, a system will propose obligation groups to obligate
- - obligation groups has to expose her users registered services terms,
- - a system will expose all terms without duplicates,
- - I might return all terms as a set - return that in one query (this might be a lot of those),
- - this might be (max. 2000 terms),
- - create method findSatisfingObligationGroups, recommendObligationGroupsForUser
- - find groups that contain the most terms from user terms group
- - groups also are able to look for people, so this should be take into concern,
- - create set from all
+ * make a payment:
 
- * Should I search for groups using elastic search?
- - elastic search was created for big data sets,
- - for know i belive i won't have that many groups,
- - this guy was saying about switching to elastic search at later stages,
- - I will test this basic resolution, because I belive that this is the right way to do at the beginning,
- - this will be simple searching pattern
-
- * what to do to optimize sql query?:
- - not really important right now,
- - when it is needed, then i will take care of that
-
- * what might be added with a term?:
- - an id of a term,
- - name of a term,
- - groups to which belongs to (many to many with an obligation group),
- - we gonna create an additional field in the database table
-
- * how important will be to have obligation group get registered services:
- - to show users how many services has been registered in a group
-
- * read about many-to-many associations:
- - if it is available to use, then I would say that we could use that,
- - jesli byłoby, aż tak strasznie nie efektywne to usunięto by te połączenie,
- a jednak ludzie go używają
-
- * how to express obligation group needs?:
  solution #1:
- - get all expected service terms from all users,
- - there has to be some kind of an algorithm that will promote users
- with bigger impact in the group,
- so users with larger amount debt will be ranked higher than other users,
- - I will get expected services from users from members of a group,
- - i will show only those with the highest numbers,
- - those will be expected services + algorithm
-
- * is obligation group needs should be matched with what users really want? - yes
-
- * write all requirements for recommendations mechanism
-
- * recommend obligation groups to a user with given list of registered services terms:
- + is this association is implemented in the right way?
- - get all terms for given group,
- - i won't poll for duplicates
- + i might end up with situation like:
- - java script language from a user and java from obligation group registered services,
- - I would miss that,
- - elastic search works great for those,
-
- requirements:
- - recommend obligation groups to a user based on the
- number of terms that matches in all registered services,
- - recommend users for obligation groups, because groups might fight for a user,
- - count tags in all obligation groups, create a ranking for the hottest services on the market
- it will be the number of tags used in registered services,
- - search for services based on tags that describes given service,
- search for obligation groups, search for users that provide services
- - show to users what is happening on the market,
- - introduce demand/supply ratio,
- - group will know that given service is very hot and it is good to make a good offer,
- + what about recommendation algorithm?:
- - the number of tags matched will decide whether I will recommend it or not,
+ - user clicks register a service unit,
+ - user has purchase tokens,
+ - one purchase token represents a registration,
+ - user will be able to view his tokens in a list,
+ - user will select a token from tokens in his profile,
+ - user will click generate purchase code for this token,
+ - passes code to a bond issuer,
 
  questions:
- + how many queries I might make to poll for my results?
+ + should user has reserved units?:
+ - user clicks a "register service unit" button
+ + what represents this registration?:
+ - purchase token?
 
- solution #1 - (store stuff in elastic search database):
- - I have to store obligation groups and registeredServicesTerms,
- - store all registeredServicesTerms in the elastic search database,
- - a user sends a query with his data to elastic database,
- - provide likes to all keywords that a user uses in his query,
- so i can get every thing using a query
- - data has to be stored in elastic database too,
+ + what might happen if an bond issuer does not register a purchase?;
+ - service unit remains blocked,
+ - user money remains blocked,
+ - there is a possibility that a bond issuer won't register a purchase and money will be blocked
+ a unit will be blocked also,
+ - so this will remain in blocked column,
+ - If I set expires date then a token would expire,
+ - after expires data, the information about done service unit would
+ go into the sky and would be lost
 
- questions:
- - should I store the data in the relational database and elastic? - it is not really clear,
- - find a resolution for managing the relational database and elastic search - there is no resolution
- the data has to be duplicated,
- + how to store tags in relational database?:
+ + how is now?:
+ - a person makes money transfer after service
+ - I make a money transfer to Sova accounting after done services,
+ - dostaje paragon zakupowy (w sklepie mam paragon, między firmami mam fakture, ),
 
- solution #2 - (store stuff in simple oracle database):
- - registeredServiceTag -> tags that described user registered service - ok,
- - user expected service -> tags that describes user expected service - ok,
- - those tags will have probably the same names - ok,
- - create tag abstract class for those classes,
- - this will be ok, I won't have any duplicates with this approach,
- - I will poll from tag table to get all those entities,
- - If I add example registered service tag: java, java will be in the table,
- - there has to be many-to-many association, to omit duplicates,
-
- + tag class:
- - this might be used to estimate the demand and supply for given service,
- - tagId: 3, tagValue: java, numberOfRegisteredServices: 23, numberOfExpectedServices: 45,
- - tagId: 4, tagValue: java script, numberOfRegisteredServices: 0, numberOfExpectedServices: 0,
-
- + registeredServiceTag:
- - registeredServiceId (associated with a user): 15, tagId: 3,
- - registeredServiceId: 16, tagId: 3,
- - registeredServiceId: 17, tagId: 3,
-
- + expectedServiceTag:
- - expectedServiceId (associated with a user): 13, tagId: 5,
- - expectedServiceId: 16, tagId: 6,
- - expectedServiceId: 17, tagId: 6,
-
- + how tagging might work:
- - a user type a service name,
- - if that tag already exists in the database then would show up in the recommendations,
- - if not then will be created in the database and will be recommended for both user registered services tags and
- user expected tags,
- - I will increase the number of users that used given tag,
- - from now this tag will be shown when a user registers or expects something,
-
- implementation:
- - Create class Tag (id, value, numberOfRegisteredServices: 23, numberOfExpectedServices: 45),
- - Create RegisteredServiceTag - many-to-many association in tag class (id, user_registered_service_id, tag_id),
- - Create ExpectedServiceTag - many-to-many association in tag class (id, user_id, tag_id),
- - Create many-to-many associations on both sides,
- - create test data,
- - I wont create any test data yet
+ solution #2 (solution with recipe):
+ - user clicks buy service unit,
+ - one service unit disapears, money deaspears,
+ - a user receives recipe that transaction was made,
+ - a user might have a list of all transactions and those transactions details
+ those recipes won't be deleted,
 
  questions:
- + how to cover synonyms?:
- - there won't be any synonyms,
+ - it is common that people pays for services after a service!,
+ but I can introduce something new here!
+ - I can introduce staging area, like in git,
+ - I register a transaction, money and a service are registered (blocked),
+ - after all parts are satisfied, I commit a transaction
 
- + Do you think it will be easy to add more tag types later?
+ * how to make a payment?:
+ solution #1 (identity method):
+ - a user goes into a shop,
+ - gives his credentials (ID card),
+ - bond issuer
 
- solution #3 - (one table):
- - put all tags into tags column that are separated by space
+ solution #2 (security code verification):
+ - when a service is reserved then a little number for this token is generated,
+ - this token will be sent in totally separate message,
+ - will be active for some time,
+ - user see "generate code" he generate a code for given token that is available for
+ given amount of time and then expires,
+ - user goes to a bond issuer, finds that token, that is associated with given service,
+ - pass a code to a bond issuer,
+ - they both have that token, but only an issuer is able to make a transaction,
+ - a user must pass this code to the bond issuer, then purchase token is destroyed
+ and transaction is successfully made
+ - a purchase token is destroyed,
+ - account balance changes,
 
- implementation:
- - create UserRegisteredService table,
- - add column tags and put those tags as a text into it
- - create UserExpectedService table and add tags column,
- - I would save it as a full text,
- - after each poll request I would have to split it by space and display,
- - searching:
- - get all user registered services, get all tags as text, split it, create set to eliminate duplicates,
+ solution #3:
+ + is this service unit really has to be reserved?:john
 
+ adventages:
+ - this is in the best interest of an issuer, because he wants this thing to disappear
 
- questions:
- + how would I connect them with registered services and expected services in the same time?:
- - save tags as text for registered service
+ + set of methods much needed:
 
- + is it ok to search by tags?:
- - put all registered service tags as a text
+ * how to represent a transaction between users?:
+ solution #1 (a user has to approve in the system that a purchase was made):
+ - a lot of work, because users has to go on a site,
+ - this is a payment methodology,
 
- + how to get obligation groups by tags that a user is offering?:
- - split user tags by space - I would say that this might be 20 - 30,
- - make a sql query: select * from obligationGroup where registeredService tags like %item1%
-
- + how to get all tags that describes what a group might offer?:
- - get all services, get all tags as a text, split it
-
+ * Could I think about those tokens like about money?:
+ - money is already created and could be sent to others, so why create another money,
+ - this token might represent only a reservation, some kind of a eneity,
+ - a bond issuer will also have an access to all issued tokens, because those are his tokens,

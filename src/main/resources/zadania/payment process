@@ -1,0 +1,110 @@
+
+ * a coupon:
+ - has to be attached with specified bond,
+ - this allows to make this coupon as a real asset,
+ - normally you would make a purchase of some service or a product, but
+ here you buy a service like an asset,
+ - normally you buy shares of a company if you think that those capabilities might be use full,
+ but having a company assets is more risky
+
+ * create bond coupons:
+ solution #1 (bond coupons):
+ - this is like a bond certificate coupon,
+ - each buyer might be able to receive a bond coupon after he clicks make a purchase,
+ - after purchase a user receives a coupon, bond loses one service unit, user loses money,
+ - user will have coupons list with all coupons from all bonds from all obligation groups,
+ - he can go to a service issuer, give him a code from that coupon,
+ - this coupon is destroyed, service is executed,
+ - deleting a coupon is in the best interest of a bond issuer, because if he does not do that,
+ then this coupon will still be active and another user will be able to use i to make a purchase
+ - when a user goes to an issuer then he generates a code for amount of units he wants to pay,
+ - this coupon won't have any date,
+ - during a purchase I will be able to specify number of service units
+ then a code will be generated,
+ - this coupons will be a user assets,
+ - this is a bit advanced and interesting,
+ - a user is a able to buy a coupon
+ and keep it for extended period of
+ time or just buy stuff immidietly
+
+ advantages:
+ - I buy a coupon, so I can reserve one service unit of work,
+ - I do not know when I would be able to use it, so that is why I am reserving this item,
+ but this is like an asset,
+ - a user is able to sell it for much more expensive price,
+ - a user is able to sell it other users, but noone knows what is the price of it, especaially users from
+ other groups
+
+ disadvantages:
+ - we have to pay before actual service,
+ - we have have some sneaky codes generated,
+ - we have to make couple steps to buy a service or a product,
+ - create a feature to hash this info
+ - we have to buy a coupon and then
+ generate this fucking hash code,
+ send this hashcode to make a purchase,
+ - after coupon was buy, it might be sell,
+ - a person can sell it for much more expensive price,
+
+ questions:
+
+ + everything comes to a situation where I have estimate barter exchange rates:
+
+ + how a user from other groups or just
+ single is able to buy a unit service
+ - maybe they can just negotiate with each other,
+ - it would turned out that
+ - they would have to negotiate between themselves final prices
+
+ + maybe I can issue this coupon in the secondary market:
+ - when I buy some service on the primary market then this is my
+ no matter what happens, this is my, so i do not have to sell it
+ to people from my group
+ - I can sell it to people from other groups, but!!!,
+ for what
+
+ + should bond know about all active coupons?:
+ - if coupons are still active then bond can not be closed - an issuer is still obligated to pay those bills,
+ - so bond would remain open even for an extended period of time,
+
+ + what would happen on the issuer side?:
+ - coupons might be issued for bonds,
+ - A bond will lose one unit of work
+ - bond does not has to know how many open coupons are on the market
+
+ + what a person might do with a coupon?:
+ - I can have this coupon for extended period of time,
+ because this coupon might be worth,
+ - I can keep this coupon for longer, extended period of time,
+ - this would be like an asset, this is like gate
+ - bond might have maturity date until might be executed,
+ so that student is not obligating for 10 years when his capabilities might be very high and worth a lot,
+ - it won't be like I will give you what I did rent, because the inflation might burn a lot of money in this case
+
+ solution #2 (without any coupons):
+ - a user goes to a bond issuer,
+ - bond issuer just do a service,
+ - a user pays using his money via my system,
+ - he sees available units,
+ - pays for a service unit before a service
+ - buy service unit
+ - so instead of using normal money, electronic money a user and issuer will use this system,
+ - this might be an alternative way to pay for a service
+
+ advantages:
+ - it is very easy,
+ - no created additional assets
+
+ examples:
+ - user enters the booking.com page, orders an accomodation,
+ then goes into someones house and after that pays using his money,
+
+ questions:
+ + how a user pays for this service?:
+ - an issuer generates a code and gives a user, user uses it to pay for a service in the
+ bond item in the list
+ - user tipes in, fills this blank place and a service is paid
+
+ + how much time I am spending on this planning?
+ - I am spanding a lot time on this fuckin planning
+

@@ -3,13 +3,13 @@ package com.maciejbihun.models;
 import com.maciejbihun.converters.AtomicReferenceConverter;
 import com.maciejbihun.datatype.BondStatus;
 import com.maciejbihun.exceptions.ClosedBondException;
-import com.maciejbihun.exceptions.EmptyConstructorIsNotAvailableException;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -33,16 +33,16 @@ public class Bond {
 
     public Bond(){}
 
-    public Bond(RegisteredServiceObligationStrategy registeredServiceObligationStrategy, Integer amountOfUnitsToPay) {
-        if (amountOfUnitsToPay < registeredServiceObligationStrategy.getMinAmountOfUnitsPerBond()){
+    public Bond(RegisteredServiceObligationStrategy registeredServiceObligationStrategy, Integer amountOfServiceUnitsToBeDelivered) {
+        if (amountOfServiceUnitsToBeDelivered < registeredServiceObligationStrategy.getMinAmountOfUnitsPerBond()){
             throw new IllegalArgumentException(String.format(NOT_ACCEPTABLE_AMOUNT_OF_UNITS_PER_BOND + " It was %s, but it should be at least %s.",
-                    amountOfUnitsToPay, registeredServiceObligationStrategy.getMinAmountOfUnitsPerBond()));
+                    amountOfServiceUnitsToBeDelivered, registeredServiceObligationStrategy.getMinAmountOfUnitsPerBond()));
         }
         this.registeredServiceObligationStrategy = registeredServiceObligationStrategy;
-        this.amountOfUnitsToPay = amountOfUnitsToPay;
+        this.amountOfServiceUnitsToBeDelivered = amountOfServiceUnitsToBeDelivered;
         this.unitOfWorkCost = registeredServiceObligationStrategy.getUnitOfWorkCost()
                 .subtract(registeredServiceObligationStrategy.getInterestRate().multiply(registeredServiceObligationStrategy.getUnitOfWorkCost()));
-        this.amountOfCreatedMoney.updateAndGet(bigDecimal -> unitOfWorkCost.multiply(new BigDecimal(amountOfUnitsToPay)).setScale(2, RoundingMode.HALF_UP));
+        this.availableBalance = unitOfWorkCost.multiply(new BigDecimal(amountOfServiceUnitsToBeDelivered)).setScale(2, RoundingMode.HALF_UP);
     }
 
     @Id
@@ -56,16 +56,31 @@ public class Bond {
     private BondStatus bondStatus = BondStatus.CREATED;
 
     @Basic(optional = false)
-    @Column(name = "AMOUNT_OF_UNITS_TO_PAY", updatable = true)
-    private Integer amountOfUnitsToPay;
+    @Column(name = "AMOUNT_OF_SERVICE_UNITS_TO_BE_DELIVERED", updatable = true)
+    private Integer amountOfServiceUnitsToBeDelivered;
+
+    @Basic(optional = false)
+    @Column(name = "AMOUNT_OF_RESERVED_SERVICE_UNITS", updatable = true)
+    private Integer amountOfReservedServiceUnits = 0;
 
     @Basic(optional = false)
     @Column(name = "UNIT_OF_WORK_COST", updatable = false)
     private BigDecimal unitOfWorkCost;
 
     @Convert(converter = AtomicReferenceConverter.class)
-    @Column(name = "AMOUNT_OF_CREATED_MONEY", length = 400, updatable = true)
-    private final AtomicReference<BigDecimal> amountOfCreatedMoney = new AtomicReference<>(BigDecimal.ZERO);
+    @Column(name = "AVAILABLE_BALANCE", length = 400, updatable = true)
+    private BigDecimal availableBalance = BigDecimal.ZERO;
+
+    /**
+     * When owner of this bond is making a reservation of a service unit
+     * then money created from this bond is blocked. Given amount of money
+     * is transferred from available balance to blocked balance.
+     * When other users are making reservations of service units then
+     * only reserved units number is increasing where available units is decreasing
+     */
+    @Convert(converter = AtomicReferenceConverter.class)
+    @Column(name = "BLOCKED_BALANCE", length = 400, updatable = true)
+    private BigDecimal blockedBalance = BigDecimal.ZERO;
 
     @Basic(optional = false)
     @Column(name = "CREATED_DATE_TIME", nullable = false, updatable = false)
@@ -79,22 +94,37 @@ public class Bond {
     @JoinColumn(name = "OBLIGATION_STRATEGY_ID", nullable = false)
     private RegisteredServiceObligationStrategy registeredServiceObligationStrategy;
 
-    public Integer subtractBondUnit() throws ClosedBondException {
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "bond")
+    private List<PurchaseToken> purchaseTokens = new ArrayList<>();
+
+    public List<PurchaseToken> getPurchaseTokens() {
+        return purchaseTokens;
+    }
+
+    /**
+     *
+     */
+    public synchronized Integer subtractBondUnit() throws ClosedBondException {
         if (bondStatus.equals(BondStatus.CLOSED)){
             throw new ClosedBondException();
         }
-        if (this.amountOfUnitsToPay == 1){
-            this.amountOfUnitsToPay = 0;
-            this.amountOfCreatedMoney.updateAndGet(createdMoney -> BigDecimal.valueOf(0, 2));
-            this.obligationClosedDateTime = LocalDateTime.now();
-            this.bondStatus = BondStatus.CLOSED;
-            BOND_LOGGER.log(Level.INFO, String.format("Obligation: %s has been closed", id));
-            return this.amountOfUnitsToPay;
+        if (this.amountOfServiceUnitsToBeDelivered == 1){
+            this.amountOfServiceUnitsToBeDelivered = 0;
+            this.bondStatus = BondStatus.PAID;
+            BOND_LOGGER.log(Level.INFO, String.format("Obligation: %s has been paid", id));
         } else {
-            this.amountOfCreatedMoney.updateAndGet(createdMoney -> createdMoney.subtract(this.unitOfWorkCost));
-            this.amountOfUnitsToPay = this.amountOfUnitsToPay - 1;
-            return this.amountOfUnitsToPay;
+            this.amountOfServiceUnitsToBeDelivered = this.amountOfServiceUnitsToBeDelivered - 1;
         }
+        return this.amountOfServiceUnitsToBeDelivered;
+    }
+
+    /**
+     * Adds one unit to reserved units and adds corresponding amount of created money.
+     * Returns changed amount of created reservedUnits.
+     */
+    public synchronized Integer addReservedBondUnit(){
+        this.amountOfReservedServiceUnits = this.amountOfReservedServiceUnits + 1;
+        return this.amountOfReservedServiceUnits;
     }
 
     public RegisteredServiceObligationStrategy getRegisteredServiceObligationStrategy() {
@@ -105,6 +135,10 @@ public class Bond {
         return id;
     }
 
+    public Integer getReservedUnits() {
+        return this.amountOfReservedServiceUnits;
+    }
+
     public BondStatus getBondStatus() {
         return bondStatus;
     }
@@ -113,16 +147,16 @@ public class Bond {
         this.bondStatus = bondStatus;
     }
 
-    public Integer getAmountOfUnitsToPay() {
-        return amountOfUnitsToPay;
+    public synchronized Integer getAmountOfServiceUnitsToBeDelivered() {
+        return this.amountOfServiceUnitsToBeDelivered;
     }
 
     public BigDecimal getUnitOfWorkCost() {
         return unitOfWorkCost;
     }
 
-    public BigDecimal getAmountOfCreatedMoney() {
-        return amountOfCreatedMoney.get();
+    public synchronized BigDecimal getAvailableBalance() {
+        return availableBalance;
     }
 
     public LocalDateTime getCreatedDateTime() {
@@ -131,6 +165,22 @@ public class Bond {
 
     public LocalDateTime getObligationClosedDateTime() {
         return this.obligationClosedDateTime;
+    }
+
+    public BigDecimal getBlockedBalance() {
+        return blockedBalance;
+    }
+
+    /**
+     * Reserves one unit
+     * Returns current amount of reserved units
+     */
+    public synchronized void reserveUnit(){
+        // subtract one unit from availableUnits
+        subtractBondUnit();
+
+        // add one unit to reserved units
+        addReservedBondUnit();
     }
 
 }

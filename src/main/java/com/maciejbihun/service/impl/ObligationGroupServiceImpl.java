@@ -113,8 +113,8 @@ public class ObligationGroupServiceImpl implements ObligationGroupService {
     }
 
     @Override
-    public List<UserRegisteredService> getObligationGroupWithRegisteredServices(Long obligationGroupId) {
-        return null;
+    public ObligationGroup getObligationGroupWithRegisteredServices(Long obligationGroupId) {
+        return obligationGroupRepository.getObligationGroupWithRegisteredServices(obligationGroupId);
     }
 
 }

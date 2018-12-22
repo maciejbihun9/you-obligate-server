@@ -73,12 +73,9 @@ public class ApplicationWorkflowTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        User exampleUser = allUsers.get(5);
 
-        // create obligation strategy for each registered service
-        // define an obligation strategy for each registered service itself
-        // create an obligation strategy for each user registered service without an admin
-
-        // allow a user to obligate
+        // reserve a service unit in given issued Bond
 
     }
 
