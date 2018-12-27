@@ -6,7 +6,7 @@ import com.maciejbihun.models.Bond;
 public class BondConverter  {
 
     public static BondDto convertToDto(Bond bond){
-        return new BondDto(bond.getAmountOfServiceUnitsToBeDelivered(), bond.getRegisteredServiceObligationStrategy().getId());
+        return new BondDto(bond.getNumberOfUnitsToServe(), bond.getRegisteredServiceObligationStrategy().getId());
     }
 
     public static Bond convertToEntity(BondDto bondDto){

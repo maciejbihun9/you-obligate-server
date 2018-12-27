@@ -6,13 +6,16 @@ import com.maciejbihun.exceptions.NotEnoughMoneyException;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Stores user's data associated with given obligation group.
+ *
+ * TESTED
+ *
  * @author Maciej Bihun
  */
 @Entity
@@ -21,11 +24,6 @@ import java.util.concurrent.atomic.AtomicReference;
 public class UserAccountInObligationGroup implements Serializable {
 
     public UserAccountInObligationGroup(){}
-
-    public UserAccountInObligationGroup(User user, ObligationGroup obligationGroup){
-        this.user = user;
-        this.obligationGroup = obligationGroup;
-    }
 
     @Id
     @Column(name = "ID")
@@ -37,18 +35,10 @@ public class UserAccountInObligationGroup implements Serializable {
     @JoinColumn(name = "USER_ID", nullable = false)
     private User user;
 
-
     @Convert(converter = AtomicReferenceConverter.class)
     @Basic(optional = false)
     @Column(name = "ACCOUNT_BALANCE", length = 400)
     private BigDecimal accountBalance = BigDecimal.ZERO;
-    /**
-     * Money which are blocked by purchase tokens
-     */
-    @Convert(converter = AtomicReferenceConverter.class)
-    @Basic(optional = false)
-    @Column(name = "BLOCKED_MONEY", length = 400)
-    private BigDecimal blockedMoney = BigDecimal.ZERO;
 
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "OBLIGATION_GROUP_ID", nullable = false)
@@ -61,6 +51,17 @@ public class UserAccountInObligationGroup implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "userAccountInObligationGroup")
     private List<RegisteredServiceObligationStrategy> userObligationStrategies = new ArrayList<>();
 
+    public synchronized void addMoney(final BigDecimal moneyToCreate){
+        accountBalance = accountBalance.add(moneyToCreate);
+    }
+
+    public synchronized void subtractMoney(final BigDecimal moneyToSubtract){
+        if (accountBalance.compareTo(moneyToSubtract) < 0){
+            throw new NotEnoughMoneyException();
+        }
+        accountBalance = accountBalance.subtract(moneyToSubtract);
+    }
+
     public Long getId() {
         return id;
     }
@@ -69,29 +70,16 @@ public class UserAccountInObligationGroup implements Serializable {
         return user;
     }
 
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     public BigDecimal getAccountBalance() {
-        return accountBalance;
+        return accountBalance.setScale(2, RoundingMode.UP);
     }
 
-    public synchronized BigDecimal addMoneyToAccount(final BigDecimal moneyToCreate){
-        return this.accountBalance.add(moneyToCreate);
-    }
-
-    /**
-     * Moves money from account balance to blocked money account balance.
-     * Returns the amount of blocked money.
-     */
-    public synchronized BigDecimal blockMoney(BigDecimal moneyToBlock){
-        // if we would like to block more money than is in the account balance
-        if (moneyToBlock.compareTo(accountBalance) > 0){
-            throw new NotEnoughMoneyException();
-        }
-        // subtract money to block
-        this.accountBalance = accountBalance.subtract(moneyToBlock);
-
-        // append money to blocked account balance
-        this.blockedMoney = blockedMoney.add(moneyToBlock);
-        return this.blockedMoney;
+    public void setObligationGroup(ObligationGroup obligationGroup) {
+        this.obligationGroup = obligationGroup;
     }
 
     public ObligationGroup getObligationGroup() {
@@ -105,5 +93,4 @@ public class UserAccountInObligationGroup implements Serializable {
     public List<RegisteredServiceObligationStrategy> getUserObligationStrategies() {
         return userObligationStrategies;
     }
-
 }

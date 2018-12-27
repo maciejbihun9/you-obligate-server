@@ -79,9 +79,9 @@ public class BondServiceIntegrationTest {
 
         // then
         assertNotNull(savedBond);
-        assertEquals(Integer.valueOf(100), savedBond.getAmountOfServiceUnitsToBeDelivered());
+        assertEquals(Integer.valueOf(100), savedBond.getNumberOfUnitsToServe());
         assertEquals(Long.valueOf(1), bondInObligationGroupResponseEntity.getBody().getId());
-        assertEquals(Integer.valueOf(100), bondById.getAmountOfServiceUnitsToBeDelivered());
+        assertEquals(Integer.valueOf(100), bondById.getNumberOfUnitsToServe());
         assertEquals(1, allBonds.size());
     }*/
 

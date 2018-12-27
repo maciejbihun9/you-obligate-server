@@ -99,7 +99,9 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
 
             // create accounts for users in given obligation groups
             if (i < 5){
-                UserAccountInObligationGroup userAccountInObligationGroup = new UserAccountInObligationGroup(users.get(i), testObligationGroups.get(0));
+                UserAccountInObligationGroup userAccountInObligationGroup = new UserAccountInObligationGroup();
+                userAccountInObligationGroup.setUser(users.get(i));
+                userAccountInObligationGroup.setObligationGroup(testObligationGroups.get(0));
                 userAccountInObligationGroupRepository.save(userAccountInObligationGroup);
 
                 // create obligation strategy
@@ -107,14 +109,19 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
 
             } else if (i >= 5 && i < 20){
                 // create user obligation group account
-                UserAccountInObligationGroup userAccountInObligationGroup = new UserAccountInObligationGroup(users.get(i), testObligationGroups.get(0));
+
+                UserAccountInObligationGroup userAccountInObligationGroup = new UserAccountInObligationGroup();
+                userAccountInObligationGroup.setUser(users.get(i));
+                userAccountInObligationGroup.setObligationGroup(testObligationGroups.get(0));
                 userAccountInObligationGroupRepository.save(userAccountInObligationGroup);
 
                 // create obligation strategy
                 createTestObligationStrategy(users.get(i).getUserRegisteredServices().get(0), userAccountInObligationGroup);
 
                 // create user obligation group account
-                userAccountInObligationGroup = new UserAccountInObligationGroup(users.get(i), testObligationGroups.get(1));
+                userAccountInObligationGroup = new UserAccountInObligationGroup();
+                userAccountInObligationGroup.setUser(users.get(i));
+                userAccountInObligationGroup.setObligationGroup(testObligationGroups.get(1));
                 userAccountInObligationGroupRepository.save(userAccountInObligationGroup);
 
                 // create obligation strategy
@@ -122,21 +129,27 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
 
             } else if(i >= 20 && i < 25){
                 // create user obligation group account
-                UserAccountInObligationGroup userAccountInObligationGroup = new UserAccountInObligationGroup(users.get(i), testObligationGroups.get(1));
+                UserAccountInObligationGroup userAccountInObligationGroup = new UserAccountInObligationGroup();
+                userAccountInObligationGroup.setUser(users.get(i));
+                userAccountInObligationGroup.setObligationGroup(testObligationGroups.get(1));
                 userAccountInObligationGroupRepository.save(userAccountInObligationGroup);
 
                 // create obligation strategy
                 createTestObligationStrategy(users.get(i).getUserRegisteredServices().get(0), userAccountInObligationGroup);
 
                 // create user obligation group account
-                userAccountInObligationGroup = new UserAccountInObligationGroup(users.get(i), testObligationGroups.get(2));
+                userAccountInObligationGroup = new UserAccountInObligationGroup();
+                userAccountInObligationGroup.setUser(users.get(i));
+                userAccountInObligationGroup.setObligationGroup(testObligationGroups.get(2));
                 userAccountInObligationGroupRepository.save(userAccountInObligationGroup);
 
                 // create obligation strategy
                 createTestObligationStrategy(users.get(i).getUserRegisteredServices().get(0), userAccountInObligationGroup);
             } else if (i >= 25){
                 // create user obligation group account
-                UserAccountInObligationGroup userAccountInObligationGroup = new UserAccountInObligationGroup(users.get(i), testObligationGroups.get(2));
+                UserAccountInObligationGroup userAccountInObligationGroup = new UserAccountInObligationGroup();
+                userAccountInObligationGroup.setUser(users.get(i));
+                userAccountInObligationGroup.setObligationGroup(testObligationGroups.get(0));
                 userAccountInObligationGroupRepository.save(userAccountInObligationGroup);
 
                 // create obligation strategy

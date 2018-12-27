@@ -2,6 +2,7 @@ package com.maciejbihun.service.impl;
 
 import com.maciejbihun.exceptions.ObligationGroupDoesNotExistsException;
 import com.maciejbihun.models.ObligationGroup;
+import com.maciejbihun.models.User;
 import com.maciejbihun.models.UserAccountInObligationGroup;
 import com.maciejbihun.models.UserPrincipal;
 import com.maciejbihun.repository.UserAccountInObligationGroupRepository;
@@ -66,13 +67,20 @@ public class UserAccountInObligationGroupServiceImpl implements UserAccountInObl
             throw new ObligationGroupDoesNotExistsException(obligationGroupId);
         }
         UserPrincipal userPrincipal = userService.loadUserByUsername(username);
-        UserAccountInObligationGroup userAccountInObligationGroup = new UserAccountInObligationGroup(userPrincipal.getUser(), obligationGroup);
+        UserAccountInObligationGroup userAccountInObligationGroup = new UserAccountInObligationGroup();
+        userAccountInObligationGroup.setUser(userPrincipal.getUser());
+        userAccountInObligationGroup.setObligationGroup(obligationGroup);
         return userAccountInObligationGroupRepository.save(userAccountInObligationGroup);
     }
 
     @Override
     public UserAccountInObligationGroup getUserAccountInObligationGroupByObligationGroupId(Long obligationGroupId) {
         return null;
+    }
+
+    @Override
+    public boolean userHasEnoughMoney(User user) {
+        return true;
     }
 
 }

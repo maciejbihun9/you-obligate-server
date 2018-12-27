@@ -14,4 +14,6 @@ public interface UserAccountInObligationGroupService {
 
     UserAccountInObligationGroup getUserAccountInObligationGroupByObligationGroupId(Long obligationGroupId);
 
+    boolean userHasEnoughMoney(User user);
+
 }

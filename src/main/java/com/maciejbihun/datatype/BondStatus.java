@@ -5,7 +5,7 @@ package com.maciejbihun.datatype;
  */
 public enum BondStatus {
 
-    CREATED("Created"), PAID("PAID"), CLOSED("Closed"), CANCELLED("Cancelled");
+    CREATED("Created"), PAID("Paid"), LACK_OF_UNITS("Lack of units"), CLOSED("Closed"), CANCELLED("Cancelled");
 
     private String bondStatus;
 

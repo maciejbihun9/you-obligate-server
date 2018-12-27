@@ -10,3 +10,42 @@
  - they show this number to a service issuer,
  - he tipes that into his screen and this coupon loses 3 items
  - this code will be available for given amount of time
+
+ * create purchase coupon - done:
+
+ * where to check whether user has enough money to buy purchase coupons?
+ - it can not be like, i have a label in the ui, and I get it's value typing
+
+ * implement bond class in the right way:
+
+ * cancel a bond:
+ solution #1:
+ - user clicks cancel bond,
+ - he loses money associated with this bond,
+ - we have people that already bought coupons of that
+ - a bond has a cancellation policy where there are described
+ fines and penalties of cancelling this asset,
+ - an investor would know this policy
+ - an investor loses unit but he got money back,
+ - this user would be fined that we would have larger interest rates
+ for cancelling bonds that were already sold,
+ - but he can cancel only units that were not sold, investors would got info about it
+
+ questions:
+ + is it possible to cancel?, is it ok to cancel a bond? - yes
+ - I have created a bond for 1000 units of work,
+ - after creating a few coupons, let's say 10 I want to cancel this bond,
+ - if there is no way back then it would be scary to make a huge obligation,
+
+ + should I have info about the amount of units on coupons in bond class?:
+ - those coupons are associated with a bond
+
+ * write tests for a bond:
+ - it does not matter that this might change, it is important to know that
+ this unit of work is working and might be mocked
+
+ questions:
+ + should bond know how to compute interest rate? - it does not matter now
+ + should bond contain numberOfCoupons?:
+ - number of coupons created out of specific bond,
+ - maybe it should be named... number of active coupons,

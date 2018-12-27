@@ -1,11 +1,9 @@
 package com.maciejbihun.service.impl;
 
-import com.maciejbihun.datatype.BondStatus;
 import com.maciejbihun.exceptions.AmountOfUnitsExceededException;
-import com.maciejbihun.exceptions.BondDoesNotExistsException;
-import com.maciejbihun.exceptions.ClosedBondException;
 import com.maciejbihun.exceptions.ObligationStrategyDoesNotExistsException;
 import com.maciejbihun.models.Bond;
+import com.maciejbihun.models.PurchaseToken;
 import com.maciejbihun.models.RegisteredServiceObligationStrategy;
 import com.maciejbihun.repository.BondRepository;
 import com.maciejbihun.repository.RegisteredServiceObligationStrategyRepository;
@@ -13,6 +11,7 @@ import com.maciejbihun.service.BondService;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.util.Optional;
 
 /**
@@ -37,33 +36,39 @@ public class BondServiceImpl implements BondService {
      * RegisteredServiceObligationStrategy, ObligationGroup, GroupAccount, Bond accounts.
      * Hibernate will take care of cascade saving of all of those dependencies.
      * @param obligationStrategyId
-     * @param amountOfUnitsToPay
+     * @param amountOfUnitsToServe
      * @return
      * @throws Exception
      */
     @Override
-    public Bond createBondInObligationStrategy(Long obligationStrategyId, Integer amountOfUnitsToPay) throws Exception {
+    public Bond createBondInObligationStrategy(Long obligationStrategyId, Integer amountOfUnitsToServe) throws Exception {
         Optional<RegisteredServiceObligationStrategy> obligationStrategyById = obligationStrategyRepository.findById(obligationStrategyId);
         if (obligationStrategyById.isPresent()){
 
             RegisteredServiceObligationStrategy registeredServiceObligationStrategy = obligationStrategyById.get();
 
-            int predictedAmountOfUnitsToPay = registeredServiceObligationStrategy.getAlreadyObligatedUnitsOfWork() + amountOfUnitsToPay;
+            int predictedAmountOfUnitsToPay = registeredServiceObligationStrategy.getAlreadyObligatedUnitsOfWork() + amountOfUnitsToServe;
 
             if (predictedAmountOfUnitsToPay > registeredServiceObligationStrategy.getMaxAmountOfUnitsForObligation()){
                 throw new AmountOfUnitsExceededException();
             }
 
-            Bond bond = new Bond(registeredServiceObligationStrategy, amountOfUnitsToPay);
+            BigDecimal amountOfCreatedMoney = CreatingMoneyStrategy.amountOfCreatedMoney(registeredServiceObligationStrategy.getUnitOfWorkCost(),
+                    registeredServiceObligationStrategy.getInterestRate(), amountOfUnitsToServe);
+
+            Bond bond = new Bond();
+            bond.setAmountOfCreatedMoney(amountOfCreatedMoney);
+            bond.setUnitOfWorkCost(registeredServiceObligationStrategy.getUnitOfWorkCost());
+            bond.setNumberOfUnitsToServe(amountOfUnitsToServe);
 
             // increase amount of money in the obligation group
-            registeredServiceObligationStrategy.getUserAccountInObligationGroup().getObligationGroup().addMoneyToAccount(bond.getAvailableBalance());
+            registeredServiceObligationStrategy.getUserAccountInObligationGroup().getObligationGroup().addMoneyToAccount(amountOfCreatedMoney);
 
             // create money in the group account
-            registeredServiceObligationStrategy.getUserAccountInObligationGroup().addMoneyToAccount(bond.getAvailableBalance());
+            registeredServiceObligationStrategy.getUserAccountInObligationGroup().addMoney(amountOfCreatedMoney);
 
             // create money in obligation strategy
-            registeredServiceObligationStrategy.increaseCreatedMoney(bond.getAvailableBalance());
+            registeredServiceObligationStrategy.increaseCreatedMoney(amountOfCreatedMoney);
 
             // save bond to generate id
             bond = bondRepository.save(bond);
@@ -77,17 +82,8 @@ public class BondServiceImpl implements BondService {
     }
 
     @Override
-    public Integer subtractObligationUnitFromBond(Long bondId) {
-        Optional<Bond> bondById = bondRepository.findById(bondId);
-        if (!bondById.isPresent()){
-            throw new BondDoesNotExistsException();
-        }
-        Bond bond = bondById.get();
-        if (bond.getBondStatus().equals(BondStatus.CLOSED)){
-            throw new ClosedBondException();
-        }
-        bondRepository.save(bond);
-        return bond.subtractBondUnit();
+    public PurchaseToken reserveServiceUnit() {
+        return null;
     }
 
 }

@@ -1,8 +1,12 @@
 package com.maciejbihun.service.impl;
 
+import com.maciejbihun.exceptions.NotEnoughMoneyException;
 import com.maciejbihun.models.*;
 import com.maciejbihun.service.MarketTransactionsService;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 /**
  * @author Maciej Bihun
@@ -10,26 +14,29 @@ import org.springframework.stereotype.Service;
 @Service
 public class MarketTransactionsServiceImpl implements MarketTransactionsService {
 
-    /**
-     * Reserves one service unit which was issued by a bond issuer.
-     */
     @Override
-    public void reserveServiceUnitForUser(User serviceCustomer, Bond issuedBond) {
-
-        // make a reservation for one unit of work using this purchase token
-        PurchaseToken purchaseToken = new PurchaseToken();
-        purchaseToken.setBond(issuedBond);
-        purchaseToken.setCustomer(serviceCustomer);
+    public void buyPurchaseCoupon(User serviceCustomer, Bond issuedBond, int amountOfServiceUnits) {
+        PurchaseCoupon purchaseCoupon = new PurchaseCoupon();
+        purchaseCoupon.setOwner(serviceCustomer);
+        purchaseCoupon.setBond(issuedBond);
+        purchaseCoupon.setServiceUnits(amountOfServiceUnits);
+        serviceCustomer.getPurchaseCoupons().add(purchaseCoupon);
 
         serviceCustomer.getUserAccountInObligationGroups().forEach(userAccountInObligationGroup -> {
-            if (userAccountInObligationGroup.getObligationGroup() ==
-                    issuedBond.getRegisteredServiceObligationStrategy().getUserAccountInObligationGroup().getObligationGroup()){
+            if (userAccountInObligationGroup.getObligationGroup().equals(issuedBond.getRegisteredServiceObligationStrategy()
+                    .getUserAccountInObligationGroup().getObligationGroup())){
 
-                // block money for service Customer
-                userAccountInObligationGroup.blockMoney(issuedBond.getUnitOfWorkCost());
+                // check if s user has enough money to make a purchase
+                BigDecimal purchaseTotalPrice = issuedBond.getUnitOfWorkCost().multiply(BigDecimal.valueOf(amountOfServiceUnits));
+                if (userAccountInObligationGroup.getAccountBalance().compareTo(purchaseTotalPrice) < 0){
+                    throw new NotEnoughMoneyException();
+                }
 
-                // reserve one unit from issued bond
-                issuedBond.reserveUnit();
+                // subtract money from user account
+                userAccountInObligationGroup.subtractMoney(purchaseTotalPrice.setScale(2, RoundingMode.UP));
+
+                // subtract amountOfServiceUnits units from bond
+                issuedBond.subtractUnits(amountOfServiceUnits);
             }
         });
     }

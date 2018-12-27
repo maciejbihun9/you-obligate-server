@@ -40,13 +40,14 @@ public class User {
     /**
      * User won't have many UserRegisteredService, so it is ok to load them eagerly.
      */
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_ID")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
     private List<UserRegisteredService> userRegisteredServices = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "OBLIGATION_GROUP_ACCOUNT_ID")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
     private List<UserAccountInObligationGroup> userAccountInObligationGroups = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "owner")
+    private List<PurchaseCoupon> purchaseCoupons = new ArrayList<>();
 
     /**
      * Expected services tags that describes what user wants in exchange for his services.
@@ -69,6 +70,10 @@ public class User {
             inverseJoinColumns = @JoinColumn(
                     name = "ROLE_ID", referencedColumnName = "ID"))
     private Collection<Role> roles;
+
+    public List<PurchaseCoupon> getPurchaseCoupons() {
+        return purchaseCoupons;
+    }
 
     public Set<ServiceTag> getExpectedServicesTags() {
         return expectedServicesTags;

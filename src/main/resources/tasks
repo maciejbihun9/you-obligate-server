@@ -1,100 +1,21 @@
 
- * should I have an account balance in group account if I have also balance
- in all bonds
- - I can make a query for all bonds associated with an account and then get that variable
- - no, i think this is cool, i will have that variable in account, because i will miss those huge
- big fat queries
+ * develop controller for market transactions
 
- * how this purchase token will be used?:
+ * how to develop this application from now?:
+ - how everything should be created:
+ - user wants something, and i giving it to him,
+ - this will be just empty application without any styles,
+ - there will be many hard questions
 
- * what happens after transaction is completed?:
- - one user has to check
+ * robimy potrzebe klienta
 
- * should I go through all those considerations about how to pay for stuff?:
- - If something, I will introduce credit cards later,
- Bit coin does not have credit cards yet
- - this paying method might be very primitive, because it is all about the concept,
+ * what a user will see on the screen when he will be looking for purchasing coupons?
 
- * make a payment:
+ solution #1 (list of bonds):
+ - user wants to make a purchase of a service units,
+ -
 
- solution #1:
- - user clicks register a service unit,
- - user has purchase tokens,
- - one purchase token represents a registration,
- - user will be able to view his tokens in a list,
- - user will select a token from tokens in his profile,
- - user will click generate purchase code for this token,
- - passes code to a bond issuer,
 
- questions:
- + should user has reserved units?:
- - user clicks a "register service unit" button
- + what represents this registration?:
- - purchase token?
 
- + what might happen if an bond issuer does not register a purchase?;
- - service unit remains blocked,
- - user money remains blocked,
- - there is a possibility that a bond issuer won't register a purchase and money will be blocked
- a unit will be blocked also,
- - so this will remain in blocked column,
- - If I set expires date then a token would expire,
- - after expires data, the information about done service unit would
- go into the sky and would be lost
-
- + how is now?:
- - a person makes money transfer after service
- - I make a money transfer to Sova accounting after done services,
- - dostaje paragon zakupowy (w sklepie mam paragon, między firmami mam fakture, ),
-
- solution #2 (solution with recipe):
- - user clicks buy service unit,
- - one service unit disapears, money deaspears,
- - a user receives recipe that transaction was made,
- - a user might have a list of all transactions and those transactions details
- those recipes won't be deleted,
-
- questions:
- - it is common that people pays for services after a service!,
- but I can introduce something new here!
- - I can introduce staging area, like in git,
- - I register a transaction, money and a service are registered (blocked),
- - after all parts are satisfied, I commit a transaction
-
- * how to make a payment?:
- solution #1 (identity method):
- - a user goes into a shop,
- - gives his credentials (ID card),
- - bond issuer
-
- solution #2 (security code verification):
- - when a service is reserved then a little number for this token is generated,
- - this token will be sent in totally separate message,
- - will be active for some time,
- - user see "generate code" he generate a code for given token that is available for
- given amount of time and then expires,
- - user goes to a bond issuer, finds that token, that is associated with given service,
- - pass a code to a bond issuer,
- - they both have that token, but only an issuer is able to make a transaction,
- - a user must pass this code to the bond issuer, then purchase token is destroyed
- and transaction is successfully made
- - a purchase token is destroyed,
- - account balance changes,
-
- solution #3:
- + is this service unit really has to be reserved?:john
-
- adventages:
- - this is in the best interest of an issuer, because he wants this thing to disappear
-
- + set of methods much needed:
-
- * how to represent a transaction between users?:
- solution #1 (a user has to approve in the system that a purchase was made):
- - a lot of work, because users has to go on a site,
- - this is a payment methodology,
-
- * Could I think about those tokens like about money?:
- - money is already created and could be sent to others, so why create another money,
- - this token might represent only a reservation, some kind of a eneity,
- - a bond issuer will also have an access to all issued tokens, because those are his tokens,
+ conclusions:
+ - it is hard to create an image of ui design in a head

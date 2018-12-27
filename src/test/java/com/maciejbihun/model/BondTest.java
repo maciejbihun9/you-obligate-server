@@ -2,6 +2,7 @@ package com.maciejbihun.model;
 
 import com.maciejbihun.datatype.UnitOfWork;
 import com.maciejbihun.models.*;
+import com.maciejbihun.service.impl.CreatingMoneyStrategy;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -16,88 +17,23 @@ import static org.junit.Assert.*;
 @RunWith(MockitoJUnitRunner.class)
 public class BondTest {
 
-    @Test(expected = IllegalArgumentException.class)
-    public void shouldThrowIllegalArgumentExceptionWhenAmountOfUnitsToPayHasWrongValue(){
-        // given
-        RegisteredServiceObligationStrategy registeredServiceObligationStrategyMock = Mockito.mock(RegisteredServiceObligationStrategy.class);
-        Mockito.when(registeredServiceObligationStrategyMock.getMinAmountOfUnitsPerBond()).thenReturn(10);
-        Integer amountOfUnitsToPay = 1;
-
-        // then
-        new Bond(registeredServiceObligationStrategyMock, amountOfUnitsToPay);
-    }
-
     @Test
-    public void shouldReturnCorrectAmountOfCreatedMoney(){
+    public void shouldReturnCorrectAmountOfLeftUnits(){
         // given
-        RegisteredServiceObligationStrategy registeredServiceObligationStrategy = new RegisteredServiceObligationStrategy(
-                Mockito.mock(UserRegisteredService.class),
-                Mockito.mock(UserAccountInObligationGroup.class),
-                UnitOfWork.SERVICE,
-                BigDecimal.valueOf(10000, 2),
-                BigDecimal.valueOf(5, 2),
-                2,
-                20
-        );
-        Integer amountOfUnitsToPay = 10;
-
+        int amountOfUnitsToServe = 100;
+        BigDecimal unitOfWorkCost = BigDecimal.valueOf(10000, 2);
+        Bond bond = new Bond();
+        bond.setNumberOfUnitsToServe(amountOfUnitsToServe);
+        bond.setUnitOfWorkCost(unitOfWorkCost);
+        bond.setAmountOfCreatedMoney(CreatingMoneyStrategy.amountOfCreatedMoney(unitOfWorkCost,
+                BigDecimal.valueOf(0, 2), amountOfUnitsToServe));
         // when
-        Bond bond = new Bond(registeredServiceObligationStrategy, amountOfUnitsToPay);
-
+        bond.subtractUnits(67);
         // then
-        assertEquals(BigDecimal.valueOf(95000, 2), bond.getAvailableBalance());
+        assertEquals(Integer.valueOf(33), bond.getNumberOfUnitsToServe());
     }
 
-    @Test
-    public void subtractBondUnit(){
-        // given
-        RegisteredServiceObligationStrategy registeredServiceObligationStrategy = new RegisteredServiceObligationStrategy(
-                Mockito.mock(UserRegisteredService.class),
-                Mockito.mock(UserAccountInObligationGroup.class),
-                UnitOfWork.SERVICE,
-                BigDecimal.valueOf(10000, 2),
-                BigDecimal.valueOf(5, 2),
-                2,
-                20
-        );
-        Integer amountOfUnitsToPay = 10;
-
-        // when
-        Bond bond = new Bond(registeredServiceObligationStrategy, amountOfUnitsToPay);
-        bond.subtractBondUnit();
-
-        //then
-        assertEquals(amountOfUnitsToPay, bond.getAmountOfServiceUnitsToBeDelivered());
-    }
-
-    @Test
-    public void reserveUnit(){
-        // given
-        RegisteredServiceObligationStrategy registeredServiceObligationStrategy = new RegisteredServiceObligationStrategy(
-                Mockito.mock(UserRegisteredService.class),
-                Mockito.mock(UserAccountInObligationGroup.class),
-                UnitOfWork.SERVICE,
-                BigDecimal.valueOf(10000, 2),
-                BigDecimal.valueOf(5, 2),
-                2,
-                20
-        );
-        Integer amountOfUnitsToPay = 10;
-
-        // when
-        Bond bond = new Bond(registeredServiceObligationStrategy, amountOfUnitsToPay);
-
-        //then
-        bond.reserveUnit();
-
-        // then
-        assertEquals(9, bond.getAmountOfServiceUnitsToBeDelivered().intValue());
-        assertEquals(1, bond.getReservedUnits().intValue());
-        assertEquals(BigDecimal.valueOf(9500, 2), bond.getBlockedBalance());
-        assertEquals(BigDecimal.valueOf(85500, 2), bond.getAvailableBalance());
-    }
-
-    @Test
+    /*@Test
     public void reservingUnitsShouldWorkWellInMultithreadedEnvironment() throws InterruptedException {
         // given
         RegisteredServiceObligationStrategy registeredServiceObligationStrategy = new RegisteredServiceObligationStrategy(
@@ -146,8 +82,8 @@ public class BondTest {
         r2.join();
 
         //then
-        assertEquals(BigDecimal.valueOf(9000000, 2), bond.getBlockedBalance());
+        // assertEquals(BigDecimal.valueOf(9000000, 2), bond.getBlockedBalance());
 
-    }
+    }*/
 
 }

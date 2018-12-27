@@ -8,10 +8,4 @@ import org.mockito.junit.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class UserAccountInObligationGroupTest {
 
-    @Test
-    public void blockMoney(){
-        UserAccountInObligationGroup userAccountInObligationGroup = new UserAccountInObligationGroup();
-        userAccountInObligationGroup.
-    }
-
 }

@@ -9,6 +9,6 @@ import com.maciejbihun.models.User;
  */
 public interface MarketTransactionsService {
 
-    void reserveServiceUnitForUser(User serviceCustomer, Bond issuedBond);
+    void buyPurchaseCoupon(User serviceCustomer, Bond bond, int amountOfServiceUnits);
 
 }

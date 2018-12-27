@@ -28,7 +28,7 @@ public class RegisteredServiceObligationStrategyTest {
                 10
         );
         Integer amountOfUnitsToPay = 11;
-        new Bond(registeredServiceObligationStrategy, amountOfUnitsToPay);
+        //new Bond(registeredServiceObligationStrategy, amountOfUnitsToPay);
     }
 
 }
