@@ -13,6 +13,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Maciej Bihun
  */
@@ -39,6 +42,16 @@ public class BondControllerImpl implements BondController {
             }
             return new ResponseEntity<>(multiValueMap, HttpStatus.NOT_FOUND);
         }
+    }
+
+    @Override
+    public ResponseEntity<List<BondDto>> getObligationGroupBonds(int obligationGroupId) {
+        List<BondDto> obligationGroupBondsDtos = new ArrayList<>();
+        List<Bond> obligationGroupBonds = bondService.getObligationGroupBonds(obligationGroupId);
+        obligationGroupBonds.forEach(bond -> {
+            obligationGroupBondsDtos.add(BondConverter.convertToDto(bond));
+        });
+        return new ResponseEntity<>(obligationGroupBondsDtos, HttpStatus.FOUND);
     }
 
 }

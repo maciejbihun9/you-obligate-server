@@ -6,7 +6,6 @@ import com.maciejbihun.exceptions.NotEnoughUnitsException;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +38,11 @@ public class Bond {
     private Long id;
 
     @Basic(optional = false)
-    @Column(name = "BOND_STATUS", updatable = true)
+    @Column(name = "OBLIGATION_GROUP_ID", updatable = false, nullable = false)
+    private Integer obligationGroupId;
+
+    @Basic(optional = false)
+    @Column(name = "BOND_STATUS", nullable = false)
     private BondStatus bondStatus = BondStatus.CREATED;
 
     @Basic(optional = false)
@@ -83,6 +86,14 @@ public class Bond {
 
     public Long getId() {
         return id;
+    }
+
+    public Integer getObligationGroupId() {
+        return obligationGroupId;
+    }
+
+    public void setObligationGroupId(Integer obligationGroupId) {
+        this.obligationGroupId = obligationGroupId;
     }
 
     public void setBondStatus(BondStatus bondStatus) {

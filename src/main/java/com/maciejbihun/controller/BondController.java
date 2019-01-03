@@ -12,5 +12,6 @@ import java.util.List;
 public interface BondController {
 
     ResponseEntity<BondDto> createBondInObligationStrategy(BondDto bondDto);
+    ResponseEntity<List<BondDto>> getObligationGroupBonds(int obligationGroupId);
 
 }
