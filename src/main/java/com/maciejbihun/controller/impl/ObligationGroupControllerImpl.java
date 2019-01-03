@@ -5,22 +5,41 @@ import com.maciejbihun.converters.ObligationGroupConverter;
 import com.maciejbihun.dto.ObligationGroupDto;
 import com.maciejbihun.models.ObligationGroup;
 import com.maciejbihun.repository.ObligationGroupRepository;
+import com.maciejbihun.service.ObligationGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Maciej Bihun
  */
-@Controller
+@RestController
 public class ObligationGroupControllerImpl implements ObligationGroupController {
 
     @Autowired
     private ObligationGroupRepository obligationGroupRepository;
 
     @Autowired
-    private com.maciejbihun.service.ObligationGroupService obligationGroupService;
+    private ObligationGroupService obligationGroupService;
+
+    @Override
+    @GetMapping("/obligation-groups")
+    public ResponseEntity<List<ObligationGroupDto>> getObligationGroups() {
+        List<ObligationGroupDto> obligationGroupDtos = new ArrayList<>();
+        List<ObligationGroup> obligationGroups = obligationGroupService.getObligationGroups();
+        obligationGroups.forEach(obligationGroup -> {
+            obligationGroupDtos.add(ObligationGroupConverter.convertToDto(obligationGroup));
+        });
+        return new ResponseEntity<>(obligationGroupDtos, HttpStatus.FOUND);
+    }
 
     @Override
     public ResponseEntity<ObligationGroupDto> saveObligationGroup(ObligationGroupDto obligationGroupDto) {

@@ -27,6 +27,11 @@ public class ObligationGroupServiceImpl implements ObligationGroupService {
     @Autowired
     private ObligationGroupRepository obligationGroupRepository;
 
+    @Override
+    public List<ObligationGroup> getObligationGroups() {
+        return obligationGroupRepository.findAll();
+    }
+
     /**
      * Saves and updates given obligation group.
      */
@@ -42,8 +47,6 @@ public class ObligationGroupServiceImpl implements ObligationGroupService {
     public boolean obligationGroupExists(Long obligationGroupId) {
         return obligationGroupRepository.existsById(obligationGroupId);
     }
-
-
 
     /**
      * Returns Obligation groups with all registered services tags fetched.

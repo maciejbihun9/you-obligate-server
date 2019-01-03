@@ -10,6 +10,8 @@ import java.util.Set;
  */
 public interface ObligationGroupService {
 
+    List<ObligationGroup> getObligationGroups();
+
     ObligationGroup saveObligationGroup(ObligationGroup obligationGroup);
 
     List<ObligationGroup> getObligationGroupsWithRegisteredServicesTags();

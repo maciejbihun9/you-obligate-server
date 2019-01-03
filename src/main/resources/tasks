@@ -1,21 +1,2 @@
 
- * develop controller for market transactions
-
- * how to develop this application from now?:
- - how everything should be created:
- - user wants something, and i giving it to him,
- - this will be just empty application without any styles,
- - there will be many hard questions
-
- * robimy potrzebe klienta
-
- * what a user will see on the screen when he will be looking for purchasing coupons?
-
- solution #1 (list of bonds):
- - user wants to make a purchase of a service units,
- -
-
-
-
- conclusions:
- - it is hard to create an image of ui design in a head
+ * develop a controller for receiving all obligation groups:
