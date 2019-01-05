@@ -16,6 +16,8 @@ public interface ObligationGroupService {
 
     List<ObligationGroup> getObligationGroupsWithRegisteredServicesTags();
 
+    List<ObligationGroup> getObligationGroupsWithBonds(String [] obligationGroupsIds);
+
     boolean obligationGroupExists(Long obligationGroupId);
 
     List<ObligationGroup> getObligationGroupsByServicesTags(Set<ServiceTag> servicesTags);

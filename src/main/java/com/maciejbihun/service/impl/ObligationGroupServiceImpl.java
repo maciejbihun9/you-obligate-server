@@ -56,6 +56,11 @@ public class ObligationGroupServiceImpl implements ObligationGroupService {
         return obligationGroupRepository.getObligationGroupsWithRegisteredServicesTags();
     }
 
+    @Override
+    public List<ObligationGroup> getObligationGroupsWithBonds(String[] obligationGroupsIds) {
+        return obligationGroupRepository.getObligationGroupsWithBonds(obligationGroupsIds);
+    }
+
     /**
      * Returns obligation groups that are recommended for given user taking into account his expected services.
      */
