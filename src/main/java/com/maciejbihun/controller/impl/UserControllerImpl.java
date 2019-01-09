@@ -4,10 +4,12 @@ import com.maciejbihun.controller.UserController;
 import com.maciejbihun.converters.UserConverter;
 import com.maciejbihun.dto.UserDto;
 import com.maciejbihun.models.User;
+import com.maciejbihun.models.UserPrincipal;
 import com.maciejbihun.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -50,6 +52,14 @@ public class UserControllerImpl implements UserController {
         User user = UserConverter.convertToEntity(userDto);
         userDto = UserConverter.convertToDto(userService.saveUser(user));
         return new ResponseEntity<>(userDto, HttpStatus.ACCEPTED);
+    }
+
+    @Override
+    @GetMapping("/logged-in-user")
+    public ResponseEntity<UserDto> getLoggedInUser(Authentication authentication) {
+        String loggedInUsername = authentication.getName();
+        UserPrincipal userPrincipal = userService.loadUserByUsername(loggedInUsername);
+        return new ResponseEntity<>(UserConverter.convertToDto(userPrincipal.getUser()), HttpStatus.OK);
     }
 
 }

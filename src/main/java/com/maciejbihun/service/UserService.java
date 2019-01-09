@@ -16,6 +16,7 @@ public interface UserService {
     List<User> getAllUsers();
     User saveUser(User user);
     UserPrincipal loadUserByUsername(String username);
+    // User getLoggedInUser();
 
     /**
      * Returns a user with eagerly fetched list of registered services.

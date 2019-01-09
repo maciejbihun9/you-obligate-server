@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
@@ -55,6 +56,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
         return new UserPrincipal(user);
     }
+
+    /*@Override
+    public User getLoggedInUser(Principal principal) {
+        return principal.getName();
+    }*/
 
     @Override
     public User loadUserWithRegisteredServices(String username) {

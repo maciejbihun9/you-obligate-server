@@ -9,6 +9,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -24,6 +25,15 @@ public class UserControllerTest {
 
     @Autowired
     UserController userController;
+
+    @Autowired
+    Authentication authentication;
+
+    @Test
+    public void shouldReturnCorrectLoggedInUser(){
+        ResponseEntity<UserDto> loggedInUser = userController.getLoggedInUser(authentication);
+        assertEquals("maciek1", loggedInUser.getBody().getName());
+    }
 
     /*@Before
     public void init(){
