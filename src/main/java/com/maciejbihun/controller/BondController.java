@@ -13,5 +13,6 @@ public interface BondController {
 
     ResponseEntity<BondDto> createBondInObligationStrategy(BondDto bondDto);
     ResponseEntity<List<BondDto>> getObligationGroupBonds(int obligationGroupId);
+    ResponseEntity<BondDto> getBond(int bondId);
 
 }

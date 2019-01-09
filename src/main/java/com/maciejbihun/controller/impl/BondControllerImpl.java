@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +54,15 @@ public class BondControllerImpl implements BondController {
             obligationGroupBondsDtos.add(BondConverter.convertToDto(bond));
         });
         return new ResponseEntity<>(obligationGroupBondsDtos, HttpStatus.FOUND);
+    }
+
+    @Override
+    @GetMapping("/bonds/{bondId}")
+    public ResponseEntity<BondDto> getBond(@PathVariable("bondId") int bondId) {
+        if (!bondService.getBond(bondId).isPresent()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(BondConverter.convertToDto(bondService.getBond(bondId).get()), HttpStatus.FOUND);
     }
 
 }

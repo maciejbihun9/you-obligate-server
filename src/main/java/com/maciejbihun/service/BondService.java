@@ -4,6 +4,7 @@ import com.maciejbihun.models.Bond;
 import com.maciejbihun.models.PurchaseToken;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface BondService {
 
@@ -12,5 +13,7 @@ public interface BondService {
     Bond createBondInObligationStrategy(Long obligationStrategyId, Integer amountOfUnitsToPay) throws Exception;
 
     PurchaseToken reserveServiceUnit();
+
+    Optional<Bond> getBond(int bondId);
 
 }

@@ -92,4 +92,9 @@ public class BondServiceImpl implements BondService {
         return null;
     }
 
+    @Override
+    public Optional<Bond> getBond(int bondId) {
+        return bondRepository.findById((long) bondId);
+    }
+
 }
