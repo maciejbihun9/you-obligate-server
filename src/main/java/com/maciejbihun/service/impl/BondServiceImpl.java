@@ -3,7 +3,6 @@ package com.maciejbihun.service.impl;
 import com.maciejbihun.exceptions.AmountOfUnitsExceededException;
 import com.maciejbihun.exceptions.ObligationStrategyDoesNotExistsException;
 import com.maciejbihun.models.Bond;
-import com.maciejbihun.models.PurchaseToken;
 import com.maciejbihun.models.RegisteredServiceObligationStrategy;
 import com.maciejbihun.repository.BondRepository;
 import com.maciejbihun.repository.RegisteredServiceObligationStrategyRepository;
@@ -85,11 +84,6 @@ public class BondServiceImpl implements BondService {
         } else {
             throw new ObligationStrategyDoesNotExistsException();
         }
-    }
-
-    @Override
-    public PurchaseToken reserveServiceUnit() {
-        return null;
     }
 
     @Override

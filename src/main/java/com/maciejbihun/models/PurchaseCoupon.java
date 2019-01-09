@@ -6,12 +6,14 @@ import java.time.LocalDateTime;
 /**
  * @author Maciej Bihun
  */
+@Entity
+@Table(name = "PurchaseCoupon")
 public class PurchaseCoupon {
 
     @Id
     @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "PURCHASE_COUPON_SEQ")
-    @SequenceGenerator(name = "OBLIGATION_GROUP_SERVICE_SEQ", sequenceName = "PURCHASE_COUPON_SEQ", allocationSize = 1)
+    @SequenceGenerator(name = "PURCHASE_COUPON_SEQ", sequenceName = "PURCHASE_COUPON_SEQ", allocationSize = 1)
     Long id;
 
     @Basic(optional = false)
@@ -20,7 +22,7 @@ public class PurchaseCoupon {
     private User owner;
 
     @Basic(optional = false)
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "BOND_ID", nullable = false)
     private Bond bond;
 
