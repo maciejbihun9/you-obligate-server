@@ -65,7 +65,7 @@ public class Bond {
     @Column(name = "OBLIGATION_CLOSED_DATE_TIME", nullable = true, updatable = true)
     private LocalDateTime obligationClosedDateTime;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "OBLIGATION_STRATEGY_ID", nullable = false)
     private RegisteredServiceObligationStrategy registeredServiceObligationStrategy;
 
