@@ -66,7 +66,7 @@ public class UserAccountInObligationGroupControllerImpl implements UserAccountIn
     }
 
     @Override
-    @GetMapping("/user-account-balance")
+    @GetMapping("/{obligationGroupId}/user-account-balance")
     public ResponseEntity<BigDecimal> getUserAccountBalanceInGivenObligationGroup(@PathVariable("obligationGroupId") Long obligationGroupId) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
