@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * @author Maciej Bihun
  */
-@RestController
+@RestController(value = "/users")
 public class UserControllerImpl implements UserController {
 
     @Autowired
