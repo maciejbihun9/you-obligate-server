@@ -5,10 +5,14 @@ import com.maciejbihun.converters.UserAccountInObligationGroupConverter;
 import com.maciejbihun.dto.UserAccountInObligationGroupDto;
 import com.maciejbihun.exceptions.ObligationGroupDoesNotExistsException;
 import com.maciejbihun.models.UserAccountInObligationGroup;
+import com.maciejbihun.models.UserPrincipal;
 import com.maciejbihun.service.UserAccountInObligationGroupService;
+import com.maciejbihun.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -26,6 +30,9 @@ public class UserAccountInObligationGroupControllerImpl implements UserAccountIn
 
     @Autowired
     UserAccountInObligationGroupService userAccountInObligationGroupService;
+
+    @Autowired
+    UserService userService;
 
     /**
      * Creates an account for a user in given obligation group and returns new instance of UserAccountInObligationGroup to the user with convenient http status.
@@ -60,10 +67,14 @@ public class UserAccountInObligationGroupControllerImpl implements UserAccountIn
 
     @Override
     @GetMapping("/user-account-balance")
-    public ResponseEntity<BigDecimal> getUserAccountBalanceInGivenObligationGroup(@PathVariable("userId") Long userId,
-                                                                                  @PathVariable("obligationGroupId") Long obligationGroupId) {
+    public ResponseEntity<BigDecimal> getUserAccountBalanceInGivenObligationGroup(@PathVariable("obligationGroupId") Long obligationGroupId) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        UserPrincipal userPrincipal = userService.loadUserByUsername(username);
+
         BigDecimal userAccountBalanceInGivenObligationGroup =
-                userAccountInObligationGroupService.getUserAccountBalanceInGivenObligationGroup(userId, obligationGroupId);
+                userAccountInObligationGroupService.getUserAccountBalanceInGivenObligationGroup(userPrincipal.getUser().getId(), obligationGroupId);
         if (userAccountBalanceInGivenObligationGroup == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

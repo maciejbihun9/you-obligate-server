@@ -12,6 +12,6 @@ public interface UserAccountInObligationGroupController {
 
     ResponseEntity<UserAccountInObligationGroup> getUserAccountInObligationGroupWithObligationStrategies(Long userAccountInObligationGroupId);
 
-    ResponseEntity<BigDecimal> getUserAccountBalanceInGivenObligationGroup(Long userId, Long obligationGroupId);
+    ResponseEntity<BigDecimal> getUserAccountBalanceInGivenObligationGroup(Long obligationGroupId);
 
 }
