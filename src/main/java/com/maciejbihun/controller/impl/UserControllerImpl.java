@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * @author Maciej Bihun
  */
-@Controller
+@RestController
 public class UserControllerImpl implements UserController {
 
     @Autowired
