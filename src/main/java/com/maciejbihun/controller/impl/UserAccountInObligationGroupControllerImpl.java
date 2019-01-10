@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
@@ -59,7 +60,8 @@ public class UserAccountInObligationGroupControllerImpl implements UserAccountIn
 
     @Override
     @GetMapping("/user-account-balance")
-    public ResponseEntity<BigDecimal> getUserAccountBalanceInGivenObligationGroup(Long userId, Long obligationGroupId) {
+    public ResponseEntity<BigDecimal> getUserAccountBalanceInGivenObligationGroup(@PathVariable("userId") Long userId,
+                                                                                  @PathVariable("obligationGroupId") Long obligationGroupId) {
         BigDecimal userAccountBalanceInGivenObligationGroup =
                 userAccountInObligationGroupService.getUserAccountBalanceInGivenObligationGroup(userId, obligationGroupId);
         if (userAccountBalanceInGivenObligationGroup == null){
