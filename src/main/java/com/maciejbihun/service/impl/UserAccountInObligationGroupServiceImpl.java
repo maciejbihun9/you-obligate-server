@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.util.HashMap;
 
 /**
@@ -76,6 +77,11 @@ public class UserAccountInObligationGroupServiceImpl implements UserAccountInObl
     @Override
     public UserAccountInObligationGroup getUserAccountInObligationGroupByObligationGroupId(Long obligationGroupId) {
         return null;
+    }
+
+    @Override
+    public BigDecimal getUserAccountBalanceInGivenObligationGroup(Long userId, Long obligationGroupId) {
+        return userAccountInObligationGroupRepository.getUserAccountBalanceInGivenObligationGroup(userId, obligationGroupId);
     }
 
     @Override
