@@ -31,8 +31,8 @@ public interface ObligationGroupRepository extends JpaRepository<ObligationGroup
             "from ObligationGroup o " +
             "join fetch o.userAccountsInObligationGroup u " +
             "join fetch u.userObligationStrategies uos " +
-            "join fetch uos.bonds b" +
-            "where o.id in (?1)")
+            "join fetch uos.bonds b " +
+            "where o.id in :obligationGroupsIds")
     List<ObligationGroup> getObligationGroupsWithBonds(String [] obligationGroupsIds);
 
 }
