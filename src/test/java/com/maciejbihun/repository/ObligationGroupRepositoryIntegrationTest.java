@@ -29,7 +29,8 @@ public class ObligationGroupRepositoryIntegrationTest {
         ObligationGroup obligationGroupWithRegisteredServices = obligationGroupRepository.getObligationGroupWithRegisteredServices(obligationGroupId);
         Long id = obligationGroupWithRegisteredServices.getId();
         assertEquals(2L, id.longValue());
-        assertNotNull(obligationGroupWithRegisteredServices.getUserAccountsInObligationGroup().iterator().next().getUserObligationStrategies().get(0).getUserRegisteredService());
+        assertNotNull(obligationGroupWithRegisteredServices.getUserAccountsInObligationGroup().iterator().next().getUserObligationStrategies()
+                .iterator().next().getUserRegisteredService());
     }
 
 }

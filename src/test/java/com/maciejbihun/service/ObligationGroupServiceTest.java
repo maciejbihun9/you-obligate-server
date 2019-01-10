@@ -69,7 +69,7 @@ public class ObligationGroupServiceTest {
             }
             Mockito.when(registeredServiceObligationStrategyMock.getUserRegisteredService()).thenReturn(userRegisteredServiceMock);
             Mockito.when(userAccountInObligationGroupMock.getUserObligationStrategies())
-                    .thenReturn(new ArrayList<>(Arrays.asList(registeredServiceObligationStrategyMock)));
+                    .thenReturn(new HashSet<>(new ArrayList<>(Arrays.asList(registeredServiceObligationStrategyMock))));
             Mockito.when(obligationGroupMock.getUserAccountsInObligationGroup())
                     .thenReturn(new HashSet<>(new ArrayList<>(Arrays.asList(userAccountInObligationGroupMock))));
             obligationGroups.add(obligationGroupMock);
@@ -77,7 +77,8 @@ public class ObligationGroupServiceTest {
         }
         List<ObligationGroup> recommendObligationGroups = obligationGroupService.getRecommendObligationGroups(expectedServicesTags, obligationGroups);
         Set<ServiceTag> userRegisteredServiceTags =
-                recommendObligationGroups.get(0).getUserAccountsInObligationGroup().iterator().next().getUserObligationStrategies().get(0).getUserRegisteredService().getUserRegisteredServiceTags();
+                recommendObligationGroups.get(0).getUserAccountsInObligationGroup().iterator().next().getUserObligationStrategies()
+                        .iterator().next().getUserRegisteredService().getUserRegisteredServiceTags();
 
         assertEquals(3, userRegisteredServiceTags.size());
     }

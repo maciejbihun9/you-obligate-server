@@ -9,7 +9,9 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Stores user's data associated with given obligation group.
@@ -35,7 +37,6 @@ public class UserAccountInObligationGroup implements Serializable {
     @JoinColumn(name = "USER_ID", nullable = false)
     private User user;
 
-    @Convert(converter = AtomicReferenceConverter.class)
     @Basic(optional = false)
     @Column(name = "ACCOUNT_BALANCE", length = 400)
     private BigDecimal accountBalance = BigDecimal.ZERO;
@@ -49,7 +50,7 @@ public class UserAccountInObligationGroup implements Serializable {
     private LocalDateTime createdDateTime = LocalDateTime.now();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "userAccountInObligationGroup")
-    private List<RegisteredServiceObligationStrategy> userObligationStrategies = new ArrayList<>();
+    private Set<RegisteredServiceObligationStrategy> userObligationStrategies = new HashSet<>();
 
     public synchronized void addMoney(final BigDecimal moneyToCreate){
         accountBalance = accountBalance.add(moneyToCreate);
@@ -90,7 +91,7 @@ public class UserAccountInObligationGroup implements Serializable {
         return createdDateTime;
     }
 
-    public List<RegisteredServiceObligationStrategy> getUserObligationStrategies() {
+    public Set<RegisteredServiceObligationStrategy> getUserObligationStrategies() {
         return userObligationStrategies;
     }
 }
