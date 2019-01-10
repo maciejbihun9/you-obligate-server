@@ -14,5 +14,5 @@ public interface UserController {
     ResponseEntity<List<UserDto>> getAllUsers();
     ResponseEntity<UserDto> createUser(UserDto userDto);
     ResponseEntity<UserDto> saveUserData(UserDto userDto);
-    ResponseEntity<UserDto> getLoggedInUser(Authentication authentication);
+    ResponseEntity<UserDto> getLoggedInUser();
 }

@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -26,13 +27,11 @@ public class UserControllerTest {
     @Autowired
     UserController userController;
 
-    @Autowired
-    Authentication authentication;
-
     @Test
+    @WithMockUser(username="maciek1",roles={"USER"})
     public void shouldReturnCorrectLoggedInUser(){
-        ResponseEntity<UserDto> loggedInUser = userController.getLoggedInUser(authentication);
-        assertEquals("maciek1", loggedInUser.getBody().getName());
+        ResponseEntity<UserDto> loggedInUser = userController.getLoggedInUser();
+        assertEquals("maciek1", loggedInUser.getBody().getUsername());
     }
 
     /*@Before
