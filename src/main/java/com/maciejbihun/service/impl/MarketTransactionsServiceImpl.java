@@ -41,4 +41,9 @@ public class MarketTransactionsServiceImpl implements MarketTransactionsService 
         });
     }
 
+    @Override
+    public void makeCouponsPurchase() {
+
+    }
+
 }

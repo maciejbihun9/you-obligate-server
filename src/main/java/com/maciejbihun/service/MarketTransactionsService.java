@@ -11,4 +11,6 @@ public interface MarketTransactionsService {
 
     void buyPurchaseCoupon(User serviceCustomer, Bond bond, int amountOfServiceUnits);
 
+    void makeCouponsPurchase();
+
 }
