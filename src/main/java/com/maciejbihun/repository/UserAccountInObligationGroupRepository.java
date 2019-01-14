@@ -18,4 +18,9 @@ public interface UserAccountInObligationGroupRepository extends JpaRepository<Us
             "where u.user.id = :userId and u.obligationGroup.id = :obligationGroupId")
     BigDecimal getUserAccountBalanceInGivenObligationGroup(Long userId, Long obligationGroupId);
 
+    @Query("select u " +
+            "from UserAccountInObligationGroup u " +
+            "where u.user.id = :userId and u.obligationGroup.id = :obligationGroupId")
+    UserAccountInObligationGroup getUserAccountInObligationGroupForObligationGroupAndUser(Long userId, Long obligationGroupId);
+
 }

@@ -1,12 +1,13 @@
 package com.maciejbihun.controller;
 
 import com.maciejbihun.dto.CouponPurchaseDataObjectDto;
+import org.springframework.http.ResponseEntity;
 
 /**
  * @author Maciej Bihun
  */
 public interface MarketTransactionsController {
 
-    void makeCouponsPurchase(CouponPurchaseDataObjectDto couponPurchaseDataObjectDto);
+    ResponseEntity<Object> makeCouponsPurchase(CouponPurchaseDataObjectDto couponPurchaseDataObjectDto);
 
 }

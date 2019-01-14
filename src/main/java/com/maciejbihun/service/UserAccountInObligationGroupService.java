@@ -8,13 +8,15 @@ import java.math.BigDecimal;
 
 public interface UserAccountInObligationGroupService {
 
+    UserAccountInObligationGroup saveUserAccountInObligationGroup(UserAccountInObligationGroup userAccountInObligationGroup);
+
     UserAccountInObligationGroup getUserAccountInObligationGroupWithObligationStrategies(Long userAccountId);
 
-    UserAccountInObligationGroup getUserAccountInObligationGroup(Long accountId);
+    UserAccountInObligationGroup getUserAccountInObligationGroup(Long serAccountInObligationGroup);
 
     UserAccountInObligationGroup createUserAccountInObligationGroup(String username, Long obligationGroupId) throws ObligationGroupDoesNotExistsException;
 
-    UserAccountInObligationGroup getUserAccountInObligationGroupByObligationGroupId(Long obligationGroupId);
+    UserAccountInObligationGroup getUserAccountInObligationGroupForObligationGroupAndUser(Long obligationGroupId, Long userId);
 
     BigDecimal getUserAccountBalanceInGivenObligationGroup(Long userId, Long obligationGroupId);
 

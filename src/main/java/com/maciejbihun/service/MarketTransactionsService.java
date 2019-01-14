@@ -1,5 +1,7 @@
 package com.maciejbihun.service;
 
+import com.maciejbihun.exceptions.ThereIsNoEnoughMoneyInAnAccountException;
+import com.maciejbihun.exceptions.ThereIsNoEnoughUnitsToServeInBondException;
 import com.maciejbihun.models.Bond;
 import com.maciejbihun.models.User;
 
@@ -11,6 +13,6 @@ public interface MarketTransactionsService {
 
     void buyPurchaseCoupon(User serviceCustomer, Bond bond, int amountOfServiceUnits);
 
-    void makeCouponsPurchase();
+    void makeCouponPurchase(User currentUser, Bond bond, int amountOfServiceUnits) throws ThereIsNoEnoughMoneyInAnAccountException, ThereIsNoEnoughUnitsToServeInBondException;
 
 }

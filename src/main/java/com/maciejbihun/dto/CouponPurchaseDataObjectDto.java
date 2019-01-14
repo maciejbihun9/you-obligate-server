@@ -4,16 +4,16 @@ import com.maciejbihun.models.Bond;
 
 public class CouponPurchaseDataObjectDto {
 
-    private Bond bond;
+    private BondDto bondDto;
 
     private Integer amountOfUnitsToBuy;
 
-    public Bond getBond() {
-        return bond;
+    public BondDto getBond() {
+        return bondDto;
     }
 
-    public void setBond(Bond bond) {
-        this.bond = bond;
+    public void setBond(BondDto bondDto) {
+        this.bondDto = bondDto;
     }
 
     public Integer getAmountOfUnitsToBuy() {

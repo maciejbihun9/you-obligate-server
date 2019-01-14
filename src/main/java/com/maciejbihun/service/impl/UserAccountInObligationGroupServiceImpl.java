@@ -38,6 +38,11 @@ public class UserAccountInObligationGroupServiceImpl implements UserAccountInObl
     @Autowired
     private UserService userService;
 
+    @Override
+    public UserAccountInObligationGroup saveUserAccountInObligationGroup(UserAccountInObligationGroup userAccountInObligationGroup) {
+        return userAccountInObligationGroupRepository.save(userAccountInObligationGroup);
+    }
+
     /**
      * Returns UserAccountInObligationGroup entity with initialized userObligationStrategies.
      */
@@ -74,9 +79,12 @@ public class UserAccountInObligationGroupServiceImpl implements UserAccountInObl
         return userAccountInObligationGroupRepository.save(userAccountInObligationGroup);
     }
 
+    /**
+     * Returns UserAccountInObligationGroup for given user and given obligation group.
+     */
     @Override
-    public UserAccountInObligationGroup getUserAccountInObligationGroupByObligationGroupId(Long obligationGroupId) {
-        return null;
+    public UserAccountInObligationGroup getUserAccountInObligationGroupForObligationGroupAndUser(Long userId, Long obligationGroupId) {
+        return userAccountInObligationGroupRepository.getUserAccountInObligationGroupForObligationGroupAndUser(userId, obligationGroupId);
     }
 
     @Override
