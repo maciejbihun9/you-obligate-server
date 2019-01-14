@@ -6,6 +6,7 @@ import com.maciejbihun.exceptions.ThereIsNoEnoughUnitsToServeInBondException;
 import com.maciejbihun.models.*;
 import com.maciejbihun.service.MarketTransactionsService;
 import com.maciejbihun.service.UserAccountInObligationGroupService;
+import com.maciejbihun.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,9 @@ public class MarketTransactionsServiceImpl implements MarketTransactionsService 
 
     @Autowired
     UserAccountInObligationGroupService userAccountInObligationGroupService;
+
+    @Autowired
+    UserService userService;
 
     @Override
     public void buyPurchaseCoupon(User serviceCustomer, Bond issuedBond, int amountOfServiceUnits) {
@@ -49,8 +53,15 @@ public class MarketTransactionsServiceImpl implements MarketTransactionsService 
     }
 
     @Override
-    public void makeCouponPurchase(User serviceCustomer, Bond issuedBond, int amountOfServiceUnits)
+    public PurchaseCoupon makeCouponPurchase(User serviceCustomer, Bond issuedBond, int amountOfServiceUnits)
             throws ThereIsNoEnoughMoneyInAnAccountException, ThereIsNoEnoughUnitsToServeInBondException {
+
+        PurchaseCoupon purchaseCoupon = new PurchaseCoupon();
+        purchaseCoupon.setOwner(serviceCustomer);
+        purchaseCoupon.setBond(issuedBond);
+        purchaseCoupon.setServiceUnits(amountOfServiceUnits);
+        serviceCustomer.getPurchaseCoupons().add(purchaseCoupon);
+
         // get user account for given user in obligation group
         UserAccountInObligationGroup userAccountInObligationGroupForObligationGroupAndUser =
                 userAccountInObligationGroupService.getUserAccountInObligationGroupForObligationGroupAndUser(serviceCustomer.getId(), issuedBond.getId());
@@ -74,6 +85,11 @@ public class MarketTransactionsServiceImpl implements MarketTransactionsService 
 
         // save user account data and issued bond
         userAccountInObligationGroupService.saveUserAccountInObligationGroup(userAccountInObligationGroupForObligationGroupAndUser);
+
+        // save user
+        userService.saveUser(serviceCustomer);
+
+        return purchaseCoupon;
 
     }
 

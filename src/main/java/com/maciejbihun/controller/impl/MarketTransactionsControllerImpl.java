@@ -6,6 +6,7 @@ import com.maciejbihun.dto.CouponPurchaseDataObjectDto;
 import com.maciejbihun.exceptions.ThereIsNoEnoughMoneyInAnAccountException;
 import com.maciejbihun.exceptions.ThereIsNoEnoughUnitsToServeInBondException;
 import com.maciejbihun.models.Bond;
+import com.maciejbihun.models.PurchaseCoupon;
 import com.maciejbihun.models.User;
 import com.maciejbihun.models.UserPrincipal;
 import com.maciejbihun.service.BondService;
@@ -53,8 +54,9 @@ public class MarketTransactionsControllerImpl implements MarketTransactionsContr
         Bond currentBond = currentBondOptional.get();
 
         // check if bond contains enough number of units to serve
+        PurchaseCoupon purchaseCoupon;
         try {
-            marketTransactionsService.makeCouponPurchase(user, currentBond, couponPurchaseDataObjectDto.getAmountOfUnitsToBuy());
+            purchaseCoupon = marketTransactionsService.makeCouponPurchase(user, currentBond, couponPurchaseDataObjectDto.getAmountOfUnitsToBuy());
         } catch (ThereIsNoEnoughMoneyInAnAccountException e) {
             // return conflict status and bond with updated data
             return new ResponseEntity<>(currentBond, HttpStatus.CONFLICT);
@@ -62,6 +64,6 @@ public class MarketTransactionsControllerImpl implements MarketTransactionsContr
             return new ResponseEntity<>(currentBond, HttpStatus.CONFLICT);
         }
         // if everything is ok I want return just ok status
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(purchaseCoupon, HttpStatus.OK);
     }
 }

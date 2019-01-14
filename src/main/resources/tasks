@@ -1,4 +1,13 @@
 
- * develop a controller for receiving all obligation groups - done
+ * Create a transaction model, a model that will represent a succes full purchase:
+ - for sure i need to have all transactions
+ - Transaction model
+ - how many units,
+ - btw. a purchase produces a Purchase Coupon,
+ - save this coupon,
+ - return a coupon, redirect to a view,
+ - poll for a coupon
 
- * develop a controller for receiving obligation group with all bonds
+ questions:
+ + why do I need this model:
+ - id, user id, bond id, amount of units, purchase_date,
