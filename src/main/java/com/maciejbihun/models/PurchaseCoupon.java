@@ -1,6 +1,7 @@
 package com.maciejbihun.models;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
@@ -29,6 +30,10 @@ public class PurchaseCoupon {
     @Basic(optional = false)
     @Column(name = "SERVICE_UNITS", nullable = false)
     private Integer serviceUnits;
+
+    @Basic(optional = false)
+    @Column(name = "TOTAL_COST", nullable = false)
+    private BigDecimal totalCost;
 
     @Basic(optional = false)
     @Column(name = "CREATED_DATE_TIME", nullable = false)
@@ -69,6 +74,14 @@ public class PurchaseCoupon {
         synchronized (this){
             this.serviceUnits = serviceUnits;
         }
+    }
+
+    public BigDecimal getTotalCost() {
+        return totalCost;
+    }
+
+    public void setTotalCost(BigDecimal totalCost) {
+        this.totalCost = totalCost;
     }
 
     public LocalDateTime getCreatedDateTime() {

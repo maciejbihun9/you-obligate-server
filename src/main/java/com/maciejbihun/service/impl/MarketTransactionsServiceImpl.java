@@ -56,11 +56,7 @@ public class MarketTransactionsServiceImpl implements MarketTransactionsService 
     public PurchaseCoupon makeCouponPurchase(User serviceCustomer, Bond issuedBond, int amountOfServiceUnits)
             throws ThereIsNoEnoughMoneyInAnAccountException, ThereIsNoEnoughUnitsToServeInBondException {
 
-        PurchaseCoupon purchaseCoupon = new PurchaseCoupon();
-        purchaseCoupon.setOwner(serviceCustomer);
-        purchaseCoupon.setBond(issuedBond);
-        purchaseCoupon.setServiceUnits(amountOfServiceUnits);
-        serviceCustomer.getPurchaseCoupons().add(purchaseCoupon);
+
 
         // get user account for given user in obligation group
         UserAccountInObligationGroup userAccountInObligationGroupForObligationGroupAndUser =
@@ -82,6 +78,14 @@ public class MarketTransactionsServiceImpl implements MarketTransactionsService 
 
         // subtract units from bond
         issuedBond.subtractUnits(amountOfServiceUnits);
+
+        // create purchase coupon
+        PurchaseCoupon purchaseCoupon = new PurchaseCoupon();
+        purchaseCoupon.setOwner(serviceCustomer);
+        purchaseCoupon.setBond(issuedBond);
+        purchaseCoupon.setServiceUnits(amountOfServiceUnits);
+        purchaseCoupon.setTotalCost(moneyToWithdraw);
+        serviceCustomer.getPurchaseCoupons().add(purchaseCoupon);
 
         // save user account data and issued bond
         userAccountInObligationGroupService.saveUserAccountInObligationGroup(userAccountInObligationGroupForObligationGroupAndUser);
