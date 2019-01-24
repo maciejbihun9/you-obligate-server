@@ -26,11 +26,11 @@
             <artifactId>sqljdbc4</artifactId>
             <version>4.0</version>
         </dependency>
-        <dependency>
+        <!--<dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <version>1.4.194</version>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-ehcache</artifactId>
@@ -80,7 +80,7 @@
         <!-- Java 6 = JAX-B Version 2.0   -->
         <!-- Java 7 = JAX-B Version 2.2.3 -->
         <!-- Java 8 = JAX-B Version 2.2.8 -->
-        <dependency>
+        <!--<dependency>
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
             <version>2.2.11</version>
@@ -94,7 +94,7 @@
             <groupId>com.sun.xml.bind</groupId>
             <artifactId>jaxb-impl</artifactId>
             <version>2.2.11</version>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>javax.activation</groupId>
             <artifactId>activation</artifactId>
@@ -105,6 +105,11 @@
             <artifactId>you-obligate-web</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.maciejbihun</groupId>
+            <artifactId>you-obligate-server</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
     <build>
@@ -127,7 +132,7 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <configuration>
                     <packagingExcludes>WEB-INF/lib/tomcat-*.jar</packagingExcludes>
-                    <warName>tutorial-app</warName>
+                    <!--<warName>tutorial-app</warName>-->
                 </configuration>
             </plugin>
             <plugin>
