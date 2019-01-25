@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 
+=======
+>>>>>>> Add a feature to store GroupJoinRequests
  * consider how a user might join a group:
  - a user see a group,
  - see all of this group details, issued bonds, people on the board,
@@ -56,3 +59,4 @@
  they will negotiate the final price and
  - a user will send a letter of an intent and a group will create
  for him a registered service obligation strategy,
+
