@@ -1,3 +1,7 @@
 .idea
 target
 you-obligate-server.iml
+src/main/resources/tasks
+src/main/resources/thoughts
+
+
