@@ -1,13 +1,10 @@
-<<<<<<< HEAD
 
-=======
->>>>>>> Add a feature to store GroupJoinRequests
  * consider how a user might join a group:
  - a user see a group,
  - see all of this group details, issued bonds, people on the board,
  - he enters the obligation group main page, main view, he see all details about this group,
  what they offer, for who they are looking for,
- - a user clicks join proposal
+ - a user clicks join proposal,
 
  questions:
  + what should be included in a group request?:
@@ -42,6 +39,20 @@
  - actually there can only be one person that is responsible for communicating with a requester,
  - there will be selected group of people that will receive those requests, based on those requests
 
+ + how to show all requests?:
+ - in a grid? as a list?
+
+ + what would happen if a user starts reading about another user and
+
+ + who will be responsible for calling to users that make requests?:
+ - couple people might sit and discuss if they
+ can get this guy, but who can make a call?,
+ - where this number might be available,
+ - who would be able responsible for creating strategies,
+ - set those rights to a specified user, who can create a registered service strategy for this user and registered service,
+ - just throw an exception if someone would try to create strategy for registered service and a user, just if those ids are found that
+ are already created then,
+
  implementation:
  - create a button - join a group, at the top of the group view,
  - show a view where user will be able to fill registered service, one unit of work price and, unit of work type,
@@ -60,3 +71,9 @@
  - a user will send a letter of an intent and a group will create
  for him a registered service obligation strategy,
 
+<<<<<<< HEAD
+=======
+ * create a user registered service strategy for a user:
+ - set users that will be notified and will have rights to open
+ - they will have rights to open that
+>>>>>>> Update tasks file
