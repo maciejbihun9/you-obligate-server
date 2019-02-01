@@ -64,6 +64,9 @@ public class UserRegisteredService {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "userRegisteredService")
     private List<RegisteredServiceObligationStrategy> registeredServiceObligationStrategies = new ArrayList<>();
 
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "userRegisteredService")
+    private Set<GroupJoinRequest> groupJoinRequests = new HashSet<>();
+
     public List<RegisteredServiceObligationStrategy> getRegisteredServiceObligationStrategies() {
         return registeredServiceObligationStrategies;
     }

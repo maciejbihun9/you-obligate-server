@@ -66,6 +66,9 @@ public class ObligationGroup implements Comparable<ObligationGroup> {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "obligationGroup")
     private Set<UserAccountInObligationGroup> userAccountsInObligationGroup = new HashSet<>();
 
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "obligationGroup")
+    private Set<GroupJoinRequest> groupJoinRequests = new HashSet<>();
+
     public Long getId() {
         return id;
     }

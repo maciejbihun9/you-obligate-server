@@ -18,12 +18,12 @@ public class GroupJoinRequest {
     @SequenceGenerator(name = "GROUP_JOIN_REQUEST_SEQ", sequenceName = "GROUP_JOIN_REQUEST_SEQ", allocationSize = 1)
     private Long id;
 
-    @Basic(optional = false)
-    @Column(name = "OBLIGATION_GROUP_ID", updatable = false, nullable = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "OBLIGATION_GROUP_ID", updatable = false, nullable = false)
     private ObligationGroup obligationGroup;
 
-    @Basic(optional = false)
-    @Column(name = "USER_REGISTERED_SERVICE_ID", updatable = false, nullable = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "USER_REGISTERED_SERVICE_ID", updatable = false, nullable = false)
     private UserRegisteredService userRegisteredService;
 
     @Basic(optional = false)
