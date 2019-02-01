@@ -3,6 +3,7 @@ package com.maciejbihun.controller.impl;
 import com.maciejbihun.controller.GroupJoinRequestController;
 import com.maciejbihun.datatype.UnitOfWork;
 import com.maciejbihun.dto.GroupJoinRequestDto;
+import com.maciejbihun.exceptions.NotEnoughPermissionsException;
 import com.maciejbihun.models.GroupJoinRequest;
 import com.maciejbihun.models.ObligationGroup;
 import com.maciejbihun.models.UserRegisteredService;
@@ -12,11 +13,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.persistence.EntityManager;
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @author Maciej Bihun
@@ -47,9 +50,18 @@ public class GroupJoinRequestControllerImpl implements GroupJoinRequestControlle
     }
 
     @Override
-    public ResponseEntity<GroupJoinRequest> getGroupJoinRequestsByObligationGroupId(Integer obligationGroupId) {
-        groupJoinRequestService.getGroupJoinRequestsByObligationGroupId(obligationGroupId);
-        return null;
+    @GetMapping(value = "/get-group-join-requests-by-obligation-group-id")
+    public ResponseEntity<List<GroupJoinRequest>> getGroupJoinRequestsByObligationGroupId(Integer obligationGroupId) {
+        List<GroupJoinRequest> groupJoinRequestsByObligationGroupId;
+        try {
+            groupJoinRequestsByObligationGroupId =
+                    groupJoinRequestService.getGroupJoinRequestsByObligationGroupId(obligationGroupId);
+            return new ResponseEntity<>(groupJoinRequestsByObligationGroupId, HttpStatus.OK);
+        } catch (NotEnoughPermissionsException e){
+            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+        } catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+        }
     }
 
 }

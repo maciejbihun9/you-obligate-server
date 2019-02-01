@@ -1,5 +1,6 @@
 package com.maciejbihun.service.impl;
 
+import com.maciejbihun.exceptions.NotEnoughPermissionsException;
 import com.maciejbihun.models.GroupJoinRequest;
 import com.maciejbihun.repository.GroupJoinRequestRepository;
 import com.maciejbihun.service.GroupJoinRequestService;
@@ -23,7 +24,7 @@ public class GroupJoinRequestServiceImpl implements GroupJoinRequestService {
     }
 
     @Override
-    public List<GroupJoinRequest> getGroupJoinRequestsByObligationGroupId(Integer obligationGroupId) {
+    public List<GroupJoinRequest> getGroupJoinRequestsByObligationGroupId(Integer obligationGroupId) throws NotEnoughPermissionsException {
         return groupJoinRequestRepository.getGroupJoinRequestsByObligationGroupId(obligationGroupId);
     }
 
