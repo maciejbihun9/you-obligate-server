@@ -6,6 +6,8 @@ import com.maciejbihun.service.GroupJoinRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @author Maciej Bihun
  */
@@ -18,6 +20,11 @@ public class GroupJoinRequestServiceImpl implements GroupJoinRequestService {
     @Override
     public GroupJoinRequest saveGroupJoinRequest(GroupJoinRequest groupJoinRequest) {
         return groupJoinRequestRepository.save(groupJoinRequest);
+    }
+
+    @Override
+    public List<GroupJoinRequest> getGroupJoinRequestsByObligationGroupId(Integer obligationGroupId) {
+        return groupJoinRequestRepository.getGroupJoinRequestsByObligationGroupId(obligationGroupId);
     }
 
 }

@@ -46,4 +46,10 @@ public class GroupJoinRequestControllerImpl implements GroupJoinRequestControlle
         return new ResponseEntity<>(groupJoinRequest, HttpStatus.CREATED);
     }
 
+    @Override
+    public ResponseEntity<GroupJoinRequest> getGroupJoinRequestsByObligationGroupId(Integer obligationGroupId) {
+        groupJoinRequestService.getGroupJoinRequestsByObligationGroupId(obligationGroupId);
+        return null;
+    }
+
 }

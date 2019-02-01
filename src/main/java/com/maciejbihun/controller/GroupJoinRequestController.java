@@ -10,5 +10,6 @@ import org.springframework.http.ResponseEntity;
 public interface GroupJoinRequestController {
 
     ResponseEntity<GroupJoinRequest> createGroupJoinRequest(GroupJoinRequestDto groupJoinRequestDto);
+    ResponseEntity<GroupJoinRequest> getGroupJoinRequestsByObligationGroupId(Integer obligationGroupId);
 
 }
