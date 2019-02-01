@@ -31,7 +31,7 @@ public class GroupJoinRequestServiceTest {
         int obligationGroupId = 1;
         try {
             groupJoinRequestService.getGroupJoinRequestsByObligationGroupId(obligationGroupId);
-        } catch (NotEnoughPermissionsException e) {
+        } catch (AccessDeniedException e) {
             e.printStackTrace();
         }
     }

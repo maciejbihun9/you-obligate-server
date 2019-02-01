@@ -3,7 +3,6 @@ package com.maciejbihun.controller.impl;
 import com.maciejbihun.controller.GroupJoinRequestController;
 import com.maciejbihun.datatype.UnitOfWork;
 import com.maciejbihun.dto.GroupJoinRequestDto;
-import com.maciejbihun.exceptions.NotEnoughPermissionsException;
 import com.maciejbihun.models.GroupJoinRequest;
 import com.maciejbihun.models.ObligationGroup;
 import com.maciejbihun.models.UserRegisteredService;
@@ -12,6 +11,7 @@ import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -57,7 +57,7 @@ public class GroupJoinRequestControllerImpl implements GroupJoinRequestControlle
             groupJoinRequestsByObligationGroupId =
                     groupJoinRequestService.getGroupJoinRequestsByObligationGroupId(obligationGroupId);
             return new ResponseEntity<>(groupJoinRequestsByObligationGroupId, HttpStatus.OK);
-        } catch (NotEnoughPermissionsException e){
+        } catch (AccessDeniedException e){
             return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
         } catch (Exception e){
             return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
