@@ -11,8 +11,10 @@ import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * @author BHN
@@ -55,9 +57,11 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
                 = createPrivilegeIfNotFound("READ_PRIVILEGE");
         Privilege writePrivilege
                 = createPrivilegeIfNotFound("WRITE_PRIVILEGE");
+        Privilege displayGroupJoinRequestPrivilege
+                = createPrivilegeIfNotFound("DISPLAY_GROUP_JOIN_REQUESTS_PRIVILEGE");
 
         List<Privilege> adminPrivileges = Arrays.asList(
-                readPrivilege, writePrivilege);
+                readPrivilege, writePrivilege, displayGroupJoinRequestPrivilege);
         createRoleIfNotFound("ROLE_ADMIN", adminPrivileges);
         createRoleIfNotFound("ROLE_USER", Arrays.asList(readPrivilege));
 
