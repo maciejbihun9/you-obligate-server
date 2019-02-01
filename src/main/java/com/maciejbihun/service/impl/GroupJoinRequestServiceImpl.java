@@ -5,6 +5,7 @@ import com.maciejbihun.models.GroupJoinRequest;
 import com.maciejbihun.repository.GroupJoinRequestRepository;
 import com.maciejbihun.service.GroupJoinRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,6 +25,7 @@ public class GroupJoinRequestServiceImpl implements GroupJoinRequestService {
     }
 
     @Override
+    @PreAuthorize("hasRole('ROLE_DISPLAY_GROUP_JOIN_REQUESTS')")
     public List<GroupJoinRequest> getGroupJoinRequestsByObligationGroupId(Integer obligationGroupId) throws NotEnoughPermissionsException {
         return groupJoinRequestRepository.getGroupJoinRequestsByObligationGroupId(obligationGroupId);
     }
